@@ -1842,6 +1842,12 @@ function matrixClickPacks() {
     }
 }
 
+document.getElementById("cheat-card-name").addEventListener("keydown", e => {
+    if (e.key == "Enter") {
+        matrixClickCard()
+    }
+}
+
 function matrixClickCard() {
     has_cheated = true; // Markeer dit slot direct als cheat-file
     saveGame(); // Forceer een directe save zodat het menu direct up-to-date is
