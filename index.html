@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="color-scheme" content="light dark">
     <title>Hit Joe for Alpha-beast</title>
-    <link rel="icon" href="Alpha-beast.png">
+    <link rel="icon" href="image_bfd5aa20.jpg">
     <style>
 
         @media (preferred-color-scheme: light) {
@@ -160,8 +160,8 @@
             display: none;
         }
         .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 10px; }
-        .shop-item-card { background: white; border: 1px solid #ffb703; border-radius: 6px; padding: 10px; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .shop-item-card button { display: inline-block; font-size: 12px; padding: 4px 8px; margin-top: 5px; background: #ffb703; color: black; }
+        .shop-item-Egg { background: white; border: 1px solid #ffb703; border-radius: 6px; padding: 10px; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .shop-item-Egg button { display: inline-block; font-size: 12px; padding: 4px 8px; margin-top: 5px; background: #ffb703; color: black; }
         
         #album-container {
             margin-top: 30px;
@@ -175,7 +175,7 @@
 
         .tier-title { font-weight: bold; padding: 6px; margin-top: 15px; border-radius: 4px; text-align: left; }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; padding: 8px 0; }
-        .card-item { text-align: left; font-size: 13px; }
+        .Egg-item { text-align: left; font-size: 13px; }
     </style></head>
 <body>
 <!-- === 🗂️ THE SELECT FILE / SLOT SCREEN (WITH RENAME SYSTEM) === -->
@@ -251,7 +251,7 @@
         onmouseleave="this.innerText='😃'" 
         onmousedown="this.innerText='😵‍💫'" 
         onmouseup="this.innerText='😨'">😃</button> <br>
-    <button id="shop-btn" onclick="new_button_click()">Buy Alpha-beast Cards (\$10.00)</button>
+    <button id="shop-btn" onclick="new_button_click()">Buy Alpha-beast Eggs (\$10.00)</button>
     <button id="upgrade-btn" onclick="upgrade_button_click()">Upgrade Hits (2x earnings) (\$100.00)</button>
     <button id="pack-upgrade-btn" onclick="upgrade_packs_click()">Upgrade Packs (\$200.00)</button>
 
@@ -263,13 +263,13 @@
 
     <div id="album-container">
         <h3>🏆 Alpha-beast Ultra-Rare Checklist Album</h3>
-        <div id="Giant-header" class="tier-title" style="background-color: #fff3cd; color: #d97706; display: none;">🔥 Giant godly CARDS (<span id="Giant-rate">0.50</span>% Chance - <span style="font-size: 10px; color: #b45309;">Rates boost to 1.00% once Packs are MAXED!</span>) — [+\$25000/sec & +5000% Multiplier ea.]</div>
+        <div id="Giant-header" class="tier-title" style="background-color: #fff3cd; color: #d97706; display: none;">🔥 Giant godly Eggs (<span id="Giant-rate">0.50</span>% Chance - <span style="font-size: 10px; color: #b45309;">Rates boost to 1.00% once Packs are MAXED!</span>) — [+\$25000/sec & +5000% Multiplier ea.]</div>
         <div class="grid" id="Giant-grid" style="display: none;"></div>
-        <div class="tier-title" style="color: #00b4d8;" class="album-header">  🔷 EPIC CARDS (<span id="epic-rate">1.00</span>% Chance) — [+\$25/sec & +50% Multiplier ea.]</div>
+        <div class="tier-title" style="color: #00b4d8;" class="album-header">  🔷 EPIC Eggs (<span id="epic-rate">1.00</span>% Chance) — [+\$25/sec & +50% Multiplier ea.]</div>
         <div class="grid" id="epic-grid"></div>
-        <div class="tier-title" style="color: #8a2be2;" class="album-header">  🔮 MYTHIC CARDS (<span id="mythic-rate">0.50</span>% Chance) — [+\$500/sec & +200% Multiplier ea.]</div>
+        <div class="tier-title" style="color: #8a2be2;" class="album-header">  🔮 MYTHIC Eggs (<span id="mythic-rate">0.50</span>% Chance) — [+\$500/sec & +200% Multiplier ea.]</div>
         <div class="grid" id="mythic-grid"></div>
-        <div class="tier-title" style="color: #e63946;" class="album-header">  👑 godly CARDS (<span id="godly-rate">0.10</span>% Chance) — [+\$5000/sec & +1000% Multiplier ea.]</div>
+        <div class="tier-title" style="color: #e63946;" class="album-header">  👑 godly Eggs (<span id="godly-rate">0.10</span>% Chance) — [+\$5000/sec & +1000% Multiplier ea.]</div>
         <div class="grid" id="godly-grid"></div>
     </div>
 
@@ -442,7 +442,7 @@ function loadGame(slotId) {
         
         if (btnShop) {
             btnShop.style.display = pokemon_notif_triggered ? "inline-block" : "none";
-            btnShop.innerText = `Buy Alpha-beast Cards ($${current_pack_price.toFixed(2)})`;
+            btnShop.innerText = `Buy Alpha-beast Eggs ($${current_pack_price.toFixed(2)})`;
         }
         if (document.getElementById("album-container")) {
             document.getElementById("album-container").style.display = pokemon_notif_triggered ? "block" : "none";
@@ -693,8 +693,8 @@ function TheCreatorGaveMeThisCheatcode44(type, amount) {
     }
 
     // ALS ER WEL PARAMETERS ZIJN: Direct via console verwerken
-    if (String(type).toLowerCase().trim() === 'card') {
-        return executeCardSpawnCheat(String(amount));
+    if (String(type).toLowerCase().trim() === 'Egg') {
+        return executeEggspawnCheat(String(amount));
     }
     
     let parsedAmount = parseFloat(amount);
@@ -745,10 +745,10 @@ function executeCheatInjection(type, amount) {
 }
 
 // 3. De kaart generator logica (koppelt aan de arrays uit jouw eerdere code)
-function executeCardSpawnCheat(cardName) {
-    if (!cardName) return "Enter a card name.";
+function executeEggspawnCheat(EggName) {
+    if (!EggName) return "Enter a Egg name.";
     
-    let targetName = cardName.trim().toLowerCase();
+    let targetName = EggName.trim().toLowerCase();
     let found = false;
     let poolFound = "";
 
@@ -769,7 +769,7 @@ function executeCardSpawnCheat(cardName) {
                      checkAndUnlock(Giant_pool, owned_Giants, "Giant");
 
     if (found && actualName) {
-        if (typeof countUniqueCards === "function" && countUniqueCards() === 100 && !Giant_godly_unlocked) {
+        if (typeof countUniqueEggs === "function" && countUniqueEggs() === 100 && !Giant_godly_unlocked) {
             Giant_godly_unlocked = true;
             if(document.getElementById("Giant-header")) document.getElementById("Giant-header").style.display = "block";
             if(document.getElementById("Giant-grid")) document.getElementById("Giant-grid").style.display = "grid";
@@ -777,8 +777,8 @@ function executeCardSpawnCheat(cardName) {
 
         if (typeof build_rarity_album === "function") build_rarity_album();
         if (typeof checkAchievements === "function") {
-            checkAchievements('cards', 1);
-            if (typeof countUniqueCards === "function") checkAchievements('album', countUniqueCards());
+            checkAchievements('Eggs', 1);
+            if (typeof countUniqueEggs === "function") checkAchievements('album', countUniqueEggs());
         }
 
         if (terminal) {
@@ -788,7 +788,7 @@ function executeCardSpawnCheat(cardName) {
         if (typeof saveGame === "function") saveGame();
         return `Succes! ${actualName} toegevoegd.`;
     } else {
-        return `Kaart "${cardName}" staat niet in de pools. Check je spelling!`;
+        return `Kaart "${EggName}" staat niet in de pools. Check je spelling!`;
     }
 }
 
@@ -804,18 +804,18 @@ function injectCheat(type) {
     if (terminal) terminal.scrollTop = terminal.scrollHeight;
 }
 
-function injectCardCheat() {
-    let cardInput = document.getElementById("cheat-card-name");
-    let cardName = cardInput.value;
-    if (!cardName || cardName.trim() === "") {
+function injectEggCheat() {
+    let EggInput = document.getElementById("cheat-Egg-name");
+    let EggName = EggInput.value;
+    if (!EggName || EggName.trim() === "") {
         alert("Enter the exact name of a Alpha-beast!");
         return;
     }
-    let result = executeCardSpawnCheat(cardName);
+    let result = executeEggspawnCheat(EggName);
     if (result.startsWith("Kaart")) {
         alert(result);
     } else {
-        cardInput.value = ""; // Maak vakje leeg bij succes
+        EggInput.value = ""; // Maak vakje leeg bij succes
     }
 }
 
@@ -864,11 +864,11 @@ function executeCheatInjection(type, amount) {
 }
 
 // Logica om een specifieke kaart te spawnen op basis van exacte naam
-function executeCardSpawnCheat(cardName) {
-    if (!cardName) return "Voer een kaartnaam in.";
+function executeEggspawnCheat(EggName) {
+    if (!EggName) return "Voer een kaartnaam in.";
     
     // Maak de invoer schoon en zorg voor de juiste hoofdletters (e.g. "charizard" -> "Charizard")
-    let targetName = cardName.trim().toLowerCase();
+    let targetName = EggName.trim().toLowerCase();
     let found = false;
     let poolFound = "";
 
@@ -891,7 +891,7 @@ function executeCardSpawnCheat(cardName) {
 
     if (found && actualName) {
         // Activeer endgame als dit de 100e kaart is
-        if (typeof countUniqueCards === "function" && countUniqueCards() === 100 && !Giant_godly_unlocked) {
+        if (typeof countUniqueEggs === "function" && countUniqueEggs() === 100 && !Giant_godly_unlocked) {
             Giant_godly_unlocked = true;
             if(document.getElementById("Giant-header")) document.getElementById("Giant-header").style.display = "block";
             if(document.getElementById("Giant-grid")) document.getElementById("Giant-grid").style.display = "grid";
@@ -900,8 +900,8 @@ function executeCardSpawnCheat(cardName) {
         // Vernieuw album en achievements
         if (typeof build_rarity_album === "function") build_rarity_album();
         if (typeof checkAchievements === "function") {
-            checkAchievements('cards', 1);
-            if (typeof countUniqueCards === "function") checkAchievements('album', countUniqueCards());
+            checkAchievements('Eggs', 1);
+            if (typeof countUniqueEggs === "function") checkAchievements('album', countUniqueEggs());
         }
 
         if (terminal) {
@@ -911,7 +911,7 @@ function executeCardSpawnCheat(cardName) {
         if (typeof saveGame === "function") saveGame();
         return `Succes! ${actualName} added to your album.`;
     } else {
-        return `Card "${cardName}" not found. Check the spelling (for example: Mewbro, Pickachoo).`;
+        return `Egg "${EggName}" not found. Check the spelling (for example: Mewbro, Pickachoo).`;
     }
 }
 
@@ -928,19 +928,19 @@ function injectCheat(type) {
 }
 
 // Aangeroepen door de nieuwe kaart-spawn knop onderaan
-function injectCardCheat() {
-    let cardInput = document.getElementById("cheat-card-name");
-    let cardName = cardInput.value;
-    if (!cardName || cardName.trim() === "") {
+function injectEggCheat() {
+    let EggInput = document.getElementById("cheat-Egg-name");
+    let EggName = EggInput.value;
+    if (!EggName || EggName.trim() === "") {
         alert("Enter the exact name of a Alpha-beast!");
         return;
     }
-    let result = executeCardSpawnCheat(cardName);
+    let result = executeEggspawnCheat(EggName);
     // Als het niet lukt, geef een waarschuwing via alert
     if (result.startsWith("Kaart")) {
         alert(result);
     } else {
-        cardInput.value = ""; // Maak het vakje leeg bij succes
+        EggInput.value = ""; // Maak het vakje leeg bij succes
     }
 }
 
@@ -1074,10 +1074,10 @@ let achievements = {
     cash_7: { name: "💰 Billionaire Club", desc: "Reach $100,000,000 cash.", unlocked: false, type: "cash", req: 100000000, bonus: 15000000 },
     cash_8: { name: "💰 Money Ocean", desc: "Reach $1,000,000,000 cash.", unlocked: false, type: "cash", req: 1000000000, bonus: 100000000 },
     cash_9: { name: "💰 Infinite Wealth", desc: "Reach $10,000,000,000 cash.", unlocked: false, type: "cash", req: 10000000000, bonus: 999999999 },
-    pack_1: { name: "📦 Card Hobbyist", desc: "Open 5 Alpha-beast packs.", unlocked: false, type: "packs", req: 5, bonus: 100 },
+    pack_1: { name: "📦 Egg Hobbyist", desc: "Open 5 Alpha-beast packs.", unlocked: false, type: "packs", req: 5, bonus: 100 },
     pack_2: { name: "📦 Pack Addict", desc: "Open 20 Alpha-beast packs.", unlocked: false, type: "packs", req: 20, bonus: 500 },
     pack_3: { name: "📦 Box Breaker", desc: "Open 50 Alpha-beast packs.", unlocked: false, type: "packs", req: 50, bonus: 2000 },
-    pack_4: { name: "📦 Card Shark", desc: "Open 100 Alpha-beast packs.", unlocked: false, type: "packs", req: 100, bonus: 10000 },
+    pack_4: { name: "📦 Egg Shark", desc: "Open 100 Alpha-beast packs.", unlocked: false, type: "packs", req: 100, bonus: 10000 },
     pack_5: { name: "📦 Scalper Menace", desc: "Open 250 Alpha-beast packs.", unlocked: false, type: "packs", req: 250, bonus: 50000 },
     pack_6: { name: "📦 Local Shop Owner", desc: "Open 500 Alpha-beast packs.", unlocked: false, type: "packs", req: 500, bonus: 250000 },
     pack_7: { name: "📦 Warehouse Raider", desc: "Open 1,000 Alpha-beast packs.", unlocked: false, type: "packs", req: 1000, bonus: 1500000 },
@@ -1092,17 +1092,17 @@ let achievements = {
     passive_7: { name: "⚡ Capitalism Peak", desc: "Reach $1,000,000/sec passive income.", unlocked: false, type: "passive", req: 1000000, bonus: 20000000 },
     passive_8: { name: "⚡ System Breaker", desc: "Reach $5,000,000/sec passive income.", unlocked: false, type: "passive", req: 5000000, bonus: 150000000 },
     passive_9: { name: "⚡ God of Passive", desc: "Reach $10,000,000/sec passive income.", unlocked: false, type: "passive", req: 10000000, bonus: 1000000000 },
-    collector_start: { name: "🔷 Collector Starter", desc: "Pull your 1st Epic card.", unlocked: false, type: "cards", req: 1, bonus: 100 },
-    godly_pull:      { name: "👑 Godly Pull", desc: "Pull a godly card.", unlocked: false, type: "cards", req: 1, bonus: 25000 },
-    album_2: { name: "🏆 Binder Filling", desc: "Collect 5 unique cards.", unlocked: false, type: "album", req: 5, bonus: 500 },
-    album_3: { name: "🏆 Card Fanatic", desc: "Collect 15 unique cards.", unlocked: false, type: "album", req: 15, bonus: 5000 },
-    album_4: { name: "🏆 Halfway Checklist", desc: "Collect 30 unique cards.", unlocked: false, type: "album", req: 30, bonus: 25000 },
-    album_5: { name: "🏆 Shiny Collector", desc: "Collect 45 unique cards.", unlocked: false, type: "album", req: 45, bonus: 150000 },
-    album_6: { name: "🏆 Elite Investor", desc: "Collect 60 unique cards.", unlocked: false, type: "album", req: 60, bonus: 1000000 },
-    album_7: { name: "🏆 Museum Curator", desc: "Collect 75 unique cards.", unlocked: false, type: "album", req: 75, bonus: 10000000 },
-    album_8: { name: "🏆 Almost Perfect", desc: "Collect 90 unique cards.", unlocked: false, type: "album", req: 90, bonus: 100000000 },
-    album_9: { name: "🏆 Ultimate Master", desc: "Collect 99 unique cards.", unlocked: false, type: "album", req: 99, bonus: 500000000 },
-    album_10: { name: "👑 TRUE ALPHA-BEAST MASTER", desc: "Collect ALL 100 UNIQUE CARDS!", unlocked: false, type: "album", req: 100, bonus: 9999999999 }
+    collector_start: { name: "🔷 Collector Starter", desc: "Pull your 1st Epic Egg.", unlocked: false, type: "Eggs", req: 1, bonus: 100 },
+    godly_pull:      { name: "👑 Godly Pull", desc: "Pull a godly Egg.", unlocked: false, type: "Eggs", req: 1, bonus: 25000 },
+    album_2: { name: "🏆 Binder Filling", desc: "Collect 5 unique Eggs.", unlocked: false, type: "album", req: 5, bonus: 500 },
+    album_3: { name: "🏆 Egg Fanatic", desc: "Collect 15 unique Eggs.", unlocked: false, type: "album", req: 15, bonus: 5000 },
+    album_4: { name: "🏆 Halfway Checklist", desc: "Collect 30 unique Eggs.", unlocked: false, type: "album", req: 30, bonus: 25000 },
+    album_5: { name: "🏆 Shiny Collector", desc: "Collect 45 unique Eggs.", unlocked: false, type: "album", req: 45, bonus: 150000 },
+    album_6: { name: "🏆 Elite Investor", desc: "Collect 60 unique Eggs.", unlocked: false, type: "album", req: 60, bonus: 1000000 },
+    album_7: { name: "🏆 Museum Curator", desc: "Collect 75 unique Eggs.", unlocked: false, type: "album", req: 75, bonus: 10000000 },
+    album_8: { name: "🏆 Almost Perfect", desc: "Collect 90 unique Eggs.", unlocked: false, type: "album", req: 90, bonus: 100000000 },
+    album_9: { name: "🏆 Ultimate Master", desc: "Collect 99 unique Eggs.", unlocked: false, type: "album", req: 99, bonus: 500000000 },
+    album_10: { name: "👑 TRUE ALPHA-BEAST MASTER", desc: "Collect ALL 100 UNIQUE Eggs!", unlocked: false, type: "album", req: 100, bonus: 9999999999 }
 };
 
 const epic_pool = [
@@ -1391,11 +1391,11 @@ function clickJoe() {
         bank_notif_triggered = true;
     }
     if (number >= 10.0 && !brokemon_notif_triggered) {
-        terminal.innerHTML += `OW! Come on... you already have enough money now... go buy Alpha-beast cards or something...\n`;
+        terminal.innerHTML += `OW! Come on... you already have enough money now... go buy Alpha-beast Eggs or something...\n`;
         let sb = document.getElementById("shop-btn");
         let ac = document.getElementById("album-container");
         if(sb) {
-            sb.innerText = `Buy Alpha-beast Cards ($${current_pack_price.toFixed(2)})`;
+            sb.innerText = `Buy Alpha-beast Eggs ($${current_pack_price.toFixed(2)})`;
             sb.style.display = "inline-block";
         }
         if(ac) ac.style.display = "block";
@@ -1422,12 +1422,12 @@ function generateNewQuests() {
     let templates = [
         { type: "click_joe", target: Math.floor(Math.random() * 60 + 40), text: "Punch Joe X times this cycle", reward: 2 },
         { type: "passive_gain", target: Math.floor(Math.random() * 4000 + 1000), text: "Accumulate \$X through passive album tier", reward: 3 },
-        { type: "pull_card", rarity: "epic", text: "Pull any brand new Epic card from a pack", reward: 2 },
-        { type: "pull_card", rarity: "mythic", text: "Successfully summon any Mythic tier Alpha-beast", reward: 4 },
+        { type: "pull_Egg", rarity: "epic", text: "Pull any brand new Epic Egg from a pack", reward: 2 },
+        { type: "pull_Egg", rarity: "mythic", text: "Successfully summon any Mythic tier Alpha-beast", reward: 4 },
         { type: "buy_upgrade", text: "Purchase any endless hit multiplier or pack upgrade", reward: 3 },
         { type: "click_joe", target: 50, text: "Smasher's Delight: Click Joe 50 times without getting hit back", reward: 3 },
         { type: "click_joe", target: 15, text: "The Guardian: Avoid getting struck by Joe for your next 15 hits", reward: 2 },
-        { type: "pull_card", rarity: "godly", text: "Against All Odds: Snag any raw godly pull from a standard pack", reward: 5 },
+        { type: "pull_Egg", rarity: "godly", text: "Against All Odds: Snag any raw godly pull from a standard pack", reward: 5 },
         { type: "buy_upgrade", text: "Premium Choice: Perform a high-tier multiplier upgrade", reward: 3 }
     ];
 
@@ -1488,8 +1488,8 @@ function generateQuestShop() {
     let random_mythic = mythic_pool[Math.floor(Math.random() * mythic_pool.length)];
     
     // 3. Voeg ze toe aan de inventaris
-    shop_inventory.push({ id: 3, name: random_epic, desc: "Buy directly to bypass pool RNG", cost: 4, type: "direct_card", pool: "epic" });
-    shop_inventory.push({ id: 4, name: random_mythic, desc: "Buy directly to bypass pool RNG", cost: 12, type: "direct_card", pool: "mythic" });
+    shop_inventory.push({ id: 3, name: random_epic, desc: "Buy directly to bypass pool RNG", cost: 4, type: "direct_Egg", pool: "epic" });
+    shop_inventory.push({ id: 4, name: random_mythic, desc: "Buy directly to bypass pool RNG", cost: 12, type: "direct_Egg", pool: "mythic" });
 
     // 4. Teken de winkel direct correct op het scherm!
     renderQuestShopUI();
@@ -1502,7 +1502,7 @@ function renderQuestShopUI() {
             let cleanName = item.name.trim();
             
             return `
-                <div class="shop-item-card">
+                <div class="shop-item-Egg">
                     <strong>${cleanName}</strong><br>
                     <span style="color: #6b7280; font-size:10px;">${item.desc}</span><br>
                     <span style="color: #b45309; font-weight:bold;">🌟 ${item.cost} Coins</span><br>
@@ -1522,12 +1522,12 @@ function new_button_click() {
         updateMoneyDisplay();
         triggerMoneyAnimation('loss'); 
         
-        let card_value = (Math.random() * (max_pack_cash - min_pack_cash) + min_pack_cash);
-        number += card_value;
+        let Egg_value = (Math.random() * (max_pack_cash - min_pack_cash) + min_pack_cash);
+        number += Egg_value;
         updateMoneyDisplay();
         triggerMoneyAnimation('win'); 
         
-        terminal.innerHTML += `Your cards cash value was worth: $${card_value.toFixed(2)}\n`;
+        terminal.innerHTML += `Your Eggs cash value was worth: $${Egg_value.toFixed(2)}\n`;
 
         let current_chance_godly = chance_godly * shop_godly_booster;
         let current_chance_mythic = chance_mythic * shop_mythic_booster;
@@ -1538,43 +1538,43 @@ function new_button_click() {
         if (Giant_godly_unlocked && roll < chance_Giant) {
             let unowned = Giant_pool.filter(name => owned_Giants[name] === 0);
             if (unowned.length > 0) {
-                let card = unowned[Math.floor(Math.random() * unowned.length)];
-                owned_Giants[card] = 1;
-                terminal.innerHTML += `\n<span style="color: #d97706; font-weight: bold;">🔥💥 Giant EVOLUTION PULL: ${card}!</span>\n\n`;
+                let Egg = unowned[Math.floor(Math.random() * unowned.length)];
+                owned_Giants[Egg] = 1;
+                terminal.innerHTML += `\n<span style="color: #d97706; font-weight: bold;">🔥💥 Giant EVOLUTION PULL: ${Egg}!</span>\n\n`;
             }
         } else if (roll < current_chance_godly) {
             let unowned = godly_pool.filter(name => owned_legendaries[name] === 0);
             if (unowned.length > 0) {
-                let card = unowned[Math.floor(Math.random() * unowned.length)];
-                owned_legendaries[card] = 1;
-                terminal.innerHTML += `<span style="color: #e63946; font-weight: bold;">👑 NEW godly PULL: ${card}!</span>\n`;
-                checkAchievements('cards', 1); 
-                checkQuestProgression('pull_card', 1, 'godly');
+                let Egg = unowned[Math.floor(Math.random() * unowned.length)];
+                owned_legendaries[Egg] = 1;
+                terminal.innerHTML += `<span style="color: #e63946; font-weight: bold;">👑 NEW godly PULL: ${Egg}!</span>\n`;
+                checkAchievements('Eggs', 1); 
+                checkQuestProgression('pull_Egg', 1, 'godly');
             }
         } else if (roll < current_chance_godly + current_chance_mythic) {
             let unowned = mythic_pool.filter(name => owned_mythics[name] === 0);
             if (unowned.length > 0) {
-                let card = unowned[Math.floor(Math.random() * unowned.length)];
-                owned_mythics[card] = 1;
-                terminal.innerHTML += `<span style="color: #8a2be2; font-weight: bold;">🔮 NEW MYTHIC PULL: ${card}!</span>\n`;
-                checkQuestProgression('pull_card', 1, 'mythic');
+                let Egg = unowned[Math.floor(Math.random() * unowned.length)];
+                owned_mythics[Egg] = 1;
+                terminal.innerHTML += `<span style="color: #8a2be2; font-weight: bold;">🔮 NEW MYTHIC PULL: ${Egg}!</span>\n`;
+                checkQuestProgression('pull_Egg', 1, 'mythic');
             }
         } else if (roll < current_chance_godly + current_chance_mythic + current_chance_epic) {
             let unowned = epic_pool.filter(name => owned_epics[name] === 0);
             if (unowned.length > 0) {
-                let card = unowned[Math.floor(Math.random() * unowned.length)];
-                owned_epics[card] = 1;
-                terminal.innerHTML += `<span style="color: #00b4d8; font-weight: bold;">🔷 NEW EPIC PULL: ${card}!</span>\n`;
-                checkAchievements('cards', 1); 
-                checkQuestProgression('pull_card', 1, 'epic');
+                let Egg = unowned[Math.floor(Math.random() * unowned.length)];
+                owned_epics[Egg] = 1;
+                terminal.innerHTML += `<span style="color: #00b4d8; font-weight: bold;">🔷 NEW EPIC PULL: ${Egg}!</span>\n`;
+                checkAchievements('Eggs', 1); 
+                checkQuestProgression('pull_Egg', 1, 'epic');
             }
         }
         
         shop_epic_booster = 1; shop_mythic_booster = 1; shop_godly_booster = 1;
 
-        if (countUniqueCards() === 100 && !Giant_godly_unlocked) {
+        if (countUniqueEggs() === 100 && !Giant_godly_unlocked) {
             Giant_godly_unlocked = true;
-            terminal.innerHTML += `\n<span style="color: #d97706; font-weight: bold; font-size: 16px;">🚨🚨 [ENDGAME UNLOCKED] 🚨🚨\nGiant EVOLVED CARDS HAVE BEEN UNLOCKED!</span>\n\n`;
+            terminal.innerHTML += `\n<span style="color: #d97706; font-weight: bold; font-size: 16px;">🚨🚨 [ENDGAME UNLOCKED] 🚨🚨\nGiant EVOLVED Eggs HAVE BEEN UNLOCKED!</span>\n\n`;
             let mh = document.getElementById("Giant-header");
             let mg = document.getElementById("Giant-grid");
             if(mh) mh.style.display = "block";
@@ -1582,7 +1582,7 @@ function new_button_click() {
         }
 
         checkAchievements('packs', total_packs_bought);
-        checkAchievements('album', countUniqueCards());
+        checkAchievements('album', countUniqueEggs());
         checkAchievements('cash', number); 
 
         terminal.innerHTML += `Your new total balance is: $${number.toFixed(2)}\n\n`;
@@ -1643,14 +1643,14 @@ function upgrade_packs_click() {
             chance_epic = 0.50; 
             chance_Giant = 0.01;
             // Gecorrigeerde melding: Geen spoilers over de geheime kaarten!
-            terminal.innerHTML += `<span style="color: #00bcd4; font-weight: bold;">Packs upgraded! MAX LEVEL REACHED! The chance on rare cards in now optimalized!</span>\n\n`;
+            terminal.innerHTML += `<span style="color: #00bcd4; font-weight: bold;">Packs upgraded! MAX LEVEL REACHED! The chance on rare Eggs in now optimalized!</span>\n\n`;
             if(pub) pub.innerText = "Packs Upgraded! (MAX LEVEL)";
         } else {
-            terminal.innerHTML += `<span style="color: #00bcd4; font-weight: bold;">Packs upgraded! The chance on rare cards increased!</span>\n\n`;
+            terminal.innerHTML += `<span style="color: #00bcd4; font-weight: bold;">Packs upgraded! The chance on rare Eggs increased!</span>\n\n`;
             if(pub) pub.innerText = `Upgrade Packs ($${pack_upgrade_cost.toFixed(2)})`;
         }
         
-        if(sb) sb.innerText = `Buy Alpha-beast Cards ($${current_pack_price.toFixed(2)})`;
+        if(sb) sb.innerText = `Buy Alpha-beast Eggs ($${current_pack_price.toFixed(2)})`;
         
         // Sla direct de voortgang op (als je het opslegsysteem gebruikt)
         if (typeof saveGame === "function") saveGame();
@@ -1675,14 +1675,14 @@ function buyShopItem(productName) {
         updateGoldDisplay();
 
         let isBooster = item.name.toLowerCase().includes("pack") || item.name.toLowerCase().includes("booster");
-        let itemType = isBooster ? "booster" : "direct_card";
+        let itemType = isBooster ? "booster" : "direct_Egg";
 
         if (itemType === "booster") {
             if (item.target === "epic") shop_epic_booster = 5;
             if (item.target === "mythic") shop_mythic_booster = 5;
             if (item.target === "godly") shop_godly_booster = 5;
             terminal.innerHTML += `\n<span style="color: #ffb703;">🛍️ Bought ${item.name}! Rates inside your cash shop are now heavily boosted for your next pull!</span>\n`;
-        } else if (itemType === "direct_card") {
+        } else if (itemType === "direct_Egg") {
             let formattedName = item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase();
             let pool = item.pool || "epic"; 
 
@@ -1707,7 +1707,7 @@ function buyShopItem(productName) {
     terminal.scrollTop = terminal.scrollHeight;
 }
 
-function countUniqueCards() {
+function countUniqueEggs() {
     let count = 0;
     epic_pool.forEach(name => { if ((owned_epics[name] || 0) > 0) count++; });
     mythic_pool.forEach(name => { if ((owned_mythics[name] || 0) > 0) count++; });
@@ -1729,7 +1729,7 @@ function build_rarity_album() {
         grid.innerHTML = pool.map(name => {
             let owned = (ownedObject[name] || 0) > 0;
             return `
-                <div class="card-item" style="opacity: ${owned ? '1' : '0.25'}; font-weight: ${owned ? 'bold' : 'normal'};">
+                <div class="Egg-item" style="opacity: ${owned ? '1' : '0.25'}; font-weight: ${owned ? 'bold' : 'normal'};">
                     ${owned ? '⚡' : '🔒'} ${name}
                 </div>
             `;
@@ -1760,9 +1760,9 @@ function TheCreatorGaveMeThisCheatcode44(type, amount) {
         return "Developer panel activated at the bottom of the page.";
     }
 
-    if (String(type).toLowerCase().trim() === 'card') {
-        if (typeof executeCardSpawnCheat === "function") return executeCardSpawnCheat(String(amount));
-        return "Error: Card spawn function not found.";
+    if (String(type).toLowerCase().trim() === 'Egg') {
+        if (typeof executeEggspawnCheat === "function") return executeEggspawnCheat(String(amount));
+        return "Error: Egg spawn function not found.";
     }
     
     let parsedAmount = parseFloat(amount);
@@ -1871,21 +1871,21 @@ function matrixClickPacks() {
     }
 }
     
-document.getElementById("cheat-card-name").addEventListener("keydown", e => {
+document.getElementById("cheat-Egg-name").addEventListener("keydown", e => {
     if (e.key == "Enter") {
-        matrixClickCard()
+        matrixClickEgg()
     }
 })
                                                             
-function matrixClickCard() {
+function matrixClickEgg() {
     has_cheated = true; // Markeer dit slot direct als cheat-file
     saveGame(); // Forceer een directe save zodat het menu direct up-to-date is
-    let cardName = document.getElementById("cheat-card-name").value;
-    if (!cardName || cardName.trim() === "") return alert("Please enter a Alpha-beast name!");
-    if (typeof executeCardSpawnCheat === "function") {
-        let result = executeCardSpawnCheat(cardName);
+    let EggName = document.getElementById("cheat-Egg-name").value;
+    if (!EggName || EggName.trim() === "") return alert("Please enter a Alpha-beast name!");
+    if (typeof executeEggspawnCheat === "function") {
+        let result = executeEggspawnCheat(EggName);
         if (result.startsWith("Kaart") || result.startsWith("Kaart")) alert("Alpha-beast not found. Check spelling!");
-        else document.getElementById("cheat-card-name").value = "";
+        else document.getElementById("cheat-Egg-name").value = "";
     }
 }
 
@@ -1927,12 +1927,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <span onclick="matrixClickPacks()" style="display: inline-block !important; background-color: #00bcd4; color: black; font-size: 13px; font-weight: bold; padding: 8px 14px; border-radius: 6px; cursor: pointer; user-select: none;">+ Pack Upgrades</span>
     </div>
 
-    <!-- SECTION 2: Specific Card Generator -->
+    <!-- SECTION 2: Specific Egg Generator -->
     <div>
-        <p style="font-size: 13px; color: #f8fafc; margin: 0 0 8px 0; text-align: left; padding-left: 25px;">🃏 SPECIFIC CARD GENERATOR:</p>
+        <p style="font-size: 13px; color: #f8fafc; margin: 0 0 8px 0; text-align: left; padding-left: 25px;">🃏 SPECIFIC Egg GENERATOR:</p>
         <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
-            <input type="text" id="cheat-card-name" placeholder="Type exact name (e.g., Mewbro, Pickachoo)..." style="padding: 8px 15px; font-size: 14px; width: 340px; border-radius: 6px; border: 2px solid #334155; background: #1e293b; color: white; font-family: monospace;">
-            <span onclick="matrixClickCard()" style="display: inline-block !important; background-color: #ec4899; color: white; font-size: 14px; font-weight: bold; padding: 8px 18px; border-radius: 6px; cursor: pointer; user-select: none;">Spawn Card 🪄</span>
+            <input type="text" id="cheat-Egg-name" placeholder="Type exact name (e.g., Mewbro, Pickachoo)..." style="padding: 8px 15px; font-size: 14px; width: 340px; border-radius: 6px; border: 2px solid #334155; background: #1e293b; color: white; font-family: monospace;">
+            <span onclick="matrixClickEgg()" style="display: inline-block !important; background-color: #ec4899; color: white; font-size: 14px; font-weight: bold; padding: 8px 18px; border-radius: 6px; cursor: pointer; user-select: none;">Spawn Egg 🪄</span>
         </div>
     </div>
 </div>
