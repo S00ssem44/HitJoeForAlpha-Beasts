@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="color-scheme" content="light dark">
-    <title>Hit Joe for Brokémon</title>
-    <link rel="icon" href="Brokémon.png">
+    <title>Hit Joe for Alpha-beast</title>
+    <link rel="icon" href="Alpha-beast.png">
     <style>
 
         @media (preferred-color-scheme: light) {
@@ -181,7 +181,7 @@
 <!-- === 🗂️ THE SELECT FILE / SLOT SCREEN (WITH RENAME SYSTEM) === -->
 <div id="slot-select-screen" style="max-width: 600px; margin: 40px auto; text-align: center; font-family: monospace; background: #f8fafc; padding: 25px; border: 3px solid #ef4444; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: block !important; color: #0f172a;">
     <h2 style="color: #ef4444; margin-bottom: 5px; font-weight: bold;">💾 SELECT YOUR SAVE FILE 💾</h2>
-    <p style="color: #64748b; font-size: 12px; margin-bottom: 25px;">Choose a slot to continue your journey or start a fresh Brokémon adventure.</p>
+    <p style="color: #64748b; font-size: 12px; margin-bottom: 25px;">Choose a slot to continue your journey or start a fresh Alpha-beast adventure.</p>
     
     <div style="display: flex; flex-direction: column; gap: 15px; padding: 10px;">
         <!-- SLOT 1 -->
@@ -251,7 +251,7 @@
         onmouseleave="this.innerText='😃'" 
         onmousedown="this.innerText='😵‍💫'" 
         onmouseup="this.innerText='😨'">😃</button> <br>
-    <button id="shop-btn" onclick="new_button_click()">Buy Brokémon Cards (\$10.00)</button>
+    <button id="shop-btn" onclick="new_button_click()">Buy Alpha-beast Cards (\$10.00)</button>
     <button id="upgrade-btn" onclick="upgrade_button_click()">Upgrade Hits (2x earnings) (\$100.00)</button>
     <button id="pack-upgrade-btn" onclick="upgrade_packs_click()">Upgrade Packs (\$200.00)</button>
 
@@ -262,15 +262,15 @@
     </div>
 
     <div id="album-container">
-        <h3>🏆 Brokémon Ultra-Rare Checklist Album</h3>
-        <div id="mega-header" class="tier-title" style="background-color: #fff3cd; color: #d97706; display: none;">🔥 MEGA LEGENDARY CARDS (<span id="mega-rate">0.50</span>% Chance - <span style="font-size: 10px; color: #b45309;">Rates boost to 1.00% once Packs are MAXED!</span>) — [+\$25000/sec & +5000% Multiplier ea.]</div>
-        <div class="grid" id="mega-grid" style="display: none;"></div>
+        <h3>🏆 Alpha-beast Ultra-Rare Checklist Album</h3>
+        <div id="Giant-header" class="tier-title" style="background-color: #fff3cd; color: #d97706; display: none;">🔥 Giant godly CARDS (<span id="Giant-rate">0.50</span>% Chance - <span style="font-size: 10px; color: #b45309;">Rates boost to 1.00% once Packs are MAXED!</span>) — [+\$25000/sec & +5000% Multiplier ea.]</div>
+        <div class="grid" id="Giant-grid" style="display: none;"></div>
         <div class="tier-title" style="color: #00b4d8;" class="album-header">  🔷 EPIC CARDS (<span id="epic-rate">1.00</span>% Chance) — [+\$25/sec & +50% Multiplier ea.]</div>
         <div class="grid" id="epic-grid"></div>
         <div class="tier-title" style="color: #8a2be2;" class="album-header">  🔮 MYTHIC CARDS (<span id="mythic-rate">0.50</span>% Chance) — [+\$500/sec & +200% Multiplier ea.]</div>
         <div class="grid" id="mythic-grid"></div>
-        <div class="tier-title" style="color: #e63946;" class="album-header">  👑 LEGENDARY CARDS (<span id="legendary-rate">0.10</span>% Chance) — [+\$5000/sec & +1000% Multiplier ea.]</div>
-        <div class="grid" id="legendary-grid"></div>
+        <div class="tier-title" style="color: #e63946;" class="album-header">  👑 godly CARDS (<span id="godly-rate">0.10</span>% Chance) — [+\$5000/sec & +1000% Multiplier ea.]</div>
+        <div class="grid" id="godly-grid"></div>
     </div>
 
 <script>
@@ -305,12 +305,12 @@ function update_achievement_ui() {
 }
 
 function build_rarity_album() {
-    // Deze functie zorgt ervoor dat je album-grids gevuld worden met je nieuwe Brokémon
+    // Deze functie zorgt ervoor dat je album-grids gevuld worden met je nieuwe Alpha-beast
     let pools = [
         { id: "epic-grid", pool: epic_pool, owned: owned_epics, color: "#00b4d8" },
         { id: "mythic-grid", pool: mythic_pool, owned: owned_mythics, color: "#8a2be2" },
-        { id: "legendary-grid", pool: legendary_pool, owned: owned_legendaries, color: "#e63946" },
-        { id: "mega-grid", pool: mega_pool, owned: owned_megas, color: "#d97706" }
+        { id: "godly-grid", pool: godly_pool, owned: owned_legendaries, color: "#e63946" },
+        { id: "Giant-grid", pool: Giant_pool, owned: owned_Giants, color: "#d97706" }
     ];
 
     pools.forEach(p => {
@@ -356,17 +356,17 @@ function saveGame() {
             current_pack_price: (typeof current_pack_price !== 'undefined') ? current_pack_price : 10,
             chance_epic: (typeof chance_epic !== 'undefined') ? chance_epic : 0.01,
             chance_mythic: (typeof chance_mythic !== 'undefined') ? chance_mythic : 0.005,
-            chance_legendary: (typeof chance_legendary !== 'undefined') ? chance_legendary : 0.001,
-            chance_mega: (typeof chance_mega !== 'undefined') ? chance_mega : 0.005,
+            chance_godly: (typeof chance_godly !== 'undefined') ? chance_godly : 0.001,
+            chance_Giant: (typeof chance_Giant !== 'undefined') ? chance_Giant : 0.005,
             total_clicks: (typeof total_clicks !== 'undefined') ? total_clicks : 0,
             total_packs_bought: (typeof total_packs_bought !== 'undefined') ? total_packs_bought : 0,
-            mega_legendary_unlocked: (typeof mega_legendary_unlocked !== 'undefined') ? mega_legendary_unlocked : false,
+            Giant_godly_unlocked: (typeof Giant_godly_unlocked !== 'undefined') ? Giant_godly_unlocked : false,
             bank_notif_triggered: (typeof bank_notif_triggered !== 'undefined') ? bank_notif_triggered : false,
             pokemon_notif_triggered: (typeof pokemon_notif_triggered !== 'undefined') ? pokemon_notif_triggered : false,
             has_cheated: has_cheated,
 
-            // Sla de Brokémon-albums op
-            owned_megas: (typeof owned_megas !== 'undefined') ? owned_megas : {},
+            // Sla de Alpha-beast-albums op
+            owned_Giants: (typeof owned_Giants !== 'undefined') ? owned_Giants : {},
             owned_epics: (typeof owned_epics !== 'undefined') ? owned_epics : {},
             owned_mythics: (typeof owned_mythics !== 'undefined') ? owned_mythics : {},
             owned_legendaries: (typeof owned_legendaries !== 'undefined') ? owned_legendaries : {}
@@ -403,17 +403,17 @@ function loadGame(slotId) {
         if (save.current_pack_price !== undefined) current_pack_price = save.current_pack_price;
         if (save.chance_epic !== undefined) chance_epic = save.chance_epic;
         if (save.chance_mythic !== undefined) chance_mythic = save.chance_mythic;
-        if (save.chance_legendary !== undefined) chance_legendary = save.chance_legendary;
-        if (save.chance_mega !== undefined) chance_mega = save.chance_mega;
+        if (save.chance_godly !== undefined) chance_godly = save.chance_godly;
+        if (save.chance_Giant !== undefined) chance_Giant = save.chance_Giant;
         if (save.total_clicks !== undefined) total_clicks = save.total_clicks;
         if (save.total_packs_bought !== undefined) total_packs_bought = save.total_packs_bought;
-        if (save.mega_legendary_unlocked !== undefined) mega_legendary_unlocked = save.mega_legendary_unlocked;
+        if (save.Giant_godly_unlocked !== undefined) Giant_godly_unlocked = save.Giant_godly_unlocked;
         if (save.bank_notif_triggered !== undefined) bank_notif_triggered = save.bank_notif_triggered;
         if (save.pokemon_notif_triggered !== undefined) pokemon_notif_triggered = save.pokemon_notif_triggered;
         if (save.has_cheated !== undefined) has_cheated = save.has_cheated;
 
-        // 2. Laad je Brokémon-album arrays in
-        if (save.owned_megas !== undefined) owned_megas = save.owned_megas;
+        // 2. Laad je Alpha-beast-album arrays in
+        if (save.owned_Giants !== undefined) owned_Giants = save.owned_Giants;
         if (save.owned_epics !== undefined) owned_epics = save.owned_epics;
         if (save.owned_mythics !== undefined) owned_mythics = save.owned_mythics;
         if (save.owned_legendaries !== undefined) owned_legendaries = save.owned_legendaries;
@@ -442,7 +442,7 @@ function loadGame(slotId) {
         
         if (btnShop) {
             btnShop.style.display = pokemon_notif_triggered ? "inline-block" : "none";
-            btnShop.innerText = `Buy Brokémon Cards ($${current_pack_price.toFixed(2)})`;
+            btnShop.innerText = `Buy Alpha-beast Cards ($${current_pack_price.toFixed(2)})`;
         }
         if (document.getElementById("album-container")) {
             document.getElementById("album-container").style.display = pokemon_notif_triggered ? "block" : "none";
@@ -458,9 +458,9 @@ function loadGame(slotId) {
             btnPackUpgrade.innerText = `Upgrade Packs ($${pack_upgrade_cost.toFixed(2)})`;
         }
 
-        if (mega_legendary_unlocked) {
-            if (document.getElementById("mega-header")) document.getElementById("mega-header").style.display = "block";
-            if (document.getElementById("mega-grid")) document.getElementById("mega-grid").style.display = "grid";
+        if (Giant_godly_unlocked) {
+            if (document.getElementById("Giant-header")) document.getElementById("Giant-header").style.display = "block";
+            if (document.getElementById("Giant-grid")) document.getElementById("Giant-grid").style.display = "grid";
         }
 
         // 5. Forceer de live-cijfers naar je interface
@@ -601,8 +601,8 @@ function selectSlotAndPlay(slotId) {
         if (typeof owned_epics !== 'undefined') {
             epic_pool.forEach(name => owned_epics[name] = 0);
             mythic_pool.forEach(name => owned_mythics[name] = 0);
-            legendary_pool.forEach(name => owned_legendaries[name] = 0);
-            mega_pool.forEach(name => owned_megas[name] = 0);
+            godly_pool.forEach(name => owned_legendaries[name] = 0);
+            Giant_pool.forEach(name => owned_Giants[name] = 0);
         }
         
         updateMoneyDisplay();
@@ -765,14 +765,14 @@ function executeCardSpawnCheat(cardName) {
 
     let actualName = checkAndUnlock(epic_pool, owned_epics, "Epic") ||
                      checkAndUnlock(mythic_pool, owned_mythics, "Mythic") ||
-                     checkAndUnlock(legendary_pool, owned_legendaries, "Legendary") ||
-                     checkAndUnlock(mega_pool, owned_megas, "Mega");
+                     checkAndUnlock(godly_pool, owned_legendaries, "godly") ||
+                     checkAndUnlock(Giant_pool, owned_Giants, "Giant");
 
     if (found && actualName) {
-        if (typeof countUniqueCards === "function" && countUniqueCards() === 100 && !mega_legendary_unlocked) {
-            mega_legendary_unlocked = true;
-            if(document.getElementById("mega-header")) document.getElementById("mega-header").style.display = "block";
-            if(document.getElementById("mega-grid")) document.getElementById("mega-grid").style.display = "grid";
+        if (typeof countUniqueCards === "function" && countUniqueCards() === 100 && !Giant_godly_unlocked) {
+            Giant_godly_unlocked = true;
+            if(document.getElementById("Giant-header")) document.getElementById("Giant-header").style.display = "block";
+            if(document.getElementById("Giant-grid")) document.getElementById("Giant-grid").style.display = "grid";
         }
 
         if (typeof build_rarity_album === "function") build_rarity_album();
@@ -808,7 +808,7 @@ function injectCardCheat() {
     let cardInput = document.getElementById("cheat-card-name");
     let cardName = cardInput.value;
     if (!cardName || cardName.trim() === "") {
-        alert("Enter the exact name of a Brokémon!");
+        alert("Enter the exact name of a Alpha-beast!");
         return;
     }
     let result = executeCardSpawnCheat(cardName);
@@ -886,15 +886,15 @@ function executeCardSpawnCheat(cardName) {
 
     let actualName = checkAndUnlock(epic_pool, owned_epics, "Epic") ||
                      checkAndUnlock(mythic_pool, owned_mythics, "Mythic") ||
-                     checkAndUnlock(legendary_pool, owned_legendaries, "Legendary") ||
-                     checkAndUnlock(mega_pool, owned_megas, "Mega");
+                     checkAndUnlock(godly_pool, owned_legendaries, "godly") ||
+                     checkAndUnlock(Giant_pool, owned_Giants, "Giant");
 
     if (found && actualName) {
         // Activeer endgame als dit de 100e kaart is
-        if (typeof countUniqueCards === "function" && countUniqueCards() === 100 && !mega_legendary_unlocked) {
-            mega_legendary_unlocked = true;
-            if(document.getElementById("mega-header")) document.getElementById("mega-header").style.display = "block";
-            if(document.getElementById("mega-grid")) document.getElementById("mega-grid").style.display = "grid";
+        if (typeof countUniqueCards === "function" && countUniqueCards() === 100 && !Giant_godly_unlocked) {
+            Giant_godly_unlocked = true;
+            if(document.getElementById("Giant-header")) document.getElementById("Giant-header").style.display = "block";
+            if(document.getElementById("Giant-grid")) document.getElementById("Giant-grid").style.display = "grid";
         }
 
         // Vernieuw album en achievements
@@ -932,7 +932,7 @@ function injectCardCheat() {
     let cardInput = document.getElementById("cheat-card-name");
     let cardName = cardInput.value;
     if (!cardName || cardName.trim() === "") {
-        alert("Enter the exact name of a Brokémon!");
+        alert("Enter the exact name of a Alpha-beast!");
         return;
     }
     let result = executeCardSpawnCheat(cardName);
@@ -1037,16 +1037,16 @@ let current_pack_price = 10.0;
 
 let chance_epic = 0.01;
 let chance_mythic = 0.005;
-let chance_legendary = 0.001;
-let chance_mega = 0.005; 
+let chance_godly = 0.001;
+let chance_Giant = 0.005; 
 
 let shop_epic_booster = 1;
 let shop_mythic_booster = 1;
-let shop_legendary_booster = 1;
+let shop_godly_booster = 1;
 
 let bank_notif_triggered = false;
 let brokemon_notif_triggered = false;
-let mega_legendary_unlocked = false; 
+let Giant_godly_unlocked = false; 
 let total_clicks = 0; 
 let total_packs_bought = 0; 
 
@@ -1074,15 +1074,15 @@ let achievements = {
     cash_7: { name: "💰 Billionaire Club", desc: "Reach $100,000,000 cash.", unlocked: false, type: "cash", req: 100000000, bonus: 15000000 },
     cash_8: { name: "💰 Money Ocean", desc: "Reach $1,000,000,000 cash.", unlocked: false, type: "cash", req: 1000000000, bonus: 100000000 },
     cash_9: { name: "💰 Infinite Wealth", desc: "Reach $10,000,000,000 cash.", unlocked: false, type: "cash", req: 10000000000, bonus: 999999999 },
-    pack_1: { name: "📦 Card Hobbyist", desc: "Open 5 Brokémon packs.", unlocked: false, type: "packs", req: 5, bonus: 100 },
-    pack_2: { name: "📦 Pack Addict", desc: "Open 20 Brokémon packs.", unlocked: false, type: "packs", req: 20, bonus: 500 },
-    pack_3: { name: "📦 Box Breaker", desc: "Open 50 Brokémon packs.", unlocked: false, type: "packs", req: 50, bonus: 2000 },
-    pack_4: { name: "📦 Card Shark", desc: "Open 100 Brokémon packs.", unlocked: false, type: "packs", req: 100, bonus: 10000 },
-    pack_5: { name: "📦 Scalper Menace", desc: "Open 250 Brokémon packs.", unlocked: false, type: "packs", req: 250, bonus: 50000 },
-    pack_6: { name: "📦 Local Shop Owner", desc: "Open 500 Brokémon packs.", unlocked: false, type: "packs", req: 500, bonus: 250000 },
-    pack_7: { name: "📦 Warehouse Raider", desc: "Open 1,000 Brokémon packs.", unlocked: false, type: "packs", req: 1000, bonus: 1500000 },
-    pack_8: { name: "📦 Factory Monopoly", desc: "Open 2,500 Brokémon packs.", unlocked: false, type: "packs", req: 2500, bonus: 10000000 },
-    pack_9: { name: "📦 Pack Overlord", desc: "Open 5,000 Brokémon packs.", unlocked: false, type: "packs", req: 5000, bonus: 100000000 },
+    pack_1: { name: "📦 Card Hobbyist", desc: "Open 5 Alpha-beast packs.", unlocked: false, type: "packs", req: 5, bonus: 100 },
+    pack_2: { name: "📦 Pack Addict", desc: "Open 20 Alpha-beast packs.", unlocked: false, type: "packs", req: 20, bonus: 500 },
+    pack_3: { name: "📦 Box Breaker", desc: "Open 50 Alpha-beast packs.", unlocked: false, type: "packs", req: 50, bonus: 2000 },
+    pack_4: { name: "📦 Card Shark", desc: "Open 100 Alpha-beast packs.", unlocked: false, type: "packs", req: 100, bonus: 10000 },
+    pack_5: { name: "📦 Scalper Menace", desc: "Open 250 Alpha-beast packs.", unlocked: false, type: "packs", req: 250, bonus: 50000 },
+    pack_6: { name: "📦 Local Shop Owner", desc: "Open 500 Alpha-beast packs.", unlocked: false, type: "packs", req: 500, bonus: 250000 },
+    pack_7: { name: "📦 Warehouse Raider", desc: "Open 1,000 Alpha-beast packs.", unlocked: false, type: "packs", req: 1000, bonus: 1500000 },
+    pack_8: { name: "📦 Factory Monopoly", desc: "Open 2,500 Alpha-beast packs.", unlocked: false, type: "packs", req: 2500, bonus: 10000000 },
+    pack_9: { name: "📦 Pack Overlord", desc: "Open 5,000 Alpha-beast packs.", unlocked: false, type: "packs", req: 5000, bonus: 100000000 },
     passive_1: { name: "⚡ Pocket Change", desc: "Reach $100/sec passive income.", unlocked: false, type: "passive", req: 100, bonus: 500 },
     passive_2: { name: "⚡ Stream of Cash", desc: "Reach $500/sec passive income.", unlocked: false, type: "passive", req: 500, bonus: 2500 },
     passive_3: { name: "⚡ River of Gold", desc: "Reach $2,500/sec passive income.", unlocked: false, type: "passive", req: 2500, bonus: 15000 },
@@ -1093,7 +1093,7 @@ let achievements = {
     passive_8: { name: "⚡ System Breaker", desc: "Reach $5,000,000/sec passive income.", unlocked: false, type: "passive", req: 5000000, bonus: 150000000 },
     passive_9: { name: "⚡ God of Passive", desc: "Reach $10,000,000/sec passive income.", unlocked: false, type: "passive", req: 10000000, bonus: 1000000000 },
     collector_start: { name: "🔷 Collector Starter", desc: "Pull your 1st Epic card.", unlocked: false, type: "cards", req: 1, bonus: 100 },
-    godly_pull:      { name: "👑 Godly Pull", desc: "Pull a Legendary card.", unlocked: false, type: "cards", req: 1, bonus: 25000 },
+    godly_pull:      { name: "👑 Godly Pull", desc: "Pull a godly card.", unlocked: false, type: "cards", req: 1, bonus: 25000 },
     album_2: { name: "🏆 Binder Filling", desc: "Collect 5 unique cards.", unlocked: false, type: "album", req: 5, bonus: 500 },
     album_3: { name: "🏆 Card Fanatic", desc: "Collect 15 unique cards.", unlocked: false, type: "album", req: 15, bonus: 5000 },
     album_4: { name: "🏆 Halfway Checklist", desc: "Collect 30 unique cards.", unlocked: false, type: "album", req: 30, bonus: 25000 },
@@ -1102,45 +1102,74 @@ let achievements = {
     album_7: { name: "🏆 Museum Curator", desc: "Collect 75 unique cards.", unlocked: false, type: "album", req: 75, bonus: 10000000 },
     album_8: { name: "🏆 Almost Perfect", desc: "Collect 90 unique cards.", unlocked: false, type: "album", req: 90, bonus: 100000000 },
     album_9: { name: "🏆 Ultimate Master", desc: "Collect 99 unique cards.", unlocked: false, type: "album", req: 99, bonus: 500000000 },
-    album_10: { name: "👑 TRUE POKÉMON MASTER", desc: "Collect ALL 100 UNIQUE CARDS!", unlocked: false, type: "album", req: 100, bonus: 9999999999 }
+    album_10: { name: "👑 TRUE ALPHA-BEAST MASTER", desc: "Collect ALL 100 UNIQUE CARDS!", unlocked: false, type: "album", req: 100, bonus: 9999999999 }
 };
 
 const epic_pool = [
-    "Brogonite", "Tybronitar", "Brolamence", "Metabross", "Garbromp", "Hydreibron", "Brodra", "Kommo-bro", "Dragabrult", 
-    "Broxcalibur", "Gyarabros", "Labros", "Snorbrox", "Arcabrone", "Genbro", "Macbroamp", "Alakabro", "Scibro", 
-    "Herabross", "Lubrorio", "Zorbroark", "Volcabrona", "Greninbro", "Talonbrome", "Noibron", "Decidubro", "Incinebroar", 
-    "Lycanbroc", "Corvibro", "Toxbrocity", "Grimmbrol", "Dragalbro", "Haxbrorus", "Broziken", "Sceptbro", "Swambrot", 
-    "Charibrord", "Blasbroise", "Venubroaur", "Brovee", "Flybron", "Aggbron", "Gardebroir", "Pickachoo", "Chandebrore"
+    "Carboror, the coal Alpha-beast", "Flumeras, the river Alpha-beast", "Filixan, the fern Alpha-beast",
+    "Spiridor, the soul Alpha-beast", "Scintiltror, the spark Alpha-beast", "Pelagona, the sea Alpha-beast",
+    "Ramurus, the branch Alpha-beast", "Mortios, the death Alpha-beast", "Flammariast, the blaze Alpha-beast", 
+    "Pluvior, the rain Alpha-beast", "Arboriusto, the tree Alpha-beast", "Idolup, the phantom Alpha-beast",
+    "Focurio, the fireplace Alpha-beast", "Fonser, the fountain Alpha-Beast", "Radixus, the root Alpha-beast",
+    "Nexor, the slaughterer Alpha-beast", "Camino, the forge Alpha-beast", "Gurgro, the whirlpool Alpha-beast", 
+    "Flosura, the flower Alpha-beast", "Leturoar, the ruin Alpha-beast", "Vavillain, the ash Alpha-beast",
+    "Paliant, the swamp Alpha-beast", "Sementrias, the seed Alpha-Beast", "Larvatum, the skeleton Alpha-beast",
+    "Incendior, the wildfire Alpha-beast", "Cataractor, the waterfall Alpha-beast", "Foenuros, the hay Alpha-beast", 
+    "Fatumtro, the doom Alpha-beast", "Igneurto, the burning Alpha-beast", "Aductro, the aqueduct Alpha-beast",
+    "Sepulcrumtro, the grave Alpha-beast", "Aestromin, the glowing Alpha-beast", "Neblurant, the fog Alpha-beast",
+    "Dumetros, the thorn Alpha-beast", "Teneboar, the darkness Alpha-beast", "Fornant, the furnace Alpha-beast", 
+    "Guttros, the waterdrop Alpha-beast", "Pratoror, the grassland Alpha-beast", "Silentrite, the silence Alpha-beast",
+    "Lignirior, the firewood Alpha-beast", "Fluctrimass, the wave Alpha-beast", "Horturur, the garden Alpha-beast",
+    "Imagios, the echo Alpha-beast", "Ciniratra, the ember Alpha-beast", "Diluviostros, the flood Alpha-beast"
 ];
 const mythic_pool = [
-    "Brow", "Celebro", "Jirabro", "Deoxbro", "Manabro", "Darkbroi", "Shaybro", "Vicbroni", "Kelbreo", "Meloebrotta", 
-    "Genebroct", "Dianbro", "Hoopbro", "Volbronion", "Mabrona", "Marbrodow", "Zerabrora", "Melbron", "Melmebro", "Zarbro", 
-    "Artibrono", "Zapbros", "Moltres", "Raibrou", "Enbro", "Suibrone", "Regibrock", "Regibroce", "Regibrol", "Latibras", 
-    "Latbros", "Uxbro", "Mesbro", "Abrof", "Crebrolia"
+    "Fulguria, the lightning Alpha-beast", "Fulmurio, the thunderbeam Alpha-beast", "Caelusmo, the sky Alpha-beast",
+    "Galus, the breeze Alpha-beast", "Pugiros, the dagger Alpha-beast", "Sercurion, the axe Alpha-beast", 
+    "Nervorian, the muscle Alpha-beast", "Luntros, the moon Alpha-beast", "Solstrant, the sun Alpha-beast",
+    "Volorias, the flying Alpha-beast", "Halimaxus, the breath Alpha-beast", "Hastarto, the spear Alpha-beast",
+    "Arcrostio, the bow Alpha-beast", "Bellatrampos, the fighter Alpha-beast", "Milinios, the soldier Alpha-beast",
+    "Stellostra, the star Alpha-beast", "Crepuscrostio, the twilight Alpha-beast", "Nubortro, the cloud Alpha-beast",
+    "Nibustior, the rainstorm Alpha-beast", "Claverer, the cudgel Alpha-beast", "Tridensos, the trident Alpha-beast", 
+    "Duxeosos, the general Alpha-beast", "Gladiatroster, the swordsman Alpha-beast", "Nitorostro, the brightness Alpha-beast", 
+    "Fugorstro, the flash Alpha-beast", "Flabberior, the fan Alpha-beast", "Flabrost, the windburst Alpha-beast", 
+    "Sagitrast, the arrow Alpha-beast", "Fundias, the slingshot Alpha-beast", "Bellustrom, the war Alpha-beast", 
+    "Pugnustrio, the triple fist Alpha-beast", "Lucidros, the shining Alpha-beast", "Rutilior, the golden Alpha-beast", 
+    "Galeast, the helmet Alpha-beast", "Legiostran, the legion Alpha-beast"
 ];
 
-const legendary_pool = [
-    "Mewbro", "Lugibro", "Ho-Bro", "Kyobro", "Groubron", "Raybrouaza", "Dibroga", "Palbroia", "Giratibro", "Arcebro", 
-    "Reshibrom", "Zekbrom", "Kyurbrom", "Xernebro", "Yvelbro", "Zybrode", "Solgabroö", "Lunabro", "Necrozbro", "Eternabro"
+const godly_pool = [
+    "Jupiterior, the thunder god Alpha-god", "Neptunio, the sea Alpha-god", "Minervantis, the wisdom and war Alpha-god",
+    "Marstodion, the war Alpha-god", "Venuasto, the love Alpha-god", "Apollonix, the sun and music Alpha-god",
+    "Dianatherium, the hunt Alpha-god", "Mercuraptor, the messenger and speed Alpha-god", "Ceresarost, the harvest and Alpha-god",
+    "Bacchusion, the wine Alpha-god", "Plutonix, the underworld Alpha-god", "Vestalith, the hearth and home Alpha-god", 
+    "Junorion, the marriage Alpha-god", "Saturnio, the time and generation Alpha-god", "Janusantro, the gates and beginnings Alpha-beast", 
+    "Fortunrio, the luck and fortune Alpha-god", "Proserpinart, the spring and rebirth Alpha-god", "Somniotro, the sleep and dreams Alpha-god",
+    "Arcusaner, the rainbow and messenger Alpha-beast", "• Terminutro, the boundaries and borders Alpha-god"
 ];
 
-const mega_pool = [
-    "Mega Charibrord A", "Mega Charibrord B", "Mega Blasbroise", "Mega Venubroaur", "Mega Mewbro A", "Mega Mewbro B",
-    "Mega Lubrorio", "Mega Genbro", "Mega Kangasbro", "Mega Raybrouaza", "Mega Alakabro", "Mega Gyarabros",
-    "Mega Garbromp", "Mega Brolamence", "Mega Metabross", "Mega Tybronitar", "Mega Gardebroir", "Mega Raibro A",
-    "Mega Scibro", "Mega Aerobroctyl", "Mega Pidgebrot", "Mega Brodrill", "Mega Abrol", "Mega Mabrole",
-    "Mega Amphabros", "Mega Aggbron", "Mega Houndbroom", "Mega Manecbroic", "Mega Pinbro", "Mega Heracbross",
-    "Mega Bronette", "Mega Sabroeye", "Mega Sharpebro", "Mega Camebropt", "Mega Glabro", "Mega Steelbro",
-    "Mega Altaribro", "Mega Latibras", "Mega Latibros", "Mega Dianbro"
+const Giant_pool = [
+
+[
+    "Giant Fulguria A","Giant Fulguria B","Giant Fulmurio A","Giant Fulmurio B",
+    "Giant Caelusmo A","Giant Caelusmo B","Giant Galus A","Giant Galus B",
+    "Giant Pugiros","Giant Sercurion",
+    "Giant Nervorian","Giant Luntros","Giant Solstrant",
+    "Giant Volorias","Giant Halimaxus","Giant Hastarto",
+    "Giant Arcrostio","Giant Bellatrampos","Giant Milinios",
+    "Giant Stellostra","Giant Crepuscrostio","Giant Nubortro",
+    "Giant Nibustior","Giant Claverer","Giant Tridensos",
+    "Giant Duxeosos","Giant Gladiatroster","Giant Nitorostro",
+    "Giant Fugorstro","Giant Flabberior"
+]
 ];
 
-let owned_megas = {}; mega_pool.forEach(name => owned_megas[name] = 0);
+let owned_Giants = {}; Giant_pool.forEach(name => owned_Giants[name] = 0);
 let owned_epics = {}; epic_pool.forEach(name => owned_epics[name] = 0);
 let owned_mythics = {}; mythic_pool.forEach(name => owned_mythics[name] = 0);
-let owned_legendaries = {}; legendary_pool.forEach(name => owned_legendaries[name] = 0);
+let owned_legendaries = {}; godly_pool.forEach(name => owned_legendaries[name] = 0);
 
 const introLines = [
-    "<span style='color: #00bcd4; font-weight: bold;'>[SYSTEM] Hidden features detected... Keep hitting Joe to unlock the Bank, Brokémon Shop, and Endless Multipliers!</span>\n\n",
+    "<span style='color: #00bcd4; font-weight: bold;'>[SYSTEM] Hidden features detected... Keep hitting Joe to unlock the Bank, Alpha-beast Shop, and Endless Multipliers!</span>\n\n",
     "Welcome\n",
     "I am Joe\n",
     "I am not just anyone...\n",
@@ -1214,8 +1243,8 @@ function get_album_multiplier() {
     // De || 0 zorgt ervoor dat als je 0 kaarten hebt, er met 0 wordt gerekend in plaats van undefined!
     epic_pool.forEach(name => total_bonus += (owned_epics[name] || 0) * 0.50);
     mythic_pool.forEach(name => total_bonus += (owned_mythics[name] || 0) * 2.00);
-    legendary_pool.forEach(name => total_bonus += (owned_legendaries[name] || 0) * 10.00);
-    mega_pool.forEach(name => total_bonus += (owned_megas[name] || 0) * 50.00); 
+    godly_pool.forEach(name => total_bonus += (owned_legendaries[name] || 0) * 10.00);
+    Giant_pool.forEach(name => total_bonus += (owned_Giants[name] || 0) * 50.00); 
     
     return total_bonus;
 }
@@ -1292,10 +1321,10 @@ function startGlobalCountdown() {
 setInterval(() => {
     let epic_income = 0; epic_pool.forEach(name => epic_income += owned_epics[name] * 25.0);
     let mythic_income = 0; mythic_pool.forEach(name => mythic_income += owned_mythics[name] * 500.0);
-    let legendary_income = 0; legendary_pool.forEach(name => legendary_income += owned_legendaries[name] * 5000.0);
-    let mega_income = 0; mega_pool.forEach(name => mega_income += owned_megas[name] * 25000.0);
+    let godly_income = 0; godly_pool.forEach(name => godly_income += owned_legendaries[name] * 5000.0);
+    let Giant_income = 0; Giant_pool.forEach(name => Giant_income += owned_Giants[name] * 25000.0);
     
-    let total_passive = epic_income + mythic_income + legendary_income + mega_income;
+    let total_passive = epic_income + mythic_income + godly_income + Giant_income;
     if (total_passive > 0 && document.getElementById("hit-btn").style.display !== "none") {
         number += total_passive;
         recent_passive_this_cycle += total_passive;
@@ -1362,11 +1391,11 @@ function clickJoe() {
         bank_notif_triggered = true;
     }
     if (number >= 10.0 && !brokemon_notif_triggered) {
-        terminal.innerHTML += `OW! Come on... you already have enough money now... go buy Brokémon cards or something...\n`;
+        terminal.innerHTML += `OW! Come on... you already have enough money now... go buy Alpha-beast cards or something...\n`;
         let sb = document.getElementById("shop-btn");
         let ac = document.getElementById("album-container");
         if(sb) {
-            sb.innerText = `Buy Brokémon Cards ($${current_pack_price.toFixed(2)})`;
+            sb.innerText = `Buy Alpha-beast Cards ($${current_pack_price.toFixed(2)})`;
             sb.style.display = "inline-block";
         }
         if(ac) ac.style.display = "block";
@@ -1394,11 +1423,11 @@ function generateNewQuests() {
         { type: "click_joe", target: Math.floor(Math.random() * 60 + 40), text: "Punch Joe X times this cycle", reward: 2 },
         { type: "passive_gain", target: Math.floor(Math.random() * 4000 + 1000), text: "Accumulate \$X through passive album tier", reward: 3 },
         { type: "pull_card", rarity: "epic", text: "Pull any brand new Epic card from a pack", reward: 2 },
-        { type: "pull_card", rarity: "mythic", text: "Successfully summon any Mythic tier Brokémon", reward: 4 },
+        { type: "pull_card", rarity: "mythic", text: "Successfully summon any Mythic tier Alpha-beast", reward: 4 },
         { type: "buy_upgrade", text: "Purchase any endless hit multiplier or pack upgrade", reward: 3 },
         { type: "click_joe", target: 50, text: "Smasher's Delight: Click Joe 50 times without getting hit back", reward: 3 },
         { type: "click_joe", target: 15, text: "The Guardian: Avoid getting struck by Joe for your next 15 hits", reward: 2 },
-        { type: "pull_card", rarity: "legendary", text: "Against All Odds: Snag any raw Legendary pull from a standard pack", reward: 5 },
+        { type: "pull_card", rarity: "godly", text: "Against All Odds: Snag any raw godly pull from a standard pack", reward: 5 },
         { type: "buy_upgrade", text: "Premium Choice: Perform a high-tier multiplier upgrade", reward: 3 }
     ];
 
@@ -1451,7 +1480,7 @@ function generateQuestShop() {
     shop_inventory = [
         { id: 0, name: "Epic Booster Pack", desc: "5x higher Epic rates next pull", cost: 3, type: "booster", target: "epic" },
         { id: 1, name: "Mythic Booster Pack", desc: "5x higher Mythic rates next pull", cost: 5, type: "booster", target: "mythic" },
-        { id: 2, name: "Legendary Booster Pack", desc: "5x higher Legendary rates next pull", cost: 8, type: "booster", target: "legendary" }
+        { id: 2, name: "godly Booster Pack", desc: "5x higher godly rates next pull", cost: 8, type: "booster", target: "godly" }
     ];
 
     // 2. Kies NU pas de willekeurige kaarten, zodat ze ook echt in de winkel blijven
@@ -1500,29 +1529,29 @@ function new_button_click() {
         
         terminal.innerHTML += `Your cards cash value was worth: $${card_value.toFixed(2)}\n`;
 
-        let current_chance_legendary = chance_legendary * shop_legendary_booster;
+        let current_chance_godly = chance_godly * shop_godly_booster;
         let current_chance_mythic = chance_mythic * shop_mythic_booster;
         let current_chance_epic = chance_epic * shop_epic_booster;
 
         let roll = Math.random();
         
-        if (mega_legendary_unlocked && roll < chance_mega) {
-            let unowned = mega_pool.filter(name => owned_megas[name] === 0);
+        if (Giant_godly_unlocked && roll < chance_Giant) {
+            let unowned = Giant_pool.filter(name => owned_Giants[name] === 0);
             if (unowned.length > 0) {
                 let card = unowned[Math.floor(Math.random() * unowned.length)];
-                owned_megas[card] = 1;
-                terminal.innerHTML += `\n<span style="color: #d97706; font-weight: bold;">🔥💥 MEGA EVOLUTION PULL: ${card}!</span>\n\n`;
+                owned_Giants[card] = 1;
+                terminal.innerHTML += `\n<span style="color: #d97706; font-weight: bold;">🔥💥 Giant EVOLUTION PULL: ${card}!</span>\n\n`;
             }
-        } else if (roll < current_chance_legendary) {
-            let unowned = legendary_pool.filter(name => owned_legendaries[name] === 0);
+        } else if (roll < current_chance_godly) {
+            let unowned = godly_pool.filter(name => owned_legendaries[name] === 0);
             if (unowned.length > 0) {
                 let card = unowned[Math.floor(Math.random() * unowned.length)];
                 owned_legendaries[card] = 1;
-                terminal.innerHTML += `<span style="color: #e63946; font-weight: bold;">👑 NEW LEGENDARY PULL: ${card}!</span>\n`;
+                terminal.innerHTML += `<span style="color: #e63946; font-weight: bold;">👑 NEW godly PULL: ${card}!</span>\n`;
                 checkAchievements('cards', 1); 
-                checkQuestProgression('pull_card', 1, 'legendary');
+                checkQuestProgression('pull_card', 1, 'godly');
             }
-        } else if (roll < current_chance_legendary + current_chance_mythic) {
+        } else if (roll < current_chance_godly + current_chance_mythic) {
             let unowned = mythic_pool.filter(name => owned_mythics[name] === 0);
             if (unowned.length > 0) {
                 let card = unowned[Math.floor(Math.random() * unowned.length)];
@@ -1530,7 +1559,7 @@ function new_button_click() {
                 terminal.innerHTML += `<span style="color: #8a2be2; font-weight: bold;">🔮 NEW MYTHIC PULL: ${card}!</span>\n`;
                 checkQuestProgression('pull_card', 1, 'mythic');
             }
-        } else if (roll < current_chance_legendary + current_chance_mythic + current_chance_epic) {
+        } else if (roll < current_chance_godly + current_chance_mythic + current_chance_epic) {
             let unowned = epic_pool.filter(name => owned_epics[name] === 0);
             if (unowned.length > 0) {
                 let card = unowned[Math.floor(Math.random() * unowned.length)];
@@ -1541,13 +1570,13 @@ function new_button_click() {
             }
         }
         
-        shop_epic_booster = 1; shop_mythic_booster = 1; shop_legendary_booster = 1;
+        shop_epic_booster = 1; shop_mythic_booster = 1; shop_godly_booster = 1;
 
-        if (countUniqueCards() === 100 && !mega_legendary_unlocked) {
-            mega_legendary_unlocked = true;
-            terminal.innerHTML += `\n<span style="color: #d97706; font-weight: bold; font-size: 16px;">🚨🚨 [ENDGAME UNLOCKED] 🚨🚨\nMEGA EVOLVED CARDS HAVE BEEN UNLOCKED!</span>\n\n`;
-            let mh = document.getElementById("mega-header");
-            let mg = document.getElementById("mega-grid");
+        if (countUniqueCards() === 100 && !Giant_godly_unlocked) {
+            Giant_godly_unlocked = true;
+            terminal.innerHTML += `\n<span style="color: #d97706; font-weight: bold; font-size: 16px;">🚨🚨 [ENDGAME UNLOCKED] 🚨🚨\nGiant EVOLVED CARDS HAVE BEEN UNLOCKED!</span>\n\n`;
+            let mh = document.getElementById("Giant-header");
+            let mg = document.getElementById("Giant-grid");
             if(mh) mh.style.display = "block";
             if(mg) mg.style.display = "grid";
         }
@@ -1601,18 +1630,18 @@ function upgrade_packs_click() {
         current_pack_price *= 2; 
         pack_upgrade_cost *= 2.5;
         chance_mythic += 0.003; 
-        chance_legendary += 0.0015;
+        chance_godly += 0.0015;
         
         // Verhoog de epic kans, maar zet een harde stop op 50%
         chance_epic += 0.005; 
-        chance_mega = 0.005; // Dit blijft achter de schermen draaien zonder het te noemen
+        chance_Giant = 0.005; // Dit blijft achter de schermen draaien zonder het te noemen
 
         let pub = document.getElementById("pack-upgrade-btn");
         let sb = document.getElementById("shop-btn");
 
         if (chance_epic >= 0.50) {
             chance_epic = 0.50; 
-            chance_mega = 0.01;
+            chance_Giant = 0.01;
             // Gecorrigeerde melding: Geen spoilers over de geheime kaarten!
             terminal.innerHTML += `<span style="color: #00bcd4; font-weight: bold;">Packs upgraded! MAX LEVEL REACHED! The chance on rare cards in now optimalized!</span>\n\n`;
             if(pub) pub.innerText = "Packs Upgraded! (MAX LEVEL)";
@@ -1621,7 +1650,7 @@ function upgrade_packs_click() {
             if(pub) pub.innerText = `Upgrade Packs ($${pack_upgrade_cost.toFixed(2)})`;
         }
         
-        if(sb) sb.innerText = `Buy Brokémon Cards ($${current_pack_price.toFixed(2)})`;
+        if(sb) sb.innerText = `Buy Alpha-beast Cards ($${current_pack_price.toFixed(2)})`;
         
         // Sla direct de voortgang op (als je het opslegsysteem gebruikt)
         if (typeof saveGame === "function") saveGame();
@@ -1651,7 +1680,7 @@ function buyShopItem(productName) {
         if (itemType === "booster") {
             if (item.target === "epic") shop_epic_booster = 5;
             if (item.target === "mythic") shop_mythic_booster = 5;
-            if (item.target === "legendary") shop_legendary_booster = 5;
+            if (item.target === "godly") shop_godly_booster = 5;
             terminal.innerHTML += `\n<span style="color: #ffb703;">🛍️ Bought ${item.name}! Rates inside your cash shop are now heavily boosted for your next pull!</span>\n`;
         } else if (itemType === "direct_card") {
             let formattedName = item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase();
@@ -1659,7 +1688,7 @@ function buyShopItem(productName) {
 
             if (pool === "epic" && typeof owned_epics !== 'undefined') owned_epics[formattedName] = 1;
             if (pool === "mythic" && typeof owned_mythics !== 'undefined') owned_mythics[formattedName] = 1;
-            if (pool === "legendary" && typeof owned_legendaries !== 'undefined') owned_legendaries[formattedName] = 1;
+            if (pool === "godly" && typeof owned_legendaries !== 'undefined') owned_legendaries[formattedName] = 1;
 
             let incomeBoost = item.income || (pool === "epic" ? 25 : pool === "mythic" ? 500 : 5000);
             if (typeof passive_income !== 'undefined') passive_income += incomeBoost;
@@ -1682,7 +1711,7 @@ function countUniqueCards() {
     let count = 0;
     epic_pool.forEach(name => { if ((owned_epics[name] || 0) > 0) count++; });
     mythic_pool.forEach(name => { if ((owned_mythics[name] || 0) > 0) count++; });
-    legendary_pool.forEach(name => { if ((owned_legendaries[name] || 0) > 0) count++; });
+    godly_pool.forEach(name => { if ((owned_legendaries[name] || 0) > 0) count++; });
     return count;
 }
 
@@ -1690,8 +1719,8 @@ function build_rarity_album() {
     // Update de kansberekening-percentages in de UI-headers
     if(document.getElementById("epic-rate")) document.getElementById("epic-rate").innerText = (chance_epic * 100).toFixed(2);
     if(document.getElementById("mythic-rate")) document.getElementById("mythic-rate").innerText = (chance_mythic * 100).toFixed(2);
-    if(document.getElementById("legendary-rate")) document.getElementById("legendary-rate").innerText = (chance_legendary * 100).toFixed(2);
-    if(document.getElementById("mega-rate")) document.getElementById("mega-rate").innerText = (chance_mega * 100).toFixed(2);
+    if(document.getElementById("godly-rate")) document.getElementById("godly-rate").innerText = (chance_godly * 100).toFixed(2);
+    if(document.getElementById("Giant-rate")) document.getElementById("Giant-rate").innerText = (chance_Giant * 100).toFixed(2);
 
     // Functie om een grid te vullen met kaarten
     let fillGrid = (gridId, pool, ownedObject) => {
@@ -1710,8 +1739,8 @@ function build_rarity_album() {
     // Bouw de 4 grids op
     fillGrid("epic-grid", epic_pool, owned_epics);
     fillGrid("mythic-grid", mythic_pool, owned_mythics);
-    fillGrid("legendary-grid", legendary_pool, owned_legendaries);
-    fillGrid("mega-grid", mega_pool, owned_megas);
+    fillGrid("godly-grid", godly_pool, owned_legendaries);
+    fillGrid("Giant-grid", Giant_pool, owned_Giants);
 }
 // ==========================================================
 // 🚨 THE DEVELOPER MATRIX INTERFACE (FULLY ENGLISH RELEASE) 🚨
@@ -1841,15 +1870,21 @@ function matrixClickPacks() {
         }
     }
 }
-
+    
+document.getElementById("cheat-card-name").addEventListener("keydown", e => {
+    if (e.key == "Enter") {
+        matrixClickCard()
+    }
+})
+                                                            
 function matrixClickCard() {
     has_cheated = true; // Markeer dit slot direct als cheat-file
     saveGame(); // Forceer een directe save zodat het menu direct up-to-date is
     let cardName = document.getElementById("cheat-card-name").value;
-    if (!cardName || cardName.trim() === "") return alert("Please enter a Brokémon name!");
+    if (!cardName || cardName.trim() === "") return alert("Please enter a Alpha-beast name!");
     if (typeof executeCardSpawnCheat === "function") {
         let result = executeCardSpawnCheat(cardName);
-        if (result.startsWith("Kaart") || result.startsWith("Kaart")) alert("Brokémon not found. Check spelling!");
+        if (result.startsWith("Kaart") || result.startsWith("Kaart")) alert("Alpha-beast not found. Check spelling!");
         else document.getElementById("cheat-card-name").value = "";
     }
 }
