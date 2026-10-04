@@ -309,7 +309,7 @@ function build_rarity_album() {
     let pools = [
         { id: "epic-grid", pool: epic_pool, owned: owned_epics, color: "#00b4d8" },
         { id: "mythic-grid", pool: mythic_pool, owned: owned_mythics, color: "#8a2be2" },
-        { id: "godly-grid", pool: godly_pool, owned: owned_legendaries, color: "#e63946" },
+        { id: "godly-grid", pool: godly_pool, owned: owned_godlies, color: "#e63946" },
         { id: "Giant-grid", pool: Giant_pool, owned: owned_Giants, color: "#d97706" }
     ];
 
@@ -369,7 +369,7 @@ function saveGame() {
             owned_Giants: (typeof owned_Giants !== 'undefined') ? owned_Giants : {},
             owned_epics: (typeof owned_epics !== 'undefined') ? owned_epics : {},
             owned_mythics: (typeof owned_mythics !== 'undefined') ? owned_mythics : {},
-            owned_legendaries: (typeof owned_legendaries !== 'undefined') ? owned_legendaries : {}
+            owned_godlies: (typeof owned_godlies !== 'undefined') ? owned_godlies : {}
         };
         
         // Schrijf het direct hard weg naar het geselecteerde slot
@@ -416,7 +416,7 @@ function loadGame(slotId) {
         if (save.owned_Giants !== undefined) owned_Giants = save.owned_Giants;
         if (save.owned_epics !== undefined) owned_epics = save.owned_epics;
         if (save.owned_mythics !== undefined) owned_mythics = save.owned_mythics;
-        if (save.owned_legendaries !== undefined) owned_legendaries = save.owned_legendaries;
+        if (save.owned_godlies !== undefined) owned_godlies = save.owned_godlies;
         
         // 3. Herstel je Achievements veilig
         if (typeof achievements !== 'undefined' && achievements) {
@@ -601,7 +601,7 @@ function selectSlotAndPlay(slotId) {
         if (typeof owned_epics !== 'undefined') {
             epic_pool.forEach(name => owned_epics[name] = 0);
             mythic_pool.forEach(name => owned_mythics[name] = 0);
-            godly_pool.forEach(name => owned_legendaries[name] = 0);
+            godly_pool.forEach(name => owned_godlies[name] = 0);
             Giant_pool.forEach(name => owned_Giants[name] = 0);
         }
         
@@ -765,7 +765,7 @@ function executeEggspawnCheat(EggName) {
 
     let actualName = checkAndUnlock(epic_pool, owned_epics, "Epic") ||
                      checkAndUnlock(mythic_pool, owned_mythics, "Mythic") ||
-                     checkAndUnlock(godly_pool, owned_legendaries, "godly") ||
+                     checkAndUnlock(godly_pool, owned_godlies, "godly") ||
                      checkAndUnlock(Giant_pool, owned_Giants, "Giant");
 
     if (found && actualName) {
@@ -886,7 +886,7 @@ function executeEggspawnCheat(EggName) {
 
     let actualName = checkAndUnlock(epic_pool, owned_epics, "Epic") ||
                      checkAndUnlock(mythic_pool, owned_mythics, "Mythic") ||
-                     checkAndUnlock(godly_pool, owned_legendaries, "godly") ||
+                     checkAndUnlock(godly_pool, owned_godlies, "godly") ||
                      checkAndUnlock(Giant_pool, owned_Giants, "Giant");
 
     if (found && actualName) {
@@ -911,7 +911,7 @@ function executeEggspawnCheat(EggName) {
         if (typeof saveGame === "function") saveGame();
         return `Succes! ${actualName} added to your album.`;
     } else {
-        return `Egg "${EggName}" not found. Check the spelling (for example: Mewbro, Pickachoo).`;
+        return `Egg "${EggName}" not found. Check the spelling.`;
     }
 }
 
@@ -1110,10 +1110,10 @@ const epic_pool = [
     "Spiridor, the soul Alpha-beast", "Scintiltror, the spark Alpha-beast", "Pelagona, the sea Alpha-beast",
     "Ramurus, the branch Alpha-beast", "Mortios, the death Alpha-beast", "Flammariast, the blaze Alpha-beast", 
     "Pluvior, the rain Alpha-beast", "Arboriusto, the tree Alpha-beast", "Idolup, the phantom Alpha-beast",
-    "Focurio, the fireplace Alpha-beast", "Fonser, the fountain Alpha-Beast", "Radixus, the root Alpha-beast",
+    "Focurio, the fireplace Alpha-beast", "Fonser, the fountain Alpha-beast", "Radixus, the root Alpha-beast",
     "Nexor, the slaughterer Alpha-beast", "Camino, the forge Alpha-beast", "Gurgro, the whirlpool Alpha-beast", 
     "Flosura, the flower Alpha-beast", "Leturoar, the ruin Alpha-beast", "Vavillain, the ash Alpha-beast",
-    "Paliant, the swamp Alpha-beast", "Sementrias, the seed Alpha-Beast", "Larvatum, the skeleton Alpha-beast",
+    "Paliant, the swamp Alpha-beast", "Sementrias, the seed Alpha-beast", "Larvatum, the skeleton Alpha-beast",
     "Incendior, the wildfire Alpha-beast", "Cataractor, the waterfall Alpha-beast", "Foenuros, the hay Alpha-beast", 
     "Fatumtro, the doom Alpha-beast", "Igneurto, the burning Alpha-beast", "Aductro, the aqueduct Alpha-beast",
     "Sepulcrumtro, the grave Alpha-beast", "Aestromin, the glowing Alpha-beast", "Neblurant, the fog Alpha-beast",
@@ -1122,6 +1122,7 @@ const epic_pool = [
     "Lignirior, the firewood Alpha-beast", "Fluctrimass, the wave Alpha-beast", "Horturur, the garden Alpha-beast",
     "Imagios, the echo Alpha-beast", "Ciniratra, the ember Alpha-beast", "Diluviostros, the flood Alpha-beast"
 ];
+
 const mythic_pool = [
     "Fulguria, the lightning Alpha-beast", "Fulmurio, the thunderbeam Alpha-beast", "Caelusmo, the sky Alpha-beast",
     "Galus, the breeze Alpha-beast", "Pugiros, the dagger Alpha-beast", "Sercurion, the axe Alpha-beast", 
@@ -1144,12 +1145,10 @@ const godly_pool = [
     "Bacchusion, the wine Alpha-god", "Plutonix, the underworld Alpha-god", "Vestalith, the hearth and home Alpha-god", 
     "Junorion, the marriage Alpha-god", "Saturnio, the time and generation Alpha-god", "Janusantro, the gates and beginnings Alpha-beast", 
     "Fortunrio, the luck and fortune Alpha-god", "Proserpinart, the spring and rebirth Alpha-god", "Somniotro, the sleep and dreams Alpha-god",
-    "Arcusaner, the rainbow and messenger Alpha-beast", "• Terminutro, the boundaries and borders Alpha-god"
+    "Arcusaner, the rainbow and messenger Alpha-beast", "Terminutro, the boundaries and borders Alpha-god"
 ];
 
 const Giant_pool = [
-
-[
     "Giant Fulguria A","Giant Fulguria B","Giant Fulmurio A","Giant Fulmurio B",
     "Giant Caelusmo A","Giant Caelusmo B","Giant Galus A","Giant Galus B",
     "Giant Pugiros","Giant Sercurion",
@@ -1160,13 +1159,12 @@ const Giant_pool = [
     "Giant Nibustior","Giant Claverer","Giant Tridensos",
     "Giant Duxeosos","Giant Gladiatroster","Giant Nitorostro",
     "Giant Fugorstro","Giant Flabberior"
-]
 ];
 
 let owned_Giants = {}; Giant_pool.forEach(name => owned_Giants[name] = 0);
 let owned_epics = {}; epic_pool.forEach(name => owned_epics[name] = 0);
 let owned_mythics = {}; mythic_pool.forEach(name => owned_mythics[name] = 0);
-let owned_legendaries = {}; godly_pool.forEach(name => owned_legendaries[name] = 0);
+let owned_godlies = {}; godly_pool.forEach(name => owned_godlies[name] = 0);
 
 const introLines = [
     "<span style='color: #00bcd4; font-weight: bold;'>[SYSTEM] Hidden features detected... Keep hitting Joe to unlock the Bank, Alpha-beast Shop, and Endless Multipliers!</span>\n\n",
@@ -1243,7 +1241,7 @@ function get_album_multiplier() {
     // De || 0 zorgt ervoor dat als je 0 kaarten hebt, er met 0 wordt gerekend in plaats van undefined!
     epic_pool.forEach(name => total_bonus += (owned_epics[name] || 0) * 0.50);
     mythic_pool.forEach(name => total_bonus += (owned_mythics[name] || 0) * 2.00);
-    godly_pool.forEach(name => total_bonus += (owned_legendaries[name] || 0) * 10.00);
+    godly_pool.forEach(name => total_bonus += (owned_godlies[name] || 0) * 10.00);
     Giant_pool.forEach(name => total_bonus += (owned_Giants[name] || 0) * 50.00); 
     
     return total_bonus;
@@ -1321,7 +1319,7 @@ function startGlobalCountdown() {
 setInterval(() => {
     let epic_income = 0; epic_pool.forEach(name => epic_income += owned_epics[name] * 25.0);
     let mythic_income = 0; mythic_pool.forEach(name => mythic_income += owned_mythics[name] * 500.0);
-    let godly_income = 0; godly_pool.forEach(name => godly_income += owned_legendaries[name] * 5000.0);
+    let godly_income = 0; godly_pool.forEach(name => godly_income += owned_godlies[name] * 5000.0);
     let Giant_income = 0; Giant_pool.forEach(name => Giant_income += owned_Giants[name] * 25000.0);
     
     let total_passive = epic_income + mythic_income + godly_income + Giant_income;
@@ -1543,10 +1541,10 @@ function new_button_click() {
                 terminal.innerHTML += `\n<span style="color: #d97706; font-weight: bold;">🔥💥 Giant EVOLUTION PULL: ${Egg}!</span>\n\n`;
             }
         } else if (roll < current_chance_godly) {
-            let unowned = godly_pool.filter(name => owned_legendaries[name] === 0);
+            let unowned = godly_pool.filter(name => owned_godlies[name] === 0);
             if (unowned.length > 0) {
                 let Egg = unowned[Math.floor(Math.random() * unowned.length)];
-                owned_legendaries[Egg] = 1;
+                owned_godlies[Egg] = 1;
                 terminal.innerHTML += `<span style="color: #e63946; font-weight: bold;">👑 NEW godly PULL: ${Egg}!</span>\n`;
                 checkAchievements('Eggs', 1); 
                 checkQuestProgression('pull_Egg', 1, 'godly');
@@ -1688,7 +1686,7 @@ function buyShopItem(productName) {
 
             if (pool === "epic" && typeof owned_epics !== 'undefined') owned_epics[formattedName] = 1;
             if (pool === "mythic" && typeof owned_mythics !== 'undefined') owned_mythics[formattedName] = 1;
-            if (pool === "godly" && typeof owned_legendaries !== 'undefined') owned_legendaries[formattedName] = 1;
+            if (pool === "godly" && typeof owned_godlies !== 'undefined') owned_godlies[formattedName] = 1;
 
             let incomeBoost = item.income || (pool === "epic" ? 25 : pool === "mythic" ? 500 : 5000);
             if (typeof passive_income !== 'undefined') passive_income += incomeBoost;
@@ -1711,7 +1709,7 @@ function countUniqueEggs() {
     let count = 0;
     epic_pool.forEach(name => { if ((owned_epics[name] || 0) > 0) count++; });
     mythic_pool.forEach(name => { if ((owned_mythics[name] || 0) > 0) count++; });
-    godly_pool.forEach(name => { if ((owned_legendaries[name] || 0) > 0) count++; });
+    godly_pool.forEach(name => { if ((owned_godlies[name] || 0) > 0) count++; });
     return count;
 }
 
@@ -1739,7 +1737,7 @@ function build_rarity_album() {
     // Bouw de 4 grids op
     fillGrid("epic-grid", epic_pool, owned_epics);
     fillGrid("mythic-grid", mythic_pool, owned_mythics);
-    fillGrid("godly-grid", godly_pool, owned_legendaries);
+    fillGrid("godly-grid", godly_pool, owned_godlies);
     fillGrid("Giant-grid", Giant_pool, owned_Giants);
 }
 // ==========================================================
@@ -1931,7 +1929,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <div>
         <p style="font-size: 13px; color: #f8fafc; margin: 0 0 8px 0; text-align: left; padding-left: 25px;">🃏 SPECIFIC EGG GENERATOR:</p>
         <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
-            <input type="text" id="cheat-Egg-name" placeholder="Type exact name (e.g., Mewbro, Pickachoo)..." style="padding: 8px 15px; font-size: 14px; width: 340px; border-radius: 6px; border: 2px solid #334155; background: #1e293b; color: white; font-family: monospace;">
+            <input type="text" id="cheat-Egg-name" placeholder="Type exact name of a Alpha-Beast" style="padding: 8px 15px; font-size: 14px; width: 340px; border-radius: 6px; border: 2px solid #334155; background: #1e293b; color: white; font-family: monospace;">
             <span onclick="matrixClickEgg()" style="display: inline-block !important; background-color: #ec4899; color: white; font-size: 14px; font-weight: bold; padding: 8px 18px; border-radius: 6px; cursor: pointer; user-select: none;">Spawn Egg 🪄</span>
         </div>
     </div>
