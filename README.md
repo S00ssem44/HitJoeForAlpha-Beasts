@@ -1,6 +1,6 @@
 # Hit Joe For Brokémon
 
-# What is the game about?
+## What is the game about?
 This is a clicker game where you need to hit 'Joe' to get money, with your money you can buy Brokémon cards, Pack upgrades or hit upgrades.
 Inside of those packs you can find rare cards sometimes that will give you permanent click boosts and passive income.
 Can you collect them all?
