@@ -148,7 +148,7 @@
 
         #shop-btn { background-color: #4caf50; color: white; }
         #upgrade-btn { background-color: #9c27b0; color: white; }
-        #pack-upgrade-btn { background-color: #00bcd4; color: black; }
+        #Egg-upgrade-btn { background-color: #00bcd4; color: black; }
         
         #quest-shop-container {
             margin: 25px auto;
@@ -253,7 +253,7 @@
         onmouseup="this.innerText='😨'">😃</button> <br>
     <button id="shop-btn" onclick="new_button_click()">Buy Alpha-beast Eggs (\$10.00)</button>
     <button id="upgrade-btn" onclick="upgrade_button_click()">Upgrade Hits (2x earnings) (\$100.00)</button>
-    <button id="pack-upgrade-btn" onclick="upgrade_packs_click()">Upgrade Packs (\$200.00)</button>
+    <button id="Egg-upgrade-btn" onclick="upgrade_Eggs_click()">Upgrade Eggs (\$200.00)</button>
 
     <div id="quest-shop-container">
         <h3 style="color: #b45309; margin: 0;">🌟 Secret Gold Coin Bazaar (<span id="shop-timer">5:00</span>)</h3>
@@ -263,7 +263,7 @@
 
     <div id="album-container">
         <h3>🏆 Alpha-beast Ultra-Rare Checklist Album</h3>
-        <div id="Giant-header" class="tier-title" style="background-color: #fff3cd; color: #d97706; display: none;">🔥 Giant godly Eggs (<span id="Giant-rate">0.50</span>% Chance - <span style="font-size: 10px; color: #b45309;">Rates boost to 1.00% once Packs are MAXED!</span>) — [+\$25000/sec & +5000% Multiplier ea.]</div>
+        <div id="Giant-header" class="tier-title" style="background-color: #fff3cd; color: #d97706; display: none;">🔥 Giant godly Eggs (<span id="Giant-rate">0.50</span>% Chance - <span style="font-size: 10px; color: #b45309;">Rates boost to 1.00% once Eggs are MAXED!</span>) — [+\$25000/sec & +5000% Multiplier ea.]</div>
         <div class="grid" id="Giant-grid" style="display: none;"></div>
         <div class="tier-title" style="color: #00b4d8;" class="album-header">  🔷 EPIC Eggs (<span id="epic-rate">1.00</span>% Chance) — [+\$25/sec & +50% Multiplier ea.]</div>
         <div class="grid" id="epic-grid"></div>
@@ -349,17 +349,17 @@ function saveGame() {
             upgrade_cost: (typeof upgrade_cost !== 'undefined') ? upgrade_cost : 100,
             next_multiplier_step: (typeof next_multiplier_step !== 'undefined') ? next_multiplier_step : 2,
             upgrade_button_spawned: (typeof upgrade_button_spawned !== 'undefined') ? upgrade_button_spawned : false,
-            pack_upgrade_cost: (typeof pack_upgrade_cost !== 'undefined') ? pack_upgrade_cost : 200,
-            pack_upgrade_spawned: (typeof pack_upgrade_spawned !== 'undefined') ? pack_upgrade_spawned : false,
-            min_pack_cash: (typeof min_pack_cash !== 'undefined') ? min_pack_cash : 1,
-            max_pack_cash: (typeof max_pack_cash !== 'undefined') ? max_pack_cash : 5,
-            current_pack_price: (typeof current_pack_price !== 'undefined') ? current_pack_price : 10,
+            Egg_upgrade_cost: (typeof Egg_upgrade_cost !== 'undefined') ? Egg_upgrade_cost : 200,
+            Egg_upgrade_spawned: (typeof Egg_upgrade_spawned !== 'undefined') ? Egg_upgrade_spawned : false,
+            min_Egg_cash: (typeof min_Egg_cash !== 'undefined') ? min_Egg_cash : 1,
+            max_Egg_cash: (typeof max_Egg_cash !== 'undefined') ? max_Egg_cash : 5,
+            current_Egg_price: (typeof current_Egg_price !== 'undefined') ? current_Egg_price : 10,
             chance_epic: (typeof chance_epic !== 'undefined') ? chance_epic : 0.01,
             chance_mythic: (typeof chance_mythic !== 'undefined') ? chance_mythic : 0.005,
             chance_godly: (typeof chance_godly !== 'undefined') ? chance_godly : 0.001,
             chance_Giant: (typeof chance_Giant !== 'undefined') ? chance_Giant : 0.005,
             total_clicks: (typeof total_clicks !== 'undefined') ? total_clicks : 0,
-            total_packs_bought: (typeof total_packs_bought !== 'undefined') ? total_packs_bought : 0,
+            total_Eggs_bought: (typeof total_Eggs_bought !== 'undefined') ? total_Eggs_bought : 0,
             Giant_godly_unlocked: (typeof Giant_godly_unlocked !== 'undefined') ? Giant_godly_unlocked : false,
             bank_notif_triggered: (typeof bank_notif_triggered !== 'undefined') ? bank_notif_triggered : false,
             pokemon_notif_triggered: (typeof pokemon_notif_triggered !== 'undefined') ? pokemon_notif_triggered : false,
@@ -396,17 +396,17 @@ function loadGame(slotId) {
         if (save.upgrade_cost !== undefined) upgrade_cost = save.upgrade_cost;
         if (save.next_multiplier_step !== undefined) next_multiplier_step = save.next_multiplier_step;
         if (save.upgrade_button_spawned !== undefined) upgrade_button_spawned = save.upgrade_button_spawned;
-        if (save.pack_upgrade_cost !== undefined) pack_upgrade_cost = save.pack_upgrade_cost;
-        if (save.pack_upgrade_spawned !== undefined) pack_upgrade_spawned = save.pack_upgrade_spawned;
-        if (save.min_pack_cash !== undefined) min_pack_cash = save.min_pack_cash;
-        if (save.max_pack_cash !== undefined) max_pack_cash = save.max_pack_cash;
-        if (save.current_pack_price !== undefined) current_pack_price = save.current_pack_price;
+        if (save.Egg_upgrade_cost !== undefined) Egg_upgrade_cost = save.Egg_upgrade_cost;
+        if (save.Egg_upgrade_spawned !== undefined) Egg_upgrade_spawned = save.Egg_upgrade_spawned;
+        if (save.min_Egg_cash !== undefined) min_Egg_cash = save.min_Egg_cash;
+        if (save.max_Egg_cash !== undefined) max_Egg_cash = save.max_Egg_cash;
+        if (save.current_Egg_price !== undefined) current_Egg_price = save.current_Egg_price;
         if (save.chance_epic !== undefined) chance_epic = save.chance_epic;
         if (save.chance_mythic !== undefined) chance_mythic = save.chance_mythic;
         if (save.chance_godly !== undefined) chance_godly = save.chance_godly;
         if (save.chance_Giant !== undefined) chance_Giant = save.chance_Giant;
         if (save.total_clicks !== undefined) total_clicks = save.total_clicks;
-        if (save.total_packs_bought !== undefined) total_packs_bought = save.total_packs_bought;
+        if (save.total_Eggs_bought !== undefined) total_Eggs_bought = save.total_Eggs_bought;
         if (save.Giant_godly_unlocked !== undefined) Giant_godly_unlocked = save.Giant_godly_unlocked;
         if (save.bank_notif_triggered !== undefined) bank_notif_triggered = save.bank_notif_triggered;
         if (save.pokemon_notif_triggered !== undefined) pokemon_notif_triggered = save.pokemon_notif_triggered;
@@ -434,7 +434,7 @@ function loadGame(slotId) {
         let dispBazaar = document.getElementById("quest-shop-container");
         let btnShop = document.getElementById("shop-btn");
         let btnUpgrade = document.getElementById("upgrade-btn");
-        let btnPackUpgrade = document.getElementById("pack-upgrade-btn");
+        let btnEggUpgrade = document.getElementById("Egg-upgrade-btn");
 
         if (dispMoney) dispMoney.style.display = bank_notif_triggered ? "block" : "none";
         if (dispGold) dispGold.style.display = bank_notif_triggered ? "block" : "none";
@@ -442,7 +442,7 @@ function loadGame(slotId) {
         
         if (btnShop) {
             btnShop.style.display = pokemon_notif_triggered ? "inline-block" : "none";
-            btnShop.innerText = `Buy Alpha-beast Eggs ($${current_pack_price.toFixed(2)})`;
+            btnShop.innerText = `Buy Alpha-beast Eggs ($${current_Egg_price.toFixed(2)})`;
         }
         if (document.getElementById("album-container")) {
             document.getElementById("album-container").style.display = pokemon_notif_triggered ? "block" : "none";
@@ -453,9 +453,9 @@ function loadGame(slotId) {
             btnUpgrade.innerText = `Upgrade Hits (${next_multiplier_step}x earnings) ($${upgrade_cost.toFixed(2)})`;
         }
         
-        if (btnPackUpgrade) {
-            btnPackUpgrade.style.display = pack_upgrade_spawned ? "inline-block" : "none";
-            btnPackUpgrade.innerText = `Upgrade Packs ($${pack_upgrade_cost.toFixed(2)})`;
+        if (btnEggUpgrade) {
+            btnEggUpgrade.style.display = Egg_upgrade_spawned ? "inline-block" : "none";
+            btnEggUpgrade.innerText = `Upgrade Eggs ($${Egg_upgrade_cost.toFixed(2)})`;
         }
 
         if (Giant_godly_unlocked) {
@@ -595,7 +595,7 @@ function selectSlotAndPlay(slotId) {
         gold_coins = 0;
         click_multiplier = 1.0;
         total_clicks = 0;
-        total_packs_bought = 0;
+        total_Eggs_bought = 0;
         
         // Maak album leeg
         if (typeof owned_epics !== 'undefined') {
@@ -729,17 +729,17 @@ function executeCheatInjection(type, amount) {
         if (terminal) terminal.innerHTML += `<span style="color: #8b5cf6;">[CHEAT] Multiplier upgraded with +${amount}x! (Nu: ${click_multiplier}x)</span>\n`;
         return `Succes! Multiplier upgraded.`;
     }
-    else if (type === 'pack_upgrade') {
+    else if (type === 'Egg_upgrade') {
         let loops = Math.min(Math.floor(amount), 100);
         let preNumber = number;
         number = 999999999999; // Tijdelijk oneindig geld om upgrades te kunnen kopen
         for(let i = 0; i < loops; i++) {
             if (chance_epic >= 0.50) break;
-            upgrade_packs_click();
+            upgrade_Eggs_click();
         }
         number = preNumber;
         updateMoneyDisplay();
-        return `Pack upgrades succesfully added!`;
+        return `Egg upgrades succesfully added!`;
     }
     return "Incorrect cheat type.";
 }
@@ -844,23 +844,23 @@ function executeCheatInjection(type, amount) {
         if (terminal) terminal.innerHTML += `<span style="color: #8b5cf6;">[CHEAT] Added +${amount}x to Hit Multiplier. New: ${click_multiplier}x!</span>\n`;
         return `Succes! Multiplier verhoogd met +${amount}x.`;
     }
-    else if (type === 'pack_upgrade') {
-        // Forceer een aantal pack upgrades (loopt door de echte upgrade functie heen)
-        if (typeof upgrade_packs_click === "function") {
+    else if (type === 'Egg_upgrade') {
+        // Forceer een aantal Egg upgrades (loopt door de echte upgrade functie heen)
+        if (typeof upgrade_Eggs_click === "function") {
             let loops = Math.min(Math.floor(amount), 100); // Veiligheidscap
             let preNumber = number;
             // Zorg tijdelijk voor oneindig geld om de upgrades te forceren
             number = 999999999999;
             for(let i = 0; i < loops; i++) {
                 if (chance_epic >= 0.50) break;
-                upgrade_packs_click();
+                upgrade_Eggs_click();
             }
             number = preNumber;
             if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
         }
-        return `Pack upgrades verwerkt!`;
+        return `Egg upgrades verwerkt!`;
     }
-    return "Foutieve invoer: Kies uit 'money', 'gold', 'multiplier', of 'pack_upgrade'.";
+    return "Foutieve invoer: Kies uit 'money', 'gold', 'multiplier', of 'Egg_upgrade'.";
 }
 
 // Logica om een specifieke kaart te spawnen op basis van exacte naam
@@ -1029,11 +1029,11 @@ let upgrade_cost = 100.0;
 let next_multiplier_step = 2; 
 let upgrade_button_spawned = false;
 
-let pack_upgrade_cost = 200.0;
-let pack_upgrade_spawned = false;
-let min_pack_cash = 1.13;
-let max_pack_cash = 15.31;
-let current_pack_price = 10.0; 
+let Egg_upgrade_cost = 200.0;
+let Egg_upgrade_spawned = false;
+let min_Egg_cash = 1.13;
+let max_Egg_cash = 15.31;
+let current_Egg_price = 10.0; 
 
 let chance_epic = 0.01;
 let chance_mythic = 0.005;
@@ -1048,7 +1048,7 @@ let bank_notif_triggered = false;
 let brokemon_notif_triggered = false;
 let Giant_godly_unlocked = false; 
 let total_clicks = 0; 
-let total_packs_bought = 0; 
+let total_Eggs_bought = 0; 
 
 let time_left = 300;
 let active_quests = [];
@@ -1074,15 +1074,15 @@ let achievements = {
     cash_7: { name: "💰 Billionaire Club", desc: "Reach $100,000,000 cash.", unlocked: false, type: "cash", req: 100000000, bonus: 15000000 },
     cash_8: { name: "💰 Money Ocean", desc: "Reach $1,000,000,000 cash.", unlocked: false, type: "cash", req: 1000000000, bonus: 100000000 },
     cash_9: { name: "💰 Infinite Wealth", desc: "Reach $10,000,000,000 cash.", unlocked: false, type: "cash", req: 10000000000, bonus: 999999999 },
-    pack_1: { name: "📦 Egg Hobbyist", desc: "Open 5 Alpha-beast packs.", unlocked: false, type: "packs", req: 5, bonus: 100 },
-    pack_2: { name: "📦 Pack Addict", desc: "Open 20 Alpha-beast packs.", unlocked: false, type: "packs", req: 20, bonus: 500 },
-    pack_3: { name: "📦 Box Breaker", desc: "Open 50 Alpha-beast packs.", unlocked: false, type: "packs", req: 50, bonus: 2000 },
-    pack_4: { name: "📦 Egg Shark", desc: "Open 100 Alpha-beast packs.", unlocked: false, type: "packs", req: 100, bonus: 10000 },
-    pack_5: { name: "📦 Scalper Menace", desc: "Open 250 Alpha-beast packs.", unlocked: false, type: "packs", req: 250, bonus: 50000 },
-    pack_6: { name: "📦 Local Shop Owner", desc: "Open 500 Alpha-beast packs.", unlocked: false, type: "packs", req: 500, bonus: 250000 },
-    pack_7: { name: "📦 Warehouse Raider", desc: "Open 1,000 Alpha-beast packs.", unlocked: false, type: "packs", req: 1000, bonus: 1500000 },
-    pack_8: { name: "📦 Factory Monopoly", desc: "Open 2,500 Alpha-beast packs.", unlocked: false, type: "packs", req: 2500, bonus: 10000000 },
-    pack_9: { name: "📦 Pack Overlord", desc: "Open 5,000 Alpha-beast packs.", unlocked: false, type: "packs", req: 5000, bonus: 100000000 },
+    Egg_1: { name: "📦 Egg Hobbyist", desc: "Open 5 Alpha-beast Eggs.", unlocked: false, type: "Eggs", req: 5, bonus: 100 },
+    Egg_2: { name: "📦 Egg Addict", desc: "Open 20 Alpha-beast Eggs.", unlocked: false, type: "Eggs", req: 20, bonus: 500 },
+    Egg_3: { name: "📦 Box Breaker", desc: "Open 50 Alpha-beast Eggs.", unlocked: false, type: "Eggs", req: 50, bonus: 2000 },
+    Egg_4: { name: "📦 Egg Shark", desc: "Open 100 Alpha-beast Eggs.", unlocked: false, type: "Eggs", req: 100, bonus: 10000 },
+    Egg_5: { name: "📦 Scalper Menace", desc: "Open 250 Alpha-beast Eggs.", unlocked: false, type: "Eggs", req: 250, bonus: 50000 },
+    Egg_6: { name: "📦 Local Shop Owner", desc: "Open 500 Alpha-beast Eggs.", unlocked: false, type: "Eggs", req: 500, bonus: 250000 },
+    Egg_7: { name: "📦 Warehouse Raider", desc: "Open 1,000 Alpha-beast Eggs.", unlocked: false, type: "Eggs", req: 1000, bonus: 1500000 },
+    Egg_8: { name: "📦 Factory Monopoly", desc: "Open 2,500 Alpha-beast Eggs.", unlocked: false, type: "Eggs", req: 2500, bonus: 10000000 },
+    Egg_9: { name: "📦 Egg Overlord", desc: "Open 5,000 Alpha-beast Eggs.", unlocked: false, type: "Eggs", req: 5000, bonus: 100000000 },
     passive_1: { name: "⚡ Pocket Change", desc: "Reach $100/sec passive income.", unlocked: false, type: "passive", req: 100, bonus: 500 },
     passive_2: { name: "⚡ Stream of Cash", desc: "Reach $500/sec passive income.", unlocked: false, type: "passive", req: 500, bonus: 2500 },
     passive_3: { name: "⚡ River of Gold", desc: "Reach $2,500/sec passive income.", unlocked: false, type: "passive", req: 2500, bonus: 15000 },
@@ -1395,7 +1395,7 @@ function clickJoe() {
         let sb = document.getElementById("shop-btn");
         let ac = document.getElementById("album-container");
         if(sb) {
-            sb.innerText = `Buy Alpha-beast Eggs ($${current_pack_price.toFixed(2)})`;
+            sb.innerText = `Buy Alpha-beast Eggs ($${current_Egg_price.toFixed(2)})`;
             sb.style.display = "inline-block";
         }
         if(ac) ac.style.display = "block";
@@ -1407,10 +1407,10 @@ function clickJoe() {
         if(ub) ub.style.display = "inline-block";
         upgrade_button_spawned = true;
     }
-    if (number >= 200.0 && !pack_upgrade_spawned) {
-        let pub = document.getElementById("pack-upgrade-btn");
+    if (number >= 200.0 && !Egg_upgrade_spawned) {
+        let pub = document.getElementById("Egg-upgrade-btn");
         if(pub) pub.style.display = "inline-block";
-        pack_upgrade_spawned = true;
+        Egg_upgrade_spawned = true;
     }
 }
 
@@ -1422,12 +1422,12 @@ function generateNewQuests() {
     let templates = [
         { type: "click_joe", target: Math.floor(Math.random() * 60 + 40), text: "Punch Joe X times this cycle", reward: 2 },
         { type: "passive_gain", target: Math.floor(Math.random() * 4000 + 1000), text: "Accumulate \$X through passive album tier", reward: 3 },
-        { type: "pull_Egg", rarity: "epic", text: "Pull any brand new Epic Egg from a pack", reward: 2 },
+        { type: "pull_Egg", rarity: "epic", text: "Pull any brand new Epic Egg from a Egg", reward: 2 },
         { type: "pull_Egg", rarity: "mythic", text: "Successfully summon any Mythic tier Alpha-beast", reward: 4 },
-        { type: "buy_upgrade", text: "Purchase any endless hit multiplier or pack upgrade", reward: 3 },
+        { type: "buy_upgrade", text: "Purchase any endless hit multiplier or Egg upgrade", reward: 3 },
         { type: "click_joe", target: 50, text: "Smasher's Delight: Click Joe 50 times without getting hit back", reward: 3 },
         { type: "click_joe", target: 15, text: "The Guardian: Avoid getting struck by Joe for your next 15 hits", reward: 2 },
-        { type: "pull_Egg", rarity: "godly", text: "Against All Odds: Snag any raw godly pull from a standard pack", reward: 5 },
+        { type: "pull_Egg", rarity: "godly", text: "Against All Odds: Snag any raw godly pull from a standard Egg", reward: 5 },
         { type: "buy_upgrade", text: "Premium Choice: Perform a high-tier multiplier upgrade", reward: 3 }
     ];
 
@@ -1478,9 +1478,9 @@ function updateQuestUI() {
 function generateQuestShop() {
     // 1. Zet altijd eerst de 3 standaard boosters in de winkel
     shop_inventory = [
-        { id: 0, name: "Epic Booster Pack", desc: "5x higher Epic rates next pull", cost: 3, type: "booster", target: "epic" },
-        { id: 1, name: "Mythic Booster Pack", desc: "5x higher Mythic rates next pull", cost: 5, type: "booster", target: "mythic" },
-        { id: 2, name: "godly Booster Pack", desc: "5x higher godly rates next pull", cost: 8, type: "booster", target: "godly" }
+        { id: 0, name: "Epic Booster Egg", desc: "5x higher Epic rates next pull", cost: 3, type: "booster", target: "epic" },
+        { id: 1, name: "Mythic Booster Egg", desc: "5x higher Mythic rates next pull", cost: 5, type: "booster", target: "mythic" },
+        { id: 2, name: "godly Booster Egg", desc: "5x higher godly rates next pull", cost: 8, type: "booster", target: "godly" }
     ];
 
     // 2. Kies NU pas de willekeurige kaarten, zodat ze ook echt in de winkel blijven
@@ -1516,13 +1516,13 @@ function renderQuestShopUI() {
 
 
 function new_button_click() {
-    if (number >= current_pack_price) {
-        number -= current_pack_price;
-        total_packs_bought++; 
+    if (number >= current_Egg_price) {
+        number -= current_Egg_price;
+        total_Eggs_bought++; 
         updateMoneyDisplay();
         triggerMoneyAnimation('loss'); 
         
-        let Egg_value = (Math.random() * (max_pack_cash - min_pack_cash) + min_pack_cash);
+        let Egg_value = (Math.random() * (max_Egg_cash - min_Egg_cash) + min_Egg_cash);
         number += Egg_value;
         updateMoneyDisplay();
         triggerMoneyAnimation('win'); 
@@ -1581,14 +1581,14 @@ function new_button_click() {
             if(mg) mg.style.display = "grid";
         }
 
-        checkAchievements('packs', total_packs_bought);
+        checkAchievements('Eggs', total_Eggs_bought);
         checkAchievements('album', countUniqueEggs());
         checkAchievements('cash', number); 
 
         terminal.innerHTML += `Your new total balance is: $${number.toFixed(2)}\n\n`;
         build_rarity_album();
     } else {
-        terminal.innerHTML += `You don't have enough money! Packs cost $${current_pack_price.toFixed(2)}\n`;
+        terminal.innerHTML += `You don't have enough money! Eggs cost $${current_Egg_price.toFixed(2)}\n`;
     }
     terminal.scrollTop = terminal.scrollHeight;
 }
@@ -1611,24 +1611,24 @@ function upgrade_button_click() {
     terminal.scrollTop = terminal.scrollHeight;
 }
 
-function upgrade_packs_click() {
+function upgrade_Eggs_click() {
     // Check eerst of we al op het maximale niveau zitten
     if (chance_epic >= 0.50) {
-        let pub = document.getElementById("pack-upgrade-btn");
-        if(pub) pub.innerText = "Packs Upgraded! (MAX LEVEL)";
-        terminal.innerHTML += `<span style="color: #00bcd4;">[SYSTEM] Your packs reached the max upgrade! You can't upgrade anymore.</span>\n\n`;
+        let pub = document.getElementById("Egg-upgrade-btn");
+        if(pub) pub.innerText = "Eggs Upgraded! (MAX LEVEL)";
+        terminal.innerHTML += `<span style="color: #00bcd4;">[SYSTEM] Your Eggs reached the max upgrade! You can't upgrade anymore.</span>\n\n`;
         terminal.scrollTop = terminal.scrollHeight;
         return; // Stop de functie hier direct
     }
 
-    if (number >= pack_upgrade_cost) {
-        number -= pack_upgrade_cost;
+    if (number >= Egg_upgrade_cost) {
+        number -= Egg_upgrade_cost;
         updateMoneyDisplay();
         triggerMoneyAnimation('loss');
-        min_pack_cash *= 2; 
-        max_pack_cash *= 2; 
-        current_pack_price *= 2; 
-        pack_upgrade_cost *= 2.5;
+        min_Egg_cash *= 2; 
+        max_Egg_cash *= 2; 
+        current_Egg_price *= 2; 
+        Egg_upgrade_cost *= 2.5;
         chance_mythic += 0.003; 
         chance_godly += 0.0015;
         
@@ -1636,21 +1636,21 @@ function upgrade_packs_click() {
         chance_epic += 0.005; 
         chance_Giant = 0.005; // Dit blijft achter de schermen draaien zonder het te noemen
 
-        let pub = document.getElementById("pack-upgrade-btn");
+        let pub = document.getElementById("Egg-upgrade-btn");
         let sb = document.getElementById("shop-btn");
 
         if (chance_epic >= 0.50) {
             chance_epic = 0.50; 
             chance_Giant = 0.01;
             // Gecorrigeerde melding: Geen spoilers over de geheime kaarten!
-            terminal.innerHTML += `<span style="color: #00bcd4; font-weight: bold;">Packs upgraded! MAX LEVEL REACHED! The chance on rare Eggs in now optimalized!</span>\n\n`;
-            if(pub) pub.innerText = "Packs Upgraded! (MAX LEVEL)";
+            terminal.innerHTML += `<span style="color: #00bcd4; font-weight: bold;">Eggs upgraded! MAX LEVEL REACHED! The chance on rare Eggs in now optimalized!</span>\n\n`;
+            if(pub) pub.innerText = "Eggs Upgraded! (MAX LEVEL)";
         } else {
-            terminal.innerHTML += `<span style="color: #00bcd4; font-weight: bold;">Packs upgraded! The chance on rare Eggs increased!</span>\n\n`;
-            if(pub) pub.innerText = `Upgrade Packs ($${pack_upgrade_cost.toFixed(2)})`;
+            terminal.innerHTML += `<span style="color: #00bcd4; font-weight: bold;">Eggs upgraded! The chance on rare Eggs increased!</span>\n\n`;
+            if(pub) pub.innerText = `Upgrade Eggs ($${Egg_upgrade_cost.toFixed(2)})`;
         }
         
-        if(sb) sb.innerText = `Buy Alpha-beast Eggs ($${current_pack_price.toFixed(2)})`;
+        if(sb) sb.innerText = `Buy Alpha-beast Eggs ($${current_Egg_price.toFixed(2)})`;
         
         // Sla direct de voortgang op (als je het opslegsysteem gebruikt)
         if (typeof saveGame === "function") saveGame();
@@ -1674,7 +1674,7 @@ function buyShopItem(productName) {
         gold_coins -= item.cost;
         updateGoldDisplay();
 
-        let isBooster = item.name.toLowerCase().includes("pack") || item.name.toLowerCase().includes("booster");
+        let isBooster = item.name.toLowerCase().includes("Egg") || item.name.toLowerCase().includes("booster");
         let itemType = isBooster ? "booster" : "direct_Egg";
 
         if (itemType === "booster") {
@@ -1835,17 +1835,17 @@ function matrixClickMultiplier() {
     }
 }
 
-function matrixClickPacks() {
+function matrixClickEggs() {
     has_cheated = true; // Markeer dit slot direct als cheat-file
     saveGame(); // Forceer een directe save zodat het menu direct up-to-date is
-    let input = prompt("How many PACK UPGRADES do you want to perform?", "5");
+    let input = prompt("How many Egg UPGRADES do you want to perform?", "5");
     if (input === null) return;
     let amt = Math.floor(parseFloat(input));
     if (isNaN(amt) || amt <= 0) return alert("Please enter a valid positive number!");
 
-    if (typeof upgrade_packs_click === "function" && typeof chance_epic !== 'undefined' && typeof number !== 'undefined') {
+    if (typeof upgrade_Eggs_click === "function" && typeof chance_epic !== 'undefined' && typeof number !== 'undefined') {
         if (chance_epic >= 0.50) {
-            if (terminal) terminal.innerHTML += `\n<span style="color: #00bcd4;">[CHEAT] Packs are already at maximum level!</span>\n`;
+            if (terminal) terminal.innerHTML += `\n<span style="color: #00bcd4;">[CHEAT] Eggs are already at maximum level!</span>\n`;
             return;
         }
 
@@ -1854,7 +1854,7 @@ function matrixClickPacks() {
         
         for (let i = 0; i < amt; i++) {
             if (chance_epic >= 0.50) break;
-            upgrade_packs_click();
+            upgrade_Eggs_click();
         }
         
         number = preNumber;
@@ -1865,7 +1865,7 @@ function matrixClickPacks() {
         }
         
         if (terminal) {
-            terminal.innerHTML += `\n<span style="color: #00bcd4;">[CHEAT] Pack upgrades processed! (Current Epic chance: ${(chance_epic * 100).toFixed(2)}%)</span>\n`;
+            terminal.innerHTML += `\n<span style="color: #00bcd4;">[CHEAT] Egg upgrades processed! (Current Epic chance: ${(chance_epic * 100).toFixed(2)}%)</span>\n`;
             terminal.scrollTop = terminal.scrollHeight;
         }
     }
@@ -1919,12 +1919,12 @@ document.addEventListener("DOMContentLoaded", () => {
     <h4 style="color: #ef4444; margin: 0 0 5px 0; font-size: 18px; letter-spacing: 1px;">⚡ DEVELOPER MATRIX UNLOCKED ⚡</h4>
     <p style="font-size: 12px; color: #94a3b8; margin: 0 0 20px 0;">Click an option and enter the desired value in the pop-up box.</p>
     
-    <!-- SECTION 1: Resources & Pack Upgrades -->
+    <!-- SECTION 1: Resources & Egg Upgrades -->
     <div style="display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed #334155;">
         <span onclick="matrixClickMoney()" style="display: inline-block !important; background-color: #10b981; color: white; font-size: 13px; font-weight: bold; padding: 8px 14px; border-radius: 6px; cursor: pointer; user-select: none;">+ Money</span>
         <span onclick="matrixClickGold()" style="display: inline-block !important; background-color: #f59e0b; color: white; font-size: 13px; font-weight: bold; padding: 8px 14px; border-radius: 6px; cursor: pointer; user-select: none;">+ Gold</span>
         <span onclick="matrixClickMultiplier()" style="display: inline-block !important; background-color: #8b5cf6; color: white; font-size: 13px; font-weight: bold; padding: 8px 14px; border-radius: 6px; cursor: pointer; user-select: none;">+ Multiplier</span>
-        <span onclick="matrixClickPacks()" style="display: inline-block !important; background-color: #00bcd4; color: black; font-size: 13px; font-weight: bold; padding: 8px 14px; border-radius: 6px; cursor: pointer; user-select: none;">+ Pack Upgrades</span>
+        <span onclick="matrixClickEggs()" style="display: inline-block !important; background-color: #00bcd4; color: black; font-size: 13px; font-weight: bold; padding: 8px 14px; border-radius: 6px; cursor: pointer; user-select: none;">+ Egg Upgrades</span>
     </div>
 
     <!-- SECTION 2: Specific Egg Generator -->
