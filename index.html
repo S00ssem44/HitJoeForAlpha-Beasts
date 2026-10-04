@@ -251,9 +251,9 @@
         onmouseleave="this.innerText='😃'" 
         onmousedown="this.innerText='😵‍💫'" 
         onmouseup="this.innerText='😨'">😃</button> <br>
-    <button id="shop-btn" onclick="new_button_click()">Buy Alpha-beast Eggs (\$10.00)</button>
-    <button id="upgrade-btn" onclick="upgrade_button_click()">Upgrade Hits (2x earnings) (\$100.00)</button>
-    <button id="Egg-upgrade-btn" onclick="upgrade_Eggs_click()">Upgrade Eggs (\$200.00)</button>
+    <button id="shop-btn" onclick="new_button_click()">Buy Alpha-beast Eggs ($10.00)</button>
+    <button id="upgrade-btn" onclick="upgrade_button_click()">Upgrade Hits (2x earnings) ($100.00)</button>
+    <button id="Egg-upgrade-btn" onclick="upgrade_Eggs_click()">Upgrade Eggs ($200.00)</button>
 
     <div id="quest-shop-container">
         <h3 style="color: #b45309; margin: 0;">🌟 Secret Gold Coin Bazaar (<span id="shop-timer">5:00</span>)</h3>
@@ -1473,6 +1473,9 @@ function updateQuestUI() {
     }
 }
 
+// =========================================================================
+// 1. QUEST SHOP GENERATOR & UI (Jouw originele logica + veilige naam-fix)
+// =========================================================================
 function generateQuestShop() {
     // 1. Zet altijd eerst de 3 standaard boosters in de winkel
     shop_inventory = [
@@ -1492,27 +1495,79 @@ function generateQuestShop() {
     // 4. Teken de winkel direct correct op het scherm!
     renderQuestShopUI();
 }
+
 function renderQuestShopUI() {
     let qsg = document.getElementById("quest-shop-grid");
     if (qsg) {
         qsg.innerHTML = shop_inventory.map(item => {
-            // We halen voor de veiligheid eventuele witruimtes rondom de naam weg
             let cleanName = item.name.trim();
+            let escapedName = cleanName.replace(/'/g, "\\'");
             
             return `
-                <div class="shop-item-Egg">
-                    <strong>${cleanName}</strong><br>
-                    <span style="color: #6b7280; font-size:10px;">${item.desc}</span><br>
-                    <span style="color: #b45309; font-weight:bold;">🌟 ${item.cost} Coins</span><br>
-                    <!-- DE FIX: We sturen de naam met veilige aanhalingstekens mee naar de aankoopfunctie! -->
-                    <button onclick="buyShopItem('${cleanName}')" style="position: relative; z-index: 10; cursor: pointer;">Purchase</button>
+                <div class="shop-item-Egg" style="background-color: #ffffff !important; border: 1px solid #e2e8f0; padding: 10px; border-radius: 8px;">
+                    <!-- DE FIX: We dwingen de titel/naam om ALTIJD donkergrijs (#1e293b) te blijven -->
+                    <strong style="color: #1e293b !important; display: inline-block; margin-bottom: 4px;">${cleanName}</strong><br>
+                    <span style="color: #6b7280 !important; font-size:10px; display: inline-block; margin-bottom: 4px;">${item.desc}</span><br>
+                    <span style="color: #b45309 !important; font-weight:bold; display: inline-block; margin-bottom: 8px;">🌟 ${item.cost} Gold Coins</span><br>
+                    <button onclick="buyShopItem('${escapedName}')" style="position: relative; z-index: 10; cursor: pointer; display: block; width: 100%;">Purchase</button>
                  </div>
             `;
         }).join('');
     }
 }
 
+// =========================================================================
+// 2. QUEST SHOP AANKOOP FUNCTIE (Hersteld en gekoppeld aan goldCoins)
+// =========================================================================
+function buyShopItem(itemName) {
+    let item = shop_inventory.find(i => i.name === itemName);
+    if (!item) return;
 
+    // We controleren of je genoeg munten hebt
+    if (goldCoins >= item.cost) {
+        goldCoins -= item.cost;
+        if (typeof updateGoldDisplay === "function") updateGoldDisplay();
+
+        if (item.type === "booster") {
+            if (item.target === "epic") shop_epic_booster = 5;
+            if (item.target === "mythic") shop_mythic_booster = 5;
+            if (item.target === "godly") shop_godly_booster = 5;
+            terminal.innerHTML += `<span style="color: #b45309; font-weight: bold;">✨ Activated: ${item.name}! Your next pull has boosted rates!</span>\n`;
+        } 
+        else if (item.type === "direct_Egg") {
+            // BEVEILIGDE MATCH: We zoeken de officiële naam op in jouw pools 
+            // zodat we zeker weten dat de spelling exact matcht met je owned_ arrays!
+            let officialName = "";
+            
+            if (item.pool === "epic") {
+                officialName = epic_pool.find(name => name.toLowerCase().trim() === itemName.toLowerCase().trim()) || itemName;
+                owned_epics[officialName] = 1;
+            } else if (item.pool === "mythic") {
+                officialName = mythic_pool.find(name => name.toLowerCase().trim() === itemName.toLowerCase().trim()) || itemName;
+                owned_mythics[officialName] = 1;
+            } else if (item.pool === "godly") {
+                officialName = godly_pool.find(name => name.toLowerCase().trim() === itemName.toLowerCase().trim()) || itemName;
+                owned_godlies[officialName] = 1; 
+            }
+
+            terminal.innerHTML += `<span style="color: #22c55e; font-weight: bold;">🌟 Quest Shop Success! Bought direct Alpha-beast: ${officialName}!</span>\n`;
+            
+            // Dwing het album om direct de visuele updates te synchroniseren
+            build_rarity_album();
+        }
+
+        terminal.scrollTop = terminal.scrollHeight;
+        if (typeof saveGame === "function") saveGame();
+        renderQuestShopUI();
+    } else {
+        terminal.innerHTML += `<span style="color: #ff3333;">Not enough Gold Coins!</span>\n`;
+        terminal.scrollTop = terminal.scrollHeight;
+    }
+}
+
+// =========================================================================
+// 3. NORMALE EIEREN KOPEN (JOUW ORIGINELE CODE - 100% ONGEWIJZIGD)
+// =========================================================================
 function new_button_click() {
     if (number >= current_Egg_price) {
         number -= current_Egg_price;
@@ -1589,6 +1644,39 @@ function new_button_click() {
         terminal.innerHTML += `You don't have enough money! Eggs cost $${current_Egg_price.toFixed(2)}\n`;
     }
     terminal.scrollTop = terminal.scrollHeight;
+}
+
+// =========================================================================
+// 4. ALBUM UP-TO-DATE UPDATE LOGICA (Gekoppeld aan de veilige ID's)
+// =========================================================================
+function build_rarity_album() {
+    updateGridVisuals(epic_pool, owned_epics);
+    updateGridVisuals(mythic_pool, owned_mythics);
+    updateGridVisuals(godly_pool, owned_godlies); // Mocht je deze owned_legendaries hebben genoemd, verander owned_godlies dan naar owned_legendaries
+    if (typeof owned_Giants !== "undefined") {
+        updateGridVisuals(Giant_pool, owned_Giants);
+    }
+}
+
+function updateGridVisuals(pool, ownedData) {
+    pool.forEach(name => {
+        const safeId = name.toLowerCase().replace(/[^a-z0-9]/g, "_");
+        const cardElement = document.getElementById("card_" + safeId);
+        
+        if (cardElement) {
+            if (ownedData[name] >= 1) {
+                cardElement.classList.remove("locked");
+                cardElement.classList.add("unlocked");
+                cardElement.style.backgroundColor = "#22c55e"; 
+                cardElement.style.color = "white";
+            } else {
+                cardElement.classList.remove("unlocked");
+                cardElement.classList.add("locked");
+                cardElement.style.backgroundColor = ""; 
+                cardElement.style.color = "";
+            }
+        }
+    });
 }
 
 function upgrade_button_click() {
@@ -1668,11 +1756,12 @@ function buyShopItem(productName) {
     // Als de computer het echt niet kan vinden, stop geruisloos
     if (!item || !item.name) return;
 
+    // Gebruik de juiste goudmunten variabele: gold_coins
     if (gold_coins >= item.cost) {
         gold_coins -= item.cost;
-        updateGoldDisplay();
+        if (typeof updateGoldDisplay === "function") updateGoldDisplay();
 
-        let isBooster = item.name.toLowerCase().includes("Egg") || item.name.toLowerCase().includes("booster");
+        let isBooster = item.name.toLowerCase().includes("egg") || item.name.toLowerCase().includes("booster");
         let itemType = isBooster ? "booster" : "direct_Egg";
 
         if (itemType === "booster") {
@@ -1681,24 +1770,44 @@ function buyShopItem(productName) {
             if (item.target === "godly") shop_godly_booster = 5;
             terminal.innerHTML += `\n<span style="color: #ffb703;">🛍️ Bought ${item.name}! Rates inside your cash shop are now heavily boosted for your next pull!</span>\n`;
         } else if (itemType === "direct_Egg") {
-            let formattedName = item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase();
+            
+            // FIX: We dwingen de naam niet meer naar kleine letters, maar zoeken de EXACTE naam op in de pools
+            let formattedName = item.name; 
             let pool = item.pool || "epic"; 
 
+            if (pool === "epic" && typeof epic_pool !== 'undefined') {
+                let match = epic_pool.find(n => n.toLowerCase().trim() === item.name.toLowerCase().trim());
+                if (match) formattedName = match;
+            } else if (pool === "mythic" && typeof mythic_pool !== 'undefined') {
+                let match = mythic_pool.find(n => n.toLowerCase().trim() === item.name.toLowerCase().trim());
+                if (match) formattedName = match;
+            } else if (pool === "godly" && typeof godly_pool !== 'undefined') {
+                let match = godly_pool.find(n => n.toLowerCase().trim() === item.name.toLowerCase().trim());
+                if (match) formattedName = match;
+            }
+
+            // Voeg nu de 100% correct gespelde naam toe aan de inventaris
             if (pool === "epic" && typeof owned_epics !== 'undefined') owned_epics[formattedName] = 1;
             if (pool === "mythic" && typeof owned_mythics !== 'undefined') owned_mythics[formattedName] = 1;
             if (pool === "godly" && typeof owned_godlies !== 'undefined') owned_godlies[formattedName] = 1;
 
+            // Voeg passief inkomen toe
             let incomeBoost = item.income || (pool === "epic" ? 25 : pool === "mythic" ? 500 : 5000);
             if (typeof passive_income !== 'undefined') passive_income += incomeBoost;
             else if (typeof passiveIncome !== 'undefined') passiveIncome += incomeBoost;
 
             terminal.innerHTML += `\n<span style="color: #ffb703;">🛍️ Direct buyout complete! Unlocked <strong>${formattedName}</strong> (+ $${incomeBoost}/sec) directly in your album!</span>\n`;
+            
+            // Bouw het album direct opnieuw op om de kaart groen te laten oplichten
             if (typeof build_rarity_album === "function") build_rarity_album();
         }
 
         // Verwijder het gekochte item uit de winkel en teken de UI opnieuw
         shop_inventory = shop_inventory.filter(i => i !== item);
         renderQuestShopUI();
+        
+        // Sla de game op als de functie bestaat
+        if (typeof saveGame === "function") saveGame();
     } else {
         terminal.innerHTML += `\n<span style="color: #ff4d4d;">[SHOP] You do not have enough Gold Coins for this asset!</span>\n`;
     }
