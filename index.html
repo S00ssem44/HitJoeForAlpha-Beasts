@@ -178,6 +178,7 @@
         .Egg-item { text-align: left; font-size: 13px; }
     </style></head>
 <body>
+    
 <!-- === 🗂️ THE SELECT FILE / SLOT SCREEN (WITH RENAME SYSTEM) === -->
 <div id="slot-select-screen" style="max-width: 600px; margin: 40px auto; text-align: center; font-family: monospace; background: #f8fafc; padding: 25px; border: 3px solid #ef4444; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: block !important; color: #0f172a;">
     <h2 style="color: #ef4444; margin-bottom: 5px; font-weight: bold;">💾 SELECT YOUR SAVE FILE 💾</h2>
@@ -245,16 +246,26 @@
     <div id="money-display">Balance: $0.00</div>
     <div id="gold-display">🌟 Gold Coins: 0</div>
 
-    <button id="hit-btn" 
-        onclick="clickJoe()" 
-        onmouseenter="this.innerText='😨'" 
-        onmouseleave="this.innerText='😃'" 
-        onmousedown="this.innerText='😵‍💫'" 
-        onmouseup="this.innerText='😨'">😃</button> <br>
-    <button id="shop-btn" onclick="new_button_click()">Buy Alpha-beast Eggs ($10.00)</button>
-    <button id="upgrade-btn" onclick="upgrade_button_click()">Upgrade Hits (2x earnings) ($100.00)</button>
-    <button id="Egg-upgrade-btn" onclick="upgrade_Eggs_click()">Upgrade Eggs ($200.00)</button>
+<button id="hit-btn" 
+    onclick="clickJoe()" 
+    onmouseenter="this.innerText='😨'" 
+    onmouseleave="this.innerText='😃'" 
+    onmousedown="this.innerText='😵‍💫'" 
+    onmouseup="this.innerText='😨'">😃</button> <br>
+<button id="shop-btn" onclick="new_button_click()">Buy Alpha-beast Eggs ($10.00)</button>
+<button id="upgrade-btn" onclick="upgrade_button_click()">Upgrade Hits (2x earnings) ($100.00)</button>
+<button id="Egg-upgrade-btn" onclick="upgrade_Eggs_click()">Upgrade Eggs ($200.00)</button>
 
+<!-- DE NIEUWE XP KNOP NAAST JOUW UPGRADES -->
+<button onclick="openFullScreenXP()" style="padding: 10px 15px; font-weight: bold; background-color: #38bdf8; color: white; border: none; border-radius: 6px; cursor: pointer; margin-left: 5px;">
+    🏆 Bekijk Rang & XP Status
+</button>
+
+<div id="quest-shop-container">
+    <h3 style="color: #b45309; margin: 0;">🌟 Secret Gold Coin Bazaar (<span id="shop-timer">5:00</span>)</h3>
+    <p style="font-size: 11px; color: #6b7280; margin: 2px 0 10px 0;">Exclusive offers that refresh and restock every 5 minutes!</p>
+    <div class="shop-grid" id="quest-shop-grid"></div>
+</div>
     <div id="quest-shop-container">
         <h3 style="color: #b45309; margin: 0;">🌟 Secret Gold Coin Bazaar (<span id="shop-timer">5:00</span>)</h3>
         <p style="font-size: 11px; color: #6b7280; margin: 2px 0 10px 0;">Exclusive offers that refresh and restock every 5 minutes!</p>
@@ -274,14 +285,89 @@
     </div>
 
 <script>
-    let has_cheated = false; // Staat standaard op false bij een nieuw spel
-    // ==========================================================
-// 🚨 CRUCIAL RE-INJECTED DISPLAY FUNCTIONS 🚨
-// ==========================================================
-function updateMoneyDisplay() {
+    let has_cheated = false;
+    function updateMoneyDisplay() {
     let moneyEl = document.getElementById("money-display");
     if (moneyEl && typeof number !== 'undefined') {
         moneyEl.innerText = "Balance: \$" + number.toFixed(2);
+    }
+}
+
+// =========================================================================
+// FULL-SCREEN XP OVERLAY (Brawl Stars Stijl - Bouwt zichzelf kogelvrij op)
+// =========================================================================
+
+function openFullScreenXP() {
+    // 1. Controleer of het scherm al bestaat, zo niet: maak het dynamisch aan!
+    let fsScreen = document.getElementById("fullscreen-xp-screen");
+    
+    if (!fsScreen) {
+        fsScreen = document.createElement("div");
+        fsScreen.id = "fullscreen-xp-screen";
+        // Brawl Stars stijl donkere achtergrond verloop
+        fsScreen.style.cssText = `
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100vw; height: 100vh; 
+            background: radial-gradient(circle, #1e1b4b 0%, #09090b 100%); 
+            z-index: 99999; 
+            justify-content: center; 
+            align-items: center; 
+            flex-direction: column; 
+            font-family: 'Arial Black', sans-serif;
+        `;
+        document.body.appendChild(fsScreen);
+    }
+
+    // 2. Vul het scherm met de Brawl Stars interface (Alle CSS zit hier muurvast in)
+    fsScreen.innerHTML = `
+        <div style="text-align: center; width: 85%; max-width: 600px; color: white; background: rgba(15, 23, 42, 0.85) !important; padding: 40px; border-radius: 24px; border: 4px solid #4f46e5; box-shadow: 0 0 50px rgba(79, 70, 229, 0.5);">
+            
+            <h2 style="font-size: 36px; color: #facc15 !important; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px 0; text-shadow: 3px 3px 0px #b45309;">
+                Bounty Rang
+            </h2>
+            
+            <div style="font-size: 54px; color: #38bdf8 !important; font-weight: 900; text-transform: uppercase; margin-bottom: 25px; text-shadow: 4px 4px 0px #0369a1;">
+                🎖️ LEVEL <span id="fs-player-level">${player_level}</span>
+            </div>
+            
+            <!-- Grote XP Laadbalk -->
+            <div style="width: 100%; background: #09090b !important; height: 35px; border-radius: 20px; border: 4px solid #334155; overflow: hidden; position: relative; margin-bottom: 15px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);">
+                <div id="fs-xp-bar-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #c084fc, #a855f7, #3b82f6); transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+                
+                <div style="position: absolute; width: 100%; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; font-weight: bold; color: white !important; text-shadow: 2px 2px 2px black;">
+                    <span id="fs-current-xp">${player_xp}</span> / <span id="fs-next-level-xp">${xp_needed_for_next_level}</span> XP
+                </div>
+            </div>
+
+            <p style="color: #94a3b8 !important; font-size: 14px; margin: 0 0 30px 0; font-family: sans-serif;">
+                Voltooi actieve Bounty Quests op het Bounty Board voor meer XP!
+            </p>
+
+            <button onclick="closeFullScreenXP()" style="padding: 15px 40px; font-size: 18px; font-weight: 900; background: linear-gradient(180deg, #facc15, #eab308); color: #7c2d12 !important; border: 4px solid #7c2d12; border-radius: 12px; cursor: pointer; text-transform: uppercase; box-shadow: 0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5);">
+                Sluiten ❌
+            </button>
+        </div>
+    `;
+
+    // 3. Toon het scherm
+    fsScreen.style.display = "flex";
+
+    // 4. Start de geanimeerde Brawl Stars 'oplaad' animatie van de balk
+    setTimeout(() => {
+        let fsFill = document.getElementById("fs-xp-bar-fill");
+        if (fsFill) {
+            let percentage = (player_xp / xp_needed_for_next_level) * 100;
+            fsFill.style.width = percentage + "%";
+        }
+    }, 50);
+}
+
+function closeFullScreenXP() {
+    let fsScreen = document.getElementById("fullscreen-xp-screen");
+    if (fsScreen) {
+        fsScreen.style.display = "none";
     }
 }
 
@@ -305,7 +391,6 @@ function update_achievement_ui() {
 }
 
 function build_rarity_album() {
-    // Deze functie zorgt ervoor dat je album-grids gevuld worden met je nieuwe Alpha-beast
     let pools = [
         { id: "epic-grid", pool: epic_pool, owned: owned_epics, color: "#00b4d8" },
         { id: "mythic-grid", pool: mythic_pool, owned: owned_mythics, color: "#8a2be2" },
@@ -331,16 +416,12 @@ function build_rarity_album() {
     });
 }
 
-// ==========================================================
-// 💾 MULTI-SLOT STORAGE SYSTEM (SAVE & LOAD) 💾
-// ==========================================================
 let current_slot = null; 
 
 function saveGame() {
-    if (!current_slot) return; // Sla niet op als er geen slot actief is
+    if (!current_slot) return;
 
     try {
-        // We bouwen de save-lijst heel veilig op. Als een variabele niet bestaat, pakt hij 0 of false.
         let gameState = {
             number: (typeof number !== 'undefined') ? number : 0,
             gold_coins: (typeof gold_coins !== 'undefined') ? gold_coins : 0,
@@ -365,14 +446,12 @@ function saveGame() {
             pokemon_notif_triggered: (typeof pokemon_notif_triggered !== 'undefined') ? pokemon_notif_triggered : false,
             has_cheated: has_cheated,
 
-            // Sla de Alpha-beast-albums op
             owned_Giants: (typeof owned_Giants !== 'undefined') ? owned_Giants : {},
             owned_epics: (typeof owned_epics !== 'undefined') ? owned_epics : {},
             owned_mythics: (typeof owned_mythics !== 'undefined') ? owned_mythics : {},
             owned_godlies: (typeof owned_godlies !== 'undefined') ? owned_godlies : {}
         };
         
-        // Schrijf het direct hard weg naar het geselecteerde slot
         localStorage.setItem("joe_game_save_slot_" + current_slot, JSON.stringify(gameState));
         console.log("Progress successfully forced to Slot " + current_slot);
     } catch (error) {
@@ -382,13 +461,12 @@ function saveGame() {
 
 function loadGame(slotId) {
     let savedData = localStorage.getItem("joe_game_save_slot_" + slotId);
-    if (!savedData) return false; // Geen savegame gevonden in dit slot
+    if (!savedData) return false;
 
     try {
         let save = JSON.parse(savedData);
-        current_slot = slotId; // Zet het actieve slot direct vast
+        current_slot = slotId;
         
-        // 1. Laad alle basis variabelen veilig in (met harde fallbacks naar je huidige waarden)
         if (save.number !== undefined) number = save.number;
         if (save.gold_coins !== undefined) gold_coins = save.gold_coins;
         if (save.click_multiplier !== undefined) click_multiplier = save.click_multiplier;
@@ -412,13 +490,11 @@ function loadGame(slotId) {
         if (save.pokemon_notif_triggered !== undefined) pokemon_notif_triggered = save.pokemon_notif_triggered;
         if (save.has_cheated !== undefined) has_cheated = save.has_cheated;
 
-        // 2. Laad je Alpha-beast-album arrays in
         if (save.owned_Giants !== undefined) owned_Giants = save.owned_Giants;
         if (save.owned_epics !== undefined) owned_epics = save.owned_epics;
         if (save.owned_mythics !== undefined) owned_mythics = save.owned_mythics;
         if (save.owned_godlies !== undefined) owned_godlies = save.owned_godlies;
         
-        // 3. Herstel je Achievements veilig
         if (typeof achievements !== 'undefined' && achievements) {
             Object.keys(achievements).forEach(key => achievements[key].unlocked = false);
             if (save.unlocked_achievements !== undefined) {
@@ -428,7 +504,6 @@ function loadGame(slotId) {
             }
         }
 
-        // 4. Veilige UI updates (deze controleren eerst of de elementen wel bestaan op je scherm!)
         let dispMoney = document.getElementById("money-display");
         let dispGold = document.getElementById("gold-display");
         let dispBazaar = document.getElementById("quest-shop-container");
@@ -463,23 +538,19 @@ function loadGame(slotId) {
             if (document.getElementById("Giant-grid")) document.getElementById("Giant-grid").style.display = "grid";
         }
 
-        // 5. Forceer de live-cijfers naar je interface
         if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
         if (typeof updateGoldDisplay === "function") updateGoldDisplay();
         if (typeof update_achievement_ui === "function") update_achievement_ui();
         if (typeof build_rarity_album === "function") build_rarity_album();
 
         console.log("Successfully loaded progress for Slot " + slotId);
-        return true; // Spel succesvol ingeladen!
+        return true;
     } catch (e) {
         console.error("Critical error inside loadGame routine:", e);
-        return false; // Mocht er toch iets geks gebeuren, start dan veilig op
+        return false;
     }
 }
 
-// ==========================================================
-// 📁 SLOT INTERFACE CONTROL LOGIC (FULLY ENGLISH) 📁
-// ==========================================================
 function updateSlotMenuUI() {
     for (let i = 1; i <= 3; i++) {
         let data = localStorage.getItem("joe_game_save_slot_" + i);
@@ -498,8 +569,6 @@ function updateSlotMenuUI() {
                 try {
                     let save = JSON.parse(data);
                     let balance = save.number !== undefined ? save.number : 0;
-                    
-                    // === HIER IS DE CHEAT CHECK ===
                     let cheatWarning = "";
                     if (save.has_cheated === true) {
                         cheatWarning = `<br><span style="color: #ef4444; font-weight: bold; font-size: 11px;">⚠️ Contains Cheats</span>`;
@@ -522,17 +591,14 @@ function updateSlotMenuUI() {
 function selectSlotAndPlay(slotId) {
     console.log("Forcing slot start for Slot: " + slotId);
     current_slot = slotId;
-    
-    // 1. Maak de game-wrapper DIRECT zichtbaar op het scherm, wat er ook gebeurt!
+
     let menu = document.getElementById("slot-select-screen");
     let wrapper = document.getElementById("game-content-wrapper");
     if (menu) menu.style.display = "none";
     if (wrapper) wrapper.style.display = "block !important"; 
     
-    // Schiet een back-up display-wijziging af mocht de inline stijl haken
     if (wrapper) wrapper.setAttribute("style", "display: block !important;");
 
-    // 2. Probeer de savegame te laden via een veilige try-catch loop
     let loaded = false;
     try {
         if (typeof loadGame === "function") {
@@ -542,12 +608,10 @@ function selectSlotAndPlay(slotId) {
         console.error("Savegame loading fell back, starting fresh:", err);
     }
     
-    // 3. Start de game-engine door naar jouw eigen functies!
     let hb = document.getElementById("hit-btn");
     if (hb) hb.style.display = "inline-block";
 
     if (!loaded) {
-        // Schone start: zet basiswaarden goed en start jouw introductie
         number = 0.00;
         gold_coins = 0;
         click_multiplier = 1.0;
@@ -560,7 +624,6 @@ function selectSlotAndPlay(slotId) {
             typeNextChar();
         }
     } else {
-        // Bestaand spel: trigger de loops
         if (typeof generateNewQuests === "function") generateNewQuests(); 
         if (typeof generateQuestShop === "function") generateQuestShop();  
         if (typeof startGlobalCountdown === "function") startGlobalCountdown();
@@ -571,9 +634,6 @@ function selectSlotAndPlay(slotId) {
     }
 }
 
-// ==========================================================
-// ⏰ AUTOMATIC STARTUP AND SAVING LOOP ⏰
-// ==========================================================
 function selectSlotAndPlay(slotId) {
     current_slot = slotId;
     let loaded = false;
@@ -581,23 +641,20 @@ function selectSlotAndPlay(slotId) {
     if (typeof loadGame === "function") {
         loaded = loadGame(slotId);
     }
-    
-    // VERBERG HET SLOTMENU EN TOON HET SPEL
+
     let menu = document.getElementById("slot-select-screen");
     let wrapper = document.getElementById("game-content-wrapper");
     
     if (menu) menu.style.display = "none";
-    if (wrapper) wrapper.style.display = "block"; // Floept je hele container in één keer open!
+    if (wrapper) wrapper.style.display = "block";
 
     if (!loaded) {
-        // GLOEDNIEUW SPEL IN DIT SLOT: Reset de engine
         number = 0.00;
         gold_coins = 0;
         click_multiplier = 1.0;
         total_clicks = 0;
         total_Eggs_bought = 0;
         
-        // Maak album leeg
         if (typeof owned_epics !== 'undefined') {
             epic_pool.forEach(name => owned_epics[name] = 0);
             mythic_pool.forEach(name => owned_mythics[name] = 0);
@@ -607,15 +664,13 @@ function selectSlotAndPlay(slotId) {
         
         updateMoneyDisplay();
         updateGoldDisplay();
-        
-        // Start de typemachine introductie
+
         currentLineIndex = 0;
         currentCharIndex = 0;
         if (typeof startIntro === "function") {
             startIntro();
         }
     } else {
-        // BESTAAND SPEL: Activeer direct de hit-knop en skip de intro!
         let hb = document.getElementById("hit-btn");
         if(hb) hb.style.display = "inline-block";
         
@@ -630,7 +685,6 @@ function selectSlotAndPlay(slotId) {
 }
 
 function wipeSlot(slotId, event) {
-    // Voorkomt dat de browser denkt dat je op het hele slot klikt om te spelen
     if (event && event.stopPropagation) {
         event.stopPropagation();
     } else if (window.event) {
@@ -639,25 +693,19 @@ function wipeSlot(slotId, event) {
     
     if (confirm("Are you 100% sure you want to WIPE Save File " + slotId + "? This will erase everything!")) {
         localStorage.removeItem("joe_game_save_slot_" + slotId);
-        updateSlotMenuUI(); // Ververs direct de teksten in het menu
+        updateSlotMenuUI();
     }
 }
-// ==========================================================
-// ✏️ SLOT RENAME SYSTEM ✏️
-// ==========================================================
 function renameSlot(slotId, event) {
-    // Voorkomt dat de game direct start als je op Rename klikt
     if (event && event.stopPropagation) event.stopPropagation();
     
-    // Haal de huidige naam op (als die er al is) als standaardwaarde
     let currentName = localStorage.getItem("joe_game_slot_name_" + slotId) || "Save File " + slotId;
     
     let newName = prompt(`Enter a new name for Slot ${slotId}:`, currentName);
     
-    // Als de speler niet op annuleren heeft gedrukt en iets heeft ingevuld
     if (newName !== null && newName.trim() !== "") {
         localStorage.setItem("joe_game_slot_name_" + slotId, newName.trim());
-        updateSlotMenuUI(); // Ververs het menu direct zodat de nieuwe naam zichtbaar is
+        updateSlotMenuUI();
     }
 }
 
@@ -671,15 +719,10 @@ function updateMatrixCheatValue(element) {
         cheat_input_value = 1000;
     }
 }
-// ==========================================================
-// 🚨 HET ULTIEME, VOLLEDIG GEKOPPELDE CHEAT SYSTEEM 🚨
-// ==========================================================
 
-// 1. De hoofdfunctie voor de F12-console
 function TheCreatorGaveMeThisCheatcode44(type, amount) {
     let panel = document.getElementById("cheat-panel");
 
-    // ALS ER GEEN PARAMETERS ZIJN: Maak het paneel dat onderaan staat gewoon zichtbaar!
     if (type === undefined && amount === undefined) {
         if (panel) {
             panel.style.display = "block";
@@ -692,7 +735,6 @@ function TheCreatorGaveMeThisCheatcode44(type, amount) {
         return "Developer panel activatet at the bottom of the page.";
     }
 
-    // ALS ER WEL PARAMETERS ZIJN: Direct via console verwerken
     if (String(type).toLowerCase().trim() === 'Egg') {
         return executeEggspawnCheat(String(amount));
     }
@@ -704,7 +746,6 @@ function TheCreatorGaveMeThisCheatcode44(type, amount) {
     return executeCheatInjection(String(type).toLowerCase().trim(), parsedAmount);
 }
 
-// 2. Het brein dat de aanpassingen doorvoert in de game state
 function executeCheatInjection(type, amount) {
     if (type === 'money') {
         number += amount;
@@ -732,7 +773,7 @@ function executeCheatInjection(type, amount) {
     else if (type === 'Egg_upgrade') {
         let loops = Math.min(Math.floor(amount), 100);
         let preNumber = number;
-        number = 999999999999; // Tijdelijk oneindig geld om upgrades te kunnen kopen
+        number = 999999999999;
         for(let i = 0; i < loops; i++) {
             if (chance_epic >= 0.50) break;
             upgrade_Eggs_click();
@@ -744,7 +785,6 @@ function executeCheatInjection(type, amount) {
     return "Incorrect cheat type.";
 }
 
-// 3. De kaart generator logica (koppelt aan de arrays uit jouw eerdere code)
 function executeEggspawnCheat(EggName) {
     if (!EggName) return "Enter a Egg name.";
     
@@ -792,7 +832,6 @@ function executeEggspawnCheat(EggName) {
     }
 }
 
-// 4. Knoppen koppelingen voor de HTML
 function injectCheat(type) {
     let amountInput = document.getElementById("cheat-amount");
     let amount = parseFloat(amountInput.value);
@@ -815,11 +854,10 @@ function injectEggCheat() {
     if (result.startsWith("Kaart")) {
         alert(result);
     } else {
-        EggInput.value = ""; // Maak vakje leeg bij succes
+        EggInput.value = "";
     }
 }
 
-// Centrale verwerking van grondstoffen en upgrades
 function executeCheatInjection(type, amount) {
     if (type === 'money') {
         number += amount;
@@ -845,11 +883,9 @@ function executeCheatInjection(type, amount) {
         return `Succes! Multiplier verhoogd met +${amount}x.`;
     }
     else if (type === 'Egg_upgrade') {
-        // Forceer een aantal Egg upgrades (loopt door de echte upgrade functie heen)
         if (typeof upgrade_Eggs_click === "function") {
-            let loops = Math.min(Math.floor(amount), 100); // Veiligheidscap
+            let loops = Math.min(Math.floor(amount), 100);
             let preNumber = number;
-            // Zorg tijdelijk voor oneindig geld om de upgrades te forceren
             number = 999999999999;
             for(let i = 0; i < loops; i++) {
                 if (chance_epic >= 0.50) break;
@@ -863,11 +899,9 @@ function executeCheatInjection(type, amount) {
     return "Foutieve invoer: Kies uit 'money', 'gold', 'multiplier', of 'Egg_upgrade'.";
 }
 
-// Logica om een specifieke kaart te spawnen op basis van exacte naam
 function executeEggspawnCheat(EggName) {
     if (!EggName) return "Voer een kaartnaam in.";
     
-    // Maak de invoer schoon en zorg voor de juiste hoofdletters (e.g. "charizard" -> "Charizard")
     let targetName = EggName.trim().toLowerCase();
     let found = false;
     let poolFound = "";
@@ -1516,14 +1550,10 @@ function renderQuestShopUI() {
     }
 }
 
-// =========================================================================
-// 2. QUEST SHOP AANKOOP FUNCTIE (Hersteld en gekoppeld aan goldCoins)
-// =========================================================================
 function buyShopItem(itemName) {
     let item = shop_inventory.find(i => i.name === itemName);
     if (!item) return;
 
-    // We controleren of je genoeg munten hebt
     if (goldCoins >= item.cost) {
         goldCoins -= item.cost;
         if (typeof updateGoldDisplay === "function") updateGoldDisplay();
@@ -1535,8 +1565,6 @@ function buyShopItem(itemName) {
             terminal.innerHTML += `<span style="color: #b45309; font-weight: bold;">✨ Activated: ${item.name}! Your next pull has boosted rates!</span>\n`;
         } 
         else if (item.type === "direct_Egg") {
-            // BEVEILIGDE MATCH: We zoeken de officiële naam op in jouw pools 
-            // zodat we zeker weten dat de spelling exact matcht met je owned_ arrays!
             let officialName = "";
             
             if (item.pool === "epic") {
@@ -1552,7 +1580,6 @@ function buyShopItem(itemName) {
 
             terminal.innerHTML += `<span style="color: #22c55e; font-weight: bold;">🌟 Quest Shop Success! Bought direct Alpha-beast: ${officialName}!</span>\n`;
             
-            // Dwing het album om direct de visuele updates te synchroniseren
             build_rarity_album();
         }
 
@@ -1565,9 +1592,6 @@ function buyShopItem(itemName) {
     }
 }
 
-// =========================================================================
-// 3. NORMALE EIEREN KOPEN (JOUW ORIGINELE CODE - 100% ONGEWIJZIGD)
-// =========================================================================
 function new_button_click() {
     if (number >= current_Egg_price) {
         number -= current_Egg_price;
@@ -1646,9 +1670,6 @@ function new_button_click() {
     terminal.scrollTop = terminal.scrollHeight;
 }
 
-// =========================================================================
-// 4. ALBUM UP-TO-DATE UPDATE LOGICA (Gekoppeld aan de veilige ID's)
-// =========================================================================
 function build_rarity_album() {
     updateGridVisuals(epic_pool, owned_epics);
     updateGridVisuals(mythic_pool, owned_mythics);
@@ -2016,12 +2037,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-</script>
-<!-- Hierboven eindigt je </script> tag -->
+function injectXpButton() {
+    let eggUpgradeBtn = document.getElementById("Egg-upgrade-btn");
+    
+    if (document.getElementById("dynamic-xp-btn")) return;
 
-<!-- ==========================================================
-     THE DEVELOPER MATRIX INTERFACE (FULLY ENGLISH OUTSIDE SCRIPT)
-     ========================================================== -->
+    if (eggUpgradeBtn) {
+        let xpBtn = document.createElement("button");
+        xpBtn.id = "dynamic-xp-btn";
+        xpBtn.innerText = "🏆 Bekijk Rang & XP Status";
+        xpBtn.onclick = openFullScreenXP;
+        
+        xpBtn.style.cssText = `
+            padding: 10px 15px; 
+            font-weight: bold; 
+            background-color: #38bdf8 !important; 
+            color: white !important; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            margin-left: 5px;
+            display: inline-block;
+        `;
+        
+        eggUpgradeBtn.parentNode.insertBefore(xpBtn, eggUpgradeBtn.nextSibling);
+    }
+}
+</script>
+
 <div id="developer-matrix-panel" style="display: none; margin: 40px auto; max-width: 750px; padding: 20px; background-color: #0f172a; border: 3px solid #ef4444; border-radius: 12px; color: #f8fafc; text-align: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); position: relative; z-index: 99999; font-family: monospace;">
     <h4 style="color: #ef4444; margin: 0 0 5px 0; font-size: 18px; letter-spacing: 1px;">⚡ DEVELOPER MATRIX UNLOCKED ⚡</h4>
     <p style="font-size: 12px; color: #94a3b8; margin: 0 0 20px 0;">Click an option and enter the desired value in the pop-up box.</p>
@@ -2041,6 +2084,47 @@ document.addEventListener("DOMContentLoaded", () => {
             <input type="text" id="cheat-Egg-name" placeholder="Type exact name of a Alpha-Beast" style="padding: 8px 15px; font-size: 14px; width: 340px; border-radius: 6px; border: 2px solid #334155; background: #1e293b; color: white; font-family: monospace;">
             <span onclick="matrixClickEgg()" style="display: inline-block !important; background-color: #ec4899; color: white; font-size: 14px; font-weight: bold; padding: 8px 18px; border-radius: 6px; cursor: pointer; user-select: none;">Spawn Egg 🪄</span>
         </div>
+    </div>
+</div>
+<!-- Knop om de Full-Screen XP Showcase te openen -->
+<button onclick="openFullScreenXP()" style="padding: 10px 20px; font-weight: bold; background-color: #38bdf8; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px;">
+    🏆 Bekijk Rang & XP Status
+</button>
+
+<!-- Het Full-Screen Overlay Scherm (Standaard verborgen) -->
+<div id="fullscreen-xp-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, #1e1b4b 0%, #09090b 100%); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; font-family: 'Arial Black', sans-serif;">
+    
+    <!-- Brawl Stars-achtige gloeiende container -->
+    <div style="text-align: center; width: 80%; max-width: 600px; color: white; background: rgba(15, 23, 42, 0.6); padding: 40px; border-radius: 24px; border: 4px solid #4f46e5; box-shadow: 0 0 50px rgba(79, 70, 229, 0.4);">
+        
+        <h2 style="font-size: 36px; color: #facc15; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; text-shadow: 3px 3px 0px #b45309;">
+            Bounty Rang
+        </h2>
+        
+        <!-- Grote Level Badge -->
+        <div style="font-size: 54px; color: #38bdf8; font-weight: 900; text-transform: uppercase; margin-bottom: 25px; text-shadow: 4px 4px 0px #0369a1;">
+            🎖️ LEVEL <span id="fs-player-level">1</span>
+        </div>
+        
+        <!-- De gigantische XP Balk -->
+        <div style="width: 100%; background: #09090b; height: 35px; border-radius: 20px; border: 4px solid #334155; overflow: hidden; position: relative; margin-bottom: 15px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);">
+            <!-- Geanimeerde Brawl Stars paars/blauw verloopbalk -->
+            <div id="fs-xp-bar-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #c084fc, #a855f7, #3b82f6); transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+            
+            <!-- XP Tekst in het midden van de balk -->
+            <div style="position: absolute; width: 100%; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; font-weight: bold; color: white; text-shadow: 2px 2px 2px black;">
+                <span id="fs-current-xp">0</span> / <span id="fs-next-level-xp">100</span> XP
+            </div>
+        </div>
+
+        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 30px; font-family: sans-serif;">
+            Complete active Bounty Quests for more XP!
+        </p>
+
+        <!-- Brawl Stars 'Sluiten / Ga Verder' Knop -->
+        <button onclick="closeFullScreenXP()" style="padding: 15px 40px; font-size: 18px; font-weight: 900; background: linear-gradient(180deg, #facc15, #eab308); color: #7c2d12; border: 4px solid #7c2d12; border-radius: 12px; cursor: pointer; text-transform: uppercase; box-shadow: 0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #7c2d12'" onmouseup="this.style.transform='none'; this.style.boxShadow='0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5)'">
+            Close ❌
+        </button>
     </div>
 </div>
 
