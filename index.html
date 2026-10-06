@@ -256,9 +256,8 @@
 <button id="upgrade-btn" onclick="upgrade_button_click()">Upgrade Hits (2x earnings) ($100.00)</button>
 <button id="Egg-upgrade-btn" onclick="upgrade_Eggs_click()">Upgrade Eggs ($200.00)</button>
 
-<!-- DE NIEUWE XP KNOP NAAST JOUW UPGRADES -->
-<button onclick="openFullScreenXP()" style="padding: 10px 15px; font-weight: bold; background-color: #38bdf8; color: white; border: none; border-radius: 6px; cursor: pointer; margin-left: 5px;">
-    🏆 Bekijk Rang & XP Status
+<button onclick="openFullScreenXP()" style="padding: 10px 15px; font-weight: bold; background-color: #38bdf8 !important; color: white !important; border: none; border-radius: 6px; cursor: pointer; margin-left: 5px; display: inline-block;">
+    🏆 Check Rank & XP Status
 </button>
 
 <div id="quest-shop-container">
@@ -293,129 +292,6 @@
     }
 }
 
-// =========================================================================
-// FULL-SCREEN XP OVERLAY (Brawl Stars Stijl - Bouwt zichzelf kogelvrij op)
-// =========================================================================
-
-function openFullScreenXP() {
-    // 1. Controleer of het scherm al bestaat, zo niet: maak het dynamisch aan!
-    let fsScreen = document.getElementById("fullscreen-xp-screen");
-    
-    if (!fsScreen) {
-        fsScreen = document.createElement("div");
-        fsScreen.id = "fullscreen-xp-screen";
-        // Brawl Stars stijl donkere achtergrond verloop
-        fsScreen.style.cssText = `
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100vw; height: 100vh; 
-            background: radial-gradient(circle, #1e1b4b 0%, #09090b 100%); 
-            z-index: 99999; 
-            justify-content: center; 
-            align-items: center; 
-            flex-direction: column; 
-            font-family: 'Arial Black', sans-serif;
-        `;
-        document.body.appendChild(fsScreen);
-    }
-
-    // 2. Vul het scherm met de Brawl Stars interface (Alle CSS zit hier muurvast in)
-    fsScreen.innerHTML = `
-        <div style="text-align: center; width: 85%; max-width: 600px; color: white; background: rgba(15, 23, 42, 0.85) !important; padding: 40px; border-radius: 24px; border: 4px solid #4f46e5; box-shadow: 0 0 50px rgba(79, 70, 229, 0.5);">
-            
-            <h2 style="font-size: 36px; color: #facc15 !important; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px 0; text-shadow: 3px 3px 0px #b45309;">
-                Bounty Rang
-            </h2>
-            
-            <div style="font-size: 54px; color: #38bdf8 !important; font-weight: 900; text-transform: uppercase; margin-bottom: 25px; text-shadow: 4px 4px 0px #0369a1;">
-                🎖️ LEVEL <span id="fs-player-level">${player_level}</span>
-            </div>
-            
-            <!-- Grote XP Laadbalk -->
-            <div style="width: 100%; background: #09090b !important; height: 35px; border-radius: 20px; border: 4px solid #334155; overflow: hidden; position: relative; margin-bottom: 15px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);">
-                <div id="fs-xp-bar-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #c084fc, #a855f7, #3b82f6); transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
-                
-                <div style="position: absolute; width: 100%; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; font-weight: bold; color: white !important; text-shadow: 2px 2px 2px black;">
-                    <span id="fs-current-xp">${player_xp}</span> / <span id="fs-next-level-xp">${xp_needed_for_next_level}</span> XP
-                </div>
-            </div>
-
-            <p style="color: #94a3b8 !important; font-size: 14px; margin: 0 0 30px 0; font-family: sans-serif;">
-                Voltooi actieve Bounty Quests op het Bounty Board voor meer XP!
-            </p>
-
-            <button onclick="closeFullScreenXP()" style="padding: 15px 40px; font-size: 18px; font-weight: 900; background: linear-gradient(180deg, #facc15, #eab308); color: #7c2d12 !important; border: 4px solid #7c2d12; border-radius: 12px; cursor: pointer; text-transform: uppercase; box-shadow: 0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5);">
-                Sluiten ❌
-            </button>
-        </div>
-    `;
-
-    // 3. Toon het scherm
-    fsScreen.style.display = "flex";
-
-    // 4. Start de geanimeerde Brawl Stars 'oplaad' animatie van de balk
-    setTimeout(() => {
-        let fsFill = document.getElementById("fs-xp-bar-fill");
-        if (fsFill) {
-            let percentage = (player_xp / xp_needed_for_next_level) * 100;
-            fsFill.style.width = percentage + "%";
-        }
-    }, 50);
-}
-
-function closeFullScreenXP() {
-    let fsScreen = document.getElementById("fullscreen-xp-screen");
-    if (fsScreen) {
-        fsScreen.style.display = "none";
-    }
-}
-
-function updateGoldDisplay() {
-    let goldEl = document.getElementById("gold-display");
-    if (goldEl && typeof gold_coins !== 'undefined') {
-        goldEl.innerText = "🌟 Gold Coins: " + gold_coins;
-    }
-}
-
-function update_achievement_ui() {
-    let achList = document.getElementById("ach-list");
-    if (achList && typeof achievements !== 'undefined') {
-        achList.innerHTML = "";
-        Object.keys(achievements).forEach(key => {
-            let ach = achievements[key];
-            let status = ach.unlocked ? "✅" : "🔒";
-            achList.innerHTML += `<div style="font-size: 12px; margin-bottom: 4px;">${status} ${ach.name}</div>`;
-        });
-    }
-}
-
-function build_rarity_album() {
-    let pools = [
-        { id: "epic-grid", pool: epic_pool, owned: owned_epics, color: "#00b4d8" },
-        { id: "mythic-grid", pool: mythic_pool, owned: owned_mythics, color: "#8a2be2" },
-        { id: "godly-grid", pool: godly_pool, owned: owned_godlies, color: "#e63946" },
-        { id: "Giant-grid", pool: Giant_pool, owned: owned_Giants, color: "#d97706" }
-    ];
-
-    pools.forEach(p => {
-        let gridEl = document.getElementById(p.id);
-        if (gridEl && p.pool && p.owned) {
-            gridEl.innerHTML = "";
-            p.pool.forEach(name => {
-                let count = p.owned[name] || 0;
-                let opacity = count > 0 ? "1" : "0.3";
-                let border = count > 0 ? `2px solid ${p.color}` : "2px dashed #cbd5e1";
-                gridEl.innerHTML += `
-                    <div style="padding: 8px; border: ${border}; border-radius: 6px; opacity: ${opacity}; text-align: center; background: white; font-size: 12px; color: #0f172a;">
-                        <strong>${name}</strong><br>Owned: ${count}
-                    </div>
-                `;
-            });
-        }
-    });
-}
-
 let current_slot = null; 
 
 function saveGame() {
@@ -445,6 +321,8 @@ function saveGame() {
             bank_notif_triggered: (typeof bank_notif_triggered !== 'undefined') ? bank_notif_triggered : false,
             pokemon_notif_triggered: (typeof pokemon_notif_triggered !== 'undefined') ? pokemon_notif_triggered : false,
             has_cheated: has_cheated,
+            player_xp: (typeof player_xp !== 'undefined') ? player_xp : 0,
+            player_level: (typeof player_level !== 'undefined') ? player_level : 1,
 
             owned_Giants: (typeof owned_Giants !== 'undefined') ? owned_Giants : {},
             owned_epics: (typeof owned_epics !== 'undefined') ? owned_epics : {},
@@ -458,7 +336,6 @@ function saveGame() {
         console.error("Critical error during saveGame execution:", error);
     }
 }
-
 function loadGame(slotId) {
     let savedData = localStorage.getItem("joe_game_save_slot_" + slotId);
     if (!savedData) return false;
@@ -489,6 +366,9 @@ function loadGame(slotId) {
         if (save.bank_notif_triggered !== undefined) bank_notif_triggered = save.bank_notif_triggered;
         if (save.pokemon_notif_triggered !== undefined) pokemon_notif_triggered = save.pokemon_notif_triggered;
         if (save.has_cheated !== undefined) has_cheated = save.has_cheated;
+
+        player_xp = save.player_xp !== undefined ? save.player_xp : 0;
+        player_level = save.player_level !== undefined ? save.player_level : 1;
 
         if (save.owned_Giants !== undefined) owned_Giants = save.owned_Giants;
         if (save.owned_epics !== undefined) owned_epics = save.owned_epics;
@@ -538,10 +418,16 @@ function loadGame(slotId) {
             if (document.getElementById("Giant-grid")) document.getElementById("Giant-grid").style.display = "grid";
         }
 
+        let menu = document.getElementById("slot-select-screen");
+        let wrapper = document.getElementById("game-content-wrapper");
+        if (menu) menu.style.display = "none";
+        if (wrapper) wrapper.style.display = "block";
+
         if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
         if (typeof updateGoldDisplay === "function") updateGoldDisplay();
         if (typeof update_achievement_ui === "function") update_achievement_ui();
         if (typeof build_rarity_album === "function") build_rarity_album();
+        if (typeof updateFullScreenVisuals === "function") updateFullScreenVisuals();
 
         console.log("Successfully loaded progress for Slot " + slotId);
         return true;
@@ -1487,12 +1373,31 @@ function checkQuestProgression(type, current_value, specific_rarity = null) {
 
 function completeQuest(id) {
     let q = active_quests[id];
+    if (!q) return;
+    
     q.done = true;
-    gold_coins += q.reward;
-    updateGoldDisplay();
-    terminal.innerHTML += `\n<span style="color: #f72585; font-weight: bold;">🌟 [BOUNTY COMPLETED] Target reached! Earned +${q.reward} Gold Coins!</span>\n`;
-    terminal.scrollTop = terminal.scrollHeight;
-    updateQuestUI();
+    
+    if (typeof gold_coins !== 'undefined') {
+        gold_coins += q.reward;
+    } else if (typeof goldCoins !== 'undefined') {
+        goldCoins += q.reward;
+    }
+    
+    if (typeof updateGoldDisplay === "function") updateGoldDisplay();
+    
+    let term = document.getElementById("terminal");
+    if (term) {
+        term.innerHTML += `\n<span style="color: #f72585; font-weight: bold;">🌟 [BOUNTY COMPLETED] Target reached! Earned +${q.reward} Gold Coins!</span>\n`;
+        term.scrollTop = term.scrollHeight;
+    }
+    
+    if (typeof updateQuestUI === "function") updateQuestUI();
+    
+    let dynamicXpReward = q.reward * 30;
+    
+    if (typeof addXP === "function") {
+        addXP(dynamicXpReward);
+    }
 }
 
 function updateQuestUI() {
@@ -1592,6 +1497,7 @@ function buyShopItem(itemName) {
     }
 }
 
+
 function new_button_click() {
     if (number >= current_Egg_price) {
         number -= current_Egg_price;
@@ -1668,15 +1574,6 @@ function new_button_click() {
         terminal.innerHTML += `You don't have enough money! Eggs cost $${current_Egg_price.toFixed(2)}\n`;
     }
     terminal.scrollTop = terminal.scrollHeight;
-}
-
-function build_rarity_album() {
-    updateGridVisuals(epic_pool, owned_epics);
-    updateGridVisuals(mythic_pool, owned_mythics);
-    updateGridVisuals(godly_pool, owned_godlies); // Mocht je deze owned_legendaries hebben genoemd, verander owned_godlies dan naar owned_legendaries
-    if (typeof owned_Giants !== "undefined") {
-        updateGridVisuals(Giant_pool, owned_Giants);
-    }
 }
 
 function updateGridVisuals(pool, ownedData) {
@@ -1844,35 +1741,32 @@ function countUniqueEggs() {
 }
 
 function build_rarity_album() {
-    // Update de kansberekening-percentages in de UI-headers
-    if(document.getElementById("epic-rate")) document.getElementById("epic-rate").innerText = (chance_epic * 100).toFixed(2);
-    if(document.getElementById("mythic-rate")) document.getElementById("mythic-rate").innerText = (chance_mythic * 100).toFixed(2);
-    if(document.getElementById("godly-rate")) document.getElementById("godly-rate").innerText = (chance_godly * 100).toFixed(2);
-    if(document.getElementById("Giant-rate")) document.getElementById("Giant-rate").innerText = (chance_Giant * 100).toFixed(2);
+    let pools = [
+        { id: "epic-grid", pool: epic_pool, owned: owned_epics, color: "#00b4d8" },
+        { id: "mythic-grid", pool: mythic_pool, owned: owned_mythics, color: "#8a2be2" },
+        { id: "godly-grid", pool: godly_pool, owned: owned_godlies, color: "#e63946" },
+        { id: "Giant-grid", pool: Giant_pool, owned: owned_Giants, color: "#d97706" }
+    ];
 
-    // Functie om een grid te vullen met kaarten
-    let fillGrid = (gridId, pool, ownedObject) => {
-        let grid = document.getElementById(gridId);
-        if (!grid) return;
-        grid.innerHTML = pool.map(name => {
-            let owned = (ownedObject[name] || 0) > 0;
-            return `
-                <div class="Egg-item" style="opacity: ${owned ? '1' : '0.25'}; font-weight: ${owned ? 'bold' : 'normal'};">
-                    ${owned ? '⚡' : '🔒'} ${name}
-                </div>
-            `;
-        }).join('');
-    };
-
-    // Bouw de 4 grids op
-    fillGrid("epic-grid", epic_pool, owned_epics);
-    fillGrid("mythic-grid", mythic_pool, owned_mythics);
-    fillGrid("godly-grid", godly_pool, owned_godlies);
-    fillGrid("Giant-grid", Giant_pool, owned_Giants);
+    pools.forEach(p => {
+        let gridEl = document.getElementById(p.id);
+        if (gridEl && p.pool && p.owned) {
+            gridEl.innerHTML = "";
+            p.pool.forEach(name => {
+                let count = p.owned[name] || 0;
+                let opacity = count > 0 ? "1" : "0.3";
+                let border = count > 0 ? `2px solid ${p.color}` : "2px dashed #cbd5e1";
+                
+                gridEl.innerHTML += `
+                    <div style="padding: 8px; border: ${border}; border-radius: 6px; opacity: ${opacity}; text-align: center; background: white; font-size: 12px; color: #0f172a;">
+                        <strong>${name}</strong><br>Owned: ${count}
+                    </div>
+                `;
+            });
+        }
+    });
 }
-// ==========================================================
-// 🚨 THE DEVELOPER MATRIX INTERFACE (FULLY ENGLISH RELEASE) 🚨
-// ==========================================================
+
 function TheCreatorGaveMeThisCheatcode44(type, amount) {
     let panel = document.getElementById("developer-matrix-panel");
 
@@ -2005,9 +1899,278 @@ document.getElementById("cheat-Egg-name").addEventListener("keydown", e => {
     }
 })
                                                             
+if (typeof player_xp === 'undefined') window.player_xp = 0;
+if (typeof player_level === 'undefined') window.player_level = 1;
+
+function getXpNeededForLevel(level) {
+    if (level === 1) return 100;
+    return 100 + (level - 1) * 50;
+}
+
+function addXP(amount) {
+    window.player_xp = (window.player_xp || 0) + amount;
+    let xpNeeded = getXpNeededForLevel(window.player_level || 1);
+    
+    while (window.player_xp >= xpNeeded) {
+        window.player_xp -= xpNeeded;
+        window.player_level = (window.player_level || 1) + 1;
+        xpNeeded = getXpNeededForLevel(window.player_level);
+        
+        if (typeof giveLevelReward === "function") {
+            giveLevelReward(window.player_level);
+        }
+        
+        let term = document.getElementById("terminal");
+        if (term) {
+            term.innerHTML += `\n<span style="color: #eab308; font-weight: bold; font-size: 14px;">🎉 LEVEL UP! You reached Level ${window.player_level}! 🚀</span>\n`;
+            term.scrollTop = term.scrollHeight;
+        }
+    }
+    
+    let fsScreen = document.getElementById("fullscreen-xp-screen");
+    if (fsScreen && fsScreen.style.display === "flex") {
+        if (typeof updateFullScreenVisuals === "function") {
+            updateFullScreenVisuals();
+        }
+    }
+    if (typeof saveGame === "function") saveGame();
+}
+
+function giveLevelReward(level) {
+    if (level === 2) { gold_coins += 10; }
+    else if (level === 3) { multiplier *= 2; }
+    else if (level === 4) { number += 50000; }
+    else if (level === 5 && typeof owned_mythics !== 'undefined' && mythic_pool.length > 0) {
+        let egg = mythic_pool[Math.floor(Math.random() * mythic_pool.length)];
+        owned_mythics[egg] = 1;
+    }
+    else if (level === 6) { gold_coins += 25; }
+    else if (level === 7) { multiplier *= 3; }
+    else if (level === 8 && typeof owned_godlies !== 'undefined' && godly_pool.length > 0) {
+        let egg = godly_pool[Math.floor(Math.random() * godly_pool.length)];
+        owned_godlies[egg] = 1;
+    }
+    else if (level >= 9 && level <= 14) {
+        gold_coins += 50;
+        multiplier *= 4;
+    }
+    else if (level >= 15 && level <= 19) {
+        gold_coins += 100;
+        number += 5000;
+    }
+    else if (level === 20 && typeof owned_Giants !== 'undefined' && Giant_pool.length > 0) {
+        let egg = Giant_pool[Math.floor(Math.random() * Giant_pool.length)];
+        owned_Giants[egg] = 1;
+    }
+    
+    if (typeof updateGoldDisplay === "function") updateGoldDisplay();
+    if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
+    if (typeof build_rarity_album === "function") build_rarity_album();
+}
+
+function openFullScreenXP() {
+    let fsScreen = document.getElementById("fullscreen-xp-screen");
+    if (fsScreen) {
+        fsScreen.style.display = "flex";
+        renderRewardRoadUI();
+        updateFullScreenVisuals();
+    }
+}
+
+function getXpNeededForLevel(level) {
+    if (level === 1) return 100;
+    return 100 + (level - 1) * 50;
+}
+
+function addXP(amount) {
+    player_xp += amount;
+    let xpNeeded = getXpNeededForLevel(player_level);
+    
+    while (player_xp >= xpNeeded) {
+        player_xp -= xpNeeded;
+        player_level++;
+        xpNeeded = getXpNeededForLevel(player_level);
+        
+        giveLevelReward(player_level);
+        
+        if (document.getElementById("terminal")) {
+            document.getElementById("terminal").innerHTML += `\n<span style="color: #eab308; font-weight: bold; font-size: 14px;">🎉 LEVEL UP! You reached Level ${player_level}! 🚀</span>\n`;
+            document.getElementById("terminal").scrollTop = document.getElementById("terminal").scrollHeight;
+        }
+    }
+    
+    if (document.getElementById("fullscreen-xp-screen") && document.getElementById("fullscreen-xp-screen").style.display === "flex") {
+        updateFullScreenVisuals();
+    }
+    if (typeof saveGame === "function") saveGame();
+}
+
+function giveLevelReward(level) {
+    if (level === 2) {
+        if (typeof gold_coins !== 'undefined') gold_coins += 10;
+        else if (typeof goldCoins !== 'undefined') goldCoins += 10;
+    }
+    else if (level === 3) {
+        if (typeof multiplier !== 'undefined') multiplier *= 2;
+        else if (typeof click_multiplier !== 'undefined') click_multiplier *= 2;
+    }
+    else if (level === 4) {
+        if (typeof number !== 'undefined') number += 500;
+    }
+    else if (level === 5 && typeof owned_mythics !== 'undefined' && typeof mythic_pool !== 'undefined' && mythic_pool.length > 0) {
+        let egg = mythic_pool[Math.floor(Math.random() * mythic_pool.length)];
+        owned_mythics[egg] = (owned_mythics[egg] || 0) + 1;
+    }
+    else if (level === 6) {
+        if (typeof gold_coins !== 'undefined') gold_coins += 25;
+        else if (typeof goldCoins !== 'undefined') goldCoins += 25;
+    }
+    else if (level === 7) {
+        if (typeof multiplier !== 'undefined') multiplier *= 3;
+        else if (typeof click_multiplier !== 'undefined') click_multiplier *= 3;
+    }
+    else if (level === 8 && typeof owned_godlies !== 'undefined' && typeof godly_pool !== 'undefined' && godly_pool.length > 0) {
+        let egg = godly_pool[Math.floor(Math.random() * godly_pool.length)];
+        owned_godlies[egg] = (owned_godlies[egg] || 0) + 1;
+    }
+    else if (level >= 9 && level <= 14) {
+        if (typeof gold_coins !== 'undefined') gold_coins += 50;
+        else if (typeof goldCoins !== 'undefined') goldCoins += 50;
+        if (typeof multiplier !== 'undefined') multiplier *= 4;
+        else if (typeof click_multiplier !== 'undefined') click_multiplier *= 4;
+    }
+    else if (level >= 15 && level <= 19) {
+        if (typeof gold_coins !== 'undefined') gold_coins += 100;
+        else if (typeof goldCoins !== 'undefined') goldCoins += 100;
+        if (typeof number !== 'undefined') number += 100000;
+        if (typeof multiplier !== 'undefined') multiplier *= 4;
+        else if (typeof click_multiplier !== 'undefined') click_multiplier *= 4;
+    }
+    else if (level === 20) {
+        if (typeof owned_epics !== 'undefined' && typeof epic_pool !== 'undefined' && epic_pool.length > 0) {
+            let egg1 = epic_pool[Math.floor(Math.random() * epic_pool.length)];
+            owned_epics[egg1] = (owned_epics[egg1] || 0) + 1;
+        }
+        if (typeof owned_mythics !== 'undefined' && typeof mythic_pool !== 'undefined' && mythic_pool.length > 0) {
+            let egg2 = mythic_pool[Math.floor(Math.random() * mythic_pool.length)];
+            owned_mythics[egg2] = (owned_mythics[egg2] || 0) + 1;
+        }
+        if (typeof owned_godlies !== 'undefined' && typeof godly_pool !== 'undefined' && godly_pool.length > 0) {
+            let egg3 = godly_pool[Math.floor(Math.random() * godly_pool.length)];
+            owned_godlies[egg3] = (owned_godlies[egg3] || 0) + 1;
+        }
+    }
+    
+    if (typeof updateGoldDisplay === "function") updateGoldDisplay();
+    if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
+    if (typeof build_rarity_album === "function") build_rarity_album();
+}
+
+function updateFullScreenVisuals() {
+    let lvlEl = document.getElementById("fs-player-level");
+    let xpEl = document.getElementById("fs-current-xp");
+    let nxtEl = document.getElementById("fs-next-level-xp");
+    let fillEl = document.getElementById("fs-xp-bar-fill");
+    
+    let xpNeeded = getXpNeededForLevel(player_level);
+    
+    if (lvlEl) lvlEl.innerText = player_level;
+    if (xpEl) xpEl.innerText = player_xp;
+    if (nxtEl) nxtEl.innerText = xpNeeded;
+    
+    if (fillEl) {
+        fillEl.style.width = "0%";
+        setTimeout(() => {
+            let percentage = (player_xp / xpNeeded) * 100;
+            fillEl.style.width = percentage + "%";
+        }, 100);
+    }
+    
+    renderRewardRoadUI();
+}
+
+function renderRewardRoadUI() {
+    let roadEl = document.getElementById("brawl-pass-road");
+    if (!roadEl) return;
+    
+    roadEl.innerHTML = "";
+    
+    for (let l = 2; l <= 20; l++) {
+        let borderCol = "#3b82f6";
+        let icon = "🪙";
+        let title = "Gold Coins";
+        let desc = "Gives you +10 Gold Coins to spend in the Secret Bazaar!";
+        
+        if (l === 2) { borderCol = "#facc15"; icon = "🪙"; title = "Gold Coins"; desc = "Gives you +10 Gold Coins to spend in the Secret Bazaar!"; }
+        else if (l === 3) { icon = "⚡"; title = "Multiplier Upgrade"; desc = "Massive boost! Permanently multiplies your current income by x2!"; }
+        else if (l === 4) { icon = "💰"; title = "Cash Reward"; desc = "Instantly adds +\$500.00 to your active balance!"; }
+        else if (l === 5) { borderCol = "#ec4899"; icon = "🔮"; title = "Mythic Egg"; desc = "Unlocks a random Mythic Alpha-beast directly inside your album!"; }
+        else if (l === 6) { icon = "🪙"; title = "Big Gold Stash"; desc = "Gives you +25 Gold Coins to spend in the Secret Bazaar!"; }
+        else if (l === 7) { icon = "⚡"; title = "Super Multiplier"; desc = "Insane speed! Permanently multiplies your current income by x3!"; }
+        else if (l === 8) { borderCol = "#e63946"; icon = "👑"; title = "Godly Egg"; desc = "Unlocks an incredibly rare Godly Alpha-beast inside your album!"; }
+        else if (l >= 9 && l <= 14) { icon = "🎁"; title = "Level " + l + " Bundle"; desc = "Contains a heavy package of +50 Gold Coins and multiplies your current income by x4!"; }
+        else if (l >= 15 && l <= 19) { borderCol = "#facc15"; icon = "💎"; title = "Mega Chest"; desc = "A jaw-dropping chest containing +100 Gold Coins, +\$100,000.00 Cash, and multiplies your income by x4!"; }
+        else if (l === 20) { borderCol = "#d97706"; icon = "📦"; title = "Ultimate Egg Bundle"; desc = "The grand finale! Unlocks 3 random Alpha-beasts at once: 1 Epic, 1 Mythic, and 1 Godly directly into your album!"; }
+        
+        let isClaimed = player_level > l;
+        let isLocked = player_level < l;
+        let bgStyle = "background: #1e293b !important;";
+        let opacityStyle = "opacity: 1;";
+        let badgeBadge = "";
+        
+        if (isClaimed) {
+            bgStyle = "background: #064e3b !important;";
+            badgeBadge = "<span style='position:absolute; top:-5px; right:-5px; background:#10b981; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; line-height:18px; font-weight:bold;'>✓</span>";
+        } else if (isLocked) {
+            opacityStyle = "opacity: 0.6;";
+            badgeBadge = "<span style='position:absolute; top:-5px; right:-5px; background:#64748b; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; line-height:18px;'>🔒</span>";
+        } else {
+            bgStyle = "background: #7c2d12 !important;";
+            badgeBadge = "<span style='position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; line-height:18px; font-weight:bold; animation: pulse 1s infinite;'>⭐</span>";
+        }
+        
+        let escapedTitle = title.replace(/'/g, "\\'");
+        let escapedDesc = desc.replace(/'/g, "\\'");
+        
+        roadEl.innerHTML += `
+            <button onclick="alert('${escapedTitle}\\n\\n${escapedDesc}')" style="min-width: 70px; max-width: 70px; height: 70px; ${bgStyle} border: 3px solid ${borderCol}; border-radius: 50% !important; padding: 0; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.4); ${opacityStyle} position: relative; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: scale(1); transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
+                <div style="font-size: 9px; color: #cbd5e1; font-weight: bold; margin-bottom: -2px;">L${l}</div>
+                <div style="font-size: 22px; line-height: 1;">${icon}</div>
+                ${badgeBadge}
+            </button>
+        `;
+    }
+}
+
+function closeFullScreenXP() {
+    let fsScreen = document.getElementById("fullscreen-xp-screen");
+    if (fsScreen) {
+        fsScreen.style.display = "none";
+    }
+}
+
+function updateGoldDisplay() {
+    let goldEl = document.getElementById("gold-display");
+    if (goldEl && typeof gold_coins !== 'undefined') {
+        goldEl.innerText = "🌟 Gold Coins: " + gold_coins;
+    }
+}
+
+function update_achievement_ui() {
+    let achList = document.getElementById("ach-list");
+    if (achList && typeof achievements !== 'undefined') {
+        achList.innerHTML = "";
+        Object.keys(achievements).forEach(key => {
+            let ach = achievements[key];
+            let status = ach.unlocked ? "✅" : "🔒";
+            achList.innerHTML += `<div style="font-size: 12px; margin-bottom: 4px;">${status} ${ach.name}</div>`;
+        });
+    }
+}
+
 function matrixClickEgg() {
-    has_cheated = true; // Markeer dit slot direct als cheat-file
-    saveGame(); // Forceer een directe save zodat het menu direct up-to-date is
+    has_cheated = true;
+    saveGame();
     let EggName = document.getElementById("cheat-Egg-name").value;
     if (!EggName || EggName.trim() === "") return alert("Please enter a Alpha-beast name!");
     if (typeof executeEggspawnCheat === "function") {
@@ -2017,59 +2180,36 @@ function matrixClickEgg() {
     }
 }
 
-// === AUTOMATIC STARTUP AND SAVING LOOP (STAAT HIER VEILIG ONDERAAN) ===
 document.addEventListener("DOMContentLoaded", () => {
+    let cheatInput = document.getElementById("cheat-Egg-name");
+    if (cheatInput) {
+        cheatInput.addEventListener("keydown", e => {
+            if (e.key == "Enter") {
+                matrixClickEgg();
+            }
+        });
+    }
+
     let menu = document.getElementById("slot-select-screen");
     let wrapper = document.getElementById("game-content-wrapper");
     
-    // Toon het menu en verberg de game dwingend bij de start
     if (menu) menu.style.display = "block";
     if (wrapper) wrapper.style.display = "none";
 
-    // Vul de 3 slots netjes met je saldo's
     if (typeof updateSlotMenuUI === "function") {
         updateSlotMenuUI();
     }
     
-    // Start de automatische save-loop van 10 seconden
     if (typeof saveGame === "function") {
         setInterval(saveGame, 10000);
     }
 });
-
-function injectXpButton() {
-    let eggUpgradeBtn = document.getElementById("Egg-upgrade-btn");
-    
-    if (document.getElementById("dynamic-xp-btn")) return;
-
-    if (eggUpgradeBtn) {
-        let xpBtn = document.createElement("button");
-        xpBtn.id = "dynamic-xp-btn";
-        xpBtn.innerText = "🏆 Bekijk Rang & XP Status";
-        xpBtn.onclick = openFullScreenXP;
-        
-        xpBtn.style.cssText = `
-            padding: 10px 15px; 
-            font-weight: bold; 
-            background-color: #38bdf8 !important; 
-            color: white !important; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            margin-left: 5px;
-            display: inline-block;
-        `;
-        
-        eggUpgradeBtn.parentNode.insertBefore(xpBtn, eggUpgradeBtn.nextSibling);
-    }
-}
 </script>
 
 <div id="developer-matrix-panel" style="display: none; margin: 40px auto; max-width: 750px; padding: 20px; background-color: #0f172a; border: 3px solid #ef4444; border-radius: 12px; color: #f8fafc; text-align: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); position: relative; z-index: 99999; font-family: monospace;">
     <h4 style="color: #ef4444; margin: 0 0 5px 0; font-size: 18px; letter-spacing: 1px;">⚡ DEVELOPER MATRIX UNLOCKED ⚡</h4>
     <p style="font-size: 12px; color: #94a3b8; margin: 0 0 20px 0;">Click an option and enter the desired value in the pop-up box.</p>
     
-    <!-- SECTION 1: Resources & Egg Upgrades -->
     <div style="display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed #334155;">
         <span onclick="matrixClickMoney()" style="display: inline-block !important; background-color: #10b981; color: white; font-size: 13px; font-weight: bold; padding: 8px 14px; border-radius: 6px; cursor: pointer; user-select: none;">+ Money</span>
         <span onclick="matrixClickGold()" style="display: inline-block !important; background-color: #f59e0b; color: white; font-size: 13px; font-weight: bold; padding: 8px 14px; border-radius: 6px; cursor: pointer; user-select: none;">+ Gold</span>
@@ -2077,7 +2217,6 @@ function injectXpButton() {
         <span onclick="matrixClickEggs()" style="display: inline-block !important; background-color: #00bcd4; color: black; font-size: 13px; font-weight: bold; padding: 8px 14px; border-radius: 6px; cursor: pointer; user-select: none;">+ Egg Upgrades</span>
     </div>
 
-    <!-- SECTION 2: Specific Egg Generator -->
     <div>
         <p style="font-size: 13px; color: #f8fafc; margin: 0 0 8px 0; text-align: left; padding-left: 25px;">🃏 SPECIFIC EGG GENERATOR:</p>
         <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
@@ -2086,47 +2225,38 @@ function injectXpButton() {
         </div>
     </div>
 </div>
-<!-- Knop om de Full-Screen XP Showcase te openen -->
-<button onclick="openFullScreenXP()" style="padding: 10px 20px; font-weight: bold; background-color: #38bdf8; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px;">
-    🏆 Bekijk Rang & XP Status
-</button>
 
-<!-- Het Full-Screen Overlay Scherm (Standaard verborgen) -->
-<div id="fullscreen-xp-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, #1e1b4b 0%, #09090b 100%); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; font-family: 'Arial Black', sans-serif;">
-    
-    <!-- Brawl Stars-achtige gloeiende container -->
-    <div style="text-align: center; width: 80%; max-width: 600px; color: white; background: rgba(15, 23, 42, 0.6); padding: 40px; border-radius: 24px; border: 4px solid #4f46e5; box-shadow: 0 0 50px rgba(79, 70, 229, 0.4);">
+<div style="text-align: center; margin: 30px 0;">
+    <button onclick="openFullScreenXP()" style="padding: 15px 30px; font-size: 16px; font-weight: bold; background-color: #38bdf8 !important; color: white !important; border: 2px solid #0284c7; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); font-family: sans-serif; text-transform: uppercase; letter-spacing: 1px;">
+        🏆 Bekijk Rang & XP Status 🚀
+    </button>
+</div>
+
+<div id="fullscreen-xp-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, #1e1b4b 0%, #09090b 100%) !important; z-index: 99999; justify-content: center; align-items: center; flex-direction: column; font-family: 'Arial Black', sans-serif;">
+    <div style="text-align: center; width: 90%; max-width: 850px; color: white !important; background: rgba(15, 23, 42, 0.85) !important; padding: 30px; border-radius: 24px; border: 4px solid #4f46e5; box-shadow: 0 0 50px rgba(79, 70, 229, 0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 999999;">
         
-        <h2 style="font-size: 36px; color: #facc15; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; text-shadow: 3px 3px 0px #b45309;">
-            Bounty Rang
-        </h2>
+        <h2 style="font-size: 32px; color: #facc15 !important; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 5px 0; text-shadow: 3px 3px 0px #b45309;">Bounty Pass</h2>
         
-        <!-- Grote Level Badge -->
-        <div style="font-size: 54px; color: #38bdf8; font-weight: 900; text-transform: uppercase; margin-bottom: 25px; text-shadow: 4px 4px 0px #0369a1;">
+        <div style="font-size: 40px; color: #38bdf8 !important; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 3px 3px 0px #0369a1;">
             🎖️ LEVEL <span id="fs-player-level">1</span>
         </div>
         
-        <!-- De gigantische XP Balk -->
-        <div style="width: 100%; background: #09090b; height: 35px; border-radius: 20px; border: 4px solid #334155; overflow: hidden; position: relative; margin-bottom: 15px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);">
-            <!-- Geanimeerde Brawl Stars paars/blauw verloopbalk -->
+        <div style="width: 100%; background: #09090b !important; height: 30px; border-radius: 20px; border: 4px solid #334155; overflow: hidden; position: relative; margin-bottom: 25px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);">
             <div id="fs-xp-bar-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #c084fc, #a855f7, #3b82f6); transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
-            
-            <!-- XP Tekst in het midden van de balk -->
-            <div style="position: absolute; width: 100%; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; font-weight: bold; color: white; text-shadow: 2px 2px 2px black;">
+            <div style="position: absolute; width: 100%; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 14px; font-weight: bold; color: white !important; text-shadow: 2px 2px 2px black; text-align: center;">
                 <span id="fs-current-xp">0</span> / <span id="fs-next-level-xp">100</span> XP
             </div>
         </div>
 
-        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 30px; font-family: sans-serif;">
-            Complete active Bounty Quests for more XP!
-        </p>
+        <h3 style="font-size: 18px; color: #a855f7 !important; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: 1px;">🎖️ Reward Road</h3>
+        
+        <div id="brawl-pass-road" style="width: 100%; display: flex; gap: 15px; overflow-x: auto; padding: 15px 5px; margin-bottom: 25px; background: rgba(15, 23, 42, 0.5) !important; border-radius: 12px; border: 2px solid #1e293b; box-shadow: inset 0 2px 8px rgba(0,0,0,0.5); scrollbar-width: thin;">
+        </div>
 
-        <!-- Brawl Stars 'Sluiten / Ga Verder' Knop -->
-        <button onclick="closeFullScreenXP()" style="padding: 15px 40px; font-size: 18px; font-weight: 900; background: linear-gradient(180deg, #facc15, #eab308); color: #7c2d12; border: 4px solid #7c2d12; border-radius: 12px; cursor: pointer; text-transform: uppercase; box-shadow: 0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.1s;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #7c2d12'" onmouseup="this.style.transform='none'; this.style.boxShadow='0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5)'">
+        <button onclick="closeFullScreenXP()" style="padding: 12px 35px; font-size: 16px; font-weight: 900; background: linear-gradient(180deg, #facc15, #eab308); color: #7c2d12 !important; border: 4px solid #7c2d12; border-radius: 12px; cursor: pointer; text-transform: uppercase; box-shadow: 0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.1s; display: block !important; position: relative; z-index: 9999999;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #7c2d12'" onmouseup="this.style.transform='none'; this.style.boxShadow='0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5)'">
             Close ❌
         </button>
     </div>
 </div>
-
 </body>
 </html>
