@@ -7,6 +7,20 @@
     <link rel="icon" href="image_bfd5aa20.jpg">
     <style>
 
+        @keyframes megaGreenGlow {
+    0% {
+        box-shadow: 0 0 25px #4ade80, 0 0 50px #22c55e, 0 4px 0 #064e3b;
+    }
+    50% {
+        box-shadow: 0 0 60px #86efac, 0 0 110px #4ade80, 0 0 150px #22c55e, 0 4px 0 #064e3b;
+        transform: scale(1.04);
+    }
+    100% {
+        box-shadow: 0 0 25px #4ade80, 0 0 50px #22c55e, 0 4px 0 #064e3b;
+    }
+}
+
+
         @media (preferred-color-scheme: light) {
             body {
                 background-color: #f0f2f5;
@@ -275,15 +289,19 @@
         <h3>🏆 Alpha-beast Ultra-Rare Checklist Album</h3>
         <div id="Giant-header" class="tier-title" style="background-color: #fff3cd; color: #d97706; display: none;">🔥 Giant godly Eggs (<span id="Giant-rate">0.50</span>% Chance - <span style="font-size: 10px; color: #b45309;">Rates boost to 1.00% once Eggs are MAXED!</span>) — [+\$25000/sec & +5000% Multiplier ea.]</div>
         <div class="grid" id="Giant-grid" style="display: none;"></div>
-        <div class="tier-title" style="color: #00b4d8;" class="album-header">  🔷 EPIC Eggs (<span id="epic-rate">1.00</span>% Chance) — [+\$25/sec & +50% Multiplier ea.]</div>
+        <div class="tier-title album-header" style="color: #00b4d8;">🔷 EPIC Eggs (<span id="epic-rate">1.00</span>% Chance) — [+\$25/sec & +50% Multiplier ea.]</div>
         <div class="grid" id="epic-grid"></div>
-        <div class="tier-title" style="color: #8a2be2;" class="album-header">  🔮 MYTHIC Eggs (<span id="mythic-rate">0.50</span>% Chance) — [+\$500/sec & +200% Multiplier ea.]</div>
+        <div class="tier-title album_header" style="color: #8a2be2;"> 🔮 MYTHIC Eggs (<span id="mythic-rate">0.50</span>% Chance) — [+\$500/sec & +200% Multiplier ea.]</div>
         <div class="grid" id="mythic-grid"></div>
-        <div class="tier-title" style="color: #e63946;" class="album-header">  👑 godly Eggs (<span id="godly-rate">0.10</span>% Chance) — [+\$5000/sec & +1000% Multiplier ea.]</div>
+        <div class="tier-title album_header" style="color: #e63946;">  👑 GODLY Eggs (<span id="godly-rate">0.10</span>% Chance) — [+\$5000/sec & +1000% Multiplier ea.]</div>
         <div class="grid" id="godly-grid"></div>
     </div>
 
 <script>
+    if (typeof player_xp === 'undefined') window.player_xp = 0;
+    if (typeof player_level === 'undefined') window.player_level = 1;
+    if (typeof claimed_rewards === 'undefined' || !claimed_rewards) window.claimed_rewards = [];
+
     let has_cheated = false;
     function updateMoneyDisplay() {
     let moneyEl = document.getElementById("money-display");
@@ -294,10 +312,205 @@
 
 let current_slot = null; 
 
+function addXP(amount) {
+    window.player_xp = (window.player_xp || 0) + amount;
+    let xpNeeded = typeof getXpNeededForLevel === "function" ? getXpNeededForLevel(window.player_level || 1) : 100;
+    
+    while (window.player_xp >= xpNeeded) {
+        if ((window.player_level || 1) >= 20) {
+            let overflowXp = window.player_xp;
+            while (overflowXp >= 300) {
+                overflowXp -= 300;
+                window.bonus_wheel_spins = (window.bonus_wheel_spins || 0) + 1;
+                let term = document.getElementById("terminal");
+                if (term) {
+                    term.innerHTML += `\n<span style="color: #10b981; font-weight: bold; font-size: 14px;">🎰 BONUS SPIN! You earned a free Prize Wheel Spin! 🚀</span>\n`;
+                    term.scrollTop = term.scrollHeight;
+                }
+            }
+            window.player_xp = overflowXp;
+            break;
+        } else {
+            window.player_xp -= xpNeeded;
+            window.player_level = (window.player_level || 1) + 1;
+            xpNeeded = typeof getXpNeededForLevel === "function" ? getXpNeededForLevel(window.player_level) : 100;
+            
+            let term = document.getElementById("terminal");
+            if (term) {
+                term.innerHTML += `\n<span style="color: #eab308; font-weight: bold; font-size: 14px;">🎉 LEVEL UP! You reached Level ${window.player_level}! Claim your reward on the Road! 🚀</span>\n`;
+                term.scrollTop = term.scrollHeight;
+            }
+        }
+    }
+    
+    let fsScreen = document.getElementById("fullscreen-xp-screen");
+    if (fsScreen && fsScreen.style.display === "flex") {
+        if (typeof updateFullScreenVisuals === "function") {
+            updateFullScreenVisuals();
+        }
+    }
+    if (typeof saveGame === "function") saveGame();
+}
+
+function spinPrizeWheel() {
+    if ((window.bonus_wheel_spins || 0) <= 0) {
+        alert("You do not have any Prize Wheel spins left! Complete more bounties!");
+        return;
+    }
+    
+    window.bonus_wheel_spins--;
+    let rand = Math.random() * 100;
+    let prizeTitle = "";
+    let prizeDesc = "";
+    
+    if (rand < 35) {
+        if (typeof number !== 'undefined') number += 50000;
+        prizeTitle = "\$50,000 Cash! 💰";
+        prizeDesc = "The money has been instantly added to your active balance.";
+    } else if (rand < 65) {
+        if (typeof gold_coins !== 'undefined') gold_coins += 50;
+        else if (typeof goldCoins !== 'undefined') goldCoins += 50;
+        prizeTitle = "50 Gold Coins! 🪙";
+        prizeDesc = "Go spend it inside the Secret Gold Coin Bazaar!";
+    } else if (rand < 80) {
+        if (typeof owned_epics !== 'undefined' && typeof epic_pool !== 'undefined' && epic_pool.length > 0) {
+            let egg = epic_pool[Math.floor(Math.random() * epic_pool.length)];
+            owned_epics[egg] = (owned_epics[egg] || 0) + 1;
+        }
+        prizeTitle = "Epic Egg! 🔷";
+        prizeDesc = "A random Epic Alpha-beast has been unlocked in your album.";
+    } else if (rand < 90) {
+        if (typeof owned_mythics !== 'undefined' && typeof mythic_pool !== 'undefined' && mythic_pool.length > 0) {
+            let egg = mythic_pool[Math.floor(Math.random() * mythic_pool.length)];
+            owned_mythics[egg] = (owned_mythics[egg] || 0) + 1;
+        }
+        prizeTitle = "Mythic Egg! 🔮";
+        prizeDesc = "A random Mythic Alpha-beast has been unlocked in your album.";
+    } else {
+        window.godly_booster_active = true;
+        prizeTitle = "GODLY BOOSTER! 👑";
+        prizeDesc = "Your next single Egg purchase will have 5 TIMES higher odds to roll a Godly Alpha-beast! (One-time use)";
+    }
+    
+    alert(`🎰 PRIZE WHEEL SPIN RESULT 🎰\n\nYou won: ${prizeTitle}\n\n${prizeDesc}`);
+    
+    if (typeof updateGoldDisplay === "function") updateGoldDisplay();
+    if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
+    if (typeof build_rarity_album === "function") build_rarity_album();
+    if (typeof updateFullScreenVisuals === "function") updateFullScreenVisuals();
+    if (typeof saveGame === "function") saveGame();
+}
+
+function getXpNeededForLevel(level) {
+    if (level === 1) return 100;
+    return 100 + (level - 1) * 95;
+}
+
+function updateFullScreenVisuals() {
+    let lvlEl = document.getElementById("fs-player-level");
+    let xpEl = document.getElementById("fs-current-xp");
+    let nxtEl = document.getElementById("fs-next-level-xp");
+    let fillEl = document.getElementById("fs-xp-bar-fill");
+    let spinBtn = document.getElementById("wheel-spin-btn");
+    let timerEl = document.getElementById("fs-season-timer");
+    
+    if (typeof window.season_number === 'undefined') window.season_number = 1;
+    let seasonHeader = document.getElementById("fs-season-header");
+    if (seasonHeader) seasonHeader.innerText = "Bounty Pass - Season " + (window.season_number || 1);
+
+    if (timerEl && window.season_start_time) {
+        let thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+        let timeElapsed = Date.now() - window.season_start_time;
+        let timeLeft = thirtyDaysInMs - timeElapsed;
+        
+        if (timeLeft <= 0) {
+            let currentSzn = window.season_number || 1;
+            window.season_number = currentSzn + 1;
+            window.player_xp = 0;
+            window.player_level = 1;
+            window.claimed_rewards = [];
+            window.bonus_wheel_spins = 0;
+            window.season_start_time = Date.now();
+            if (typeof saveGame === "function") saveGame();
+            timeLeft = thirtyDaysInMs;
+        }
+        
+        let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        timerEl.innerText = `⏳ Season ends in: ${days}d ${hours}h`;
+    }
+    
+    let rawLvl = (typeof player_level !== 'undefined') ? player_level : 1;
+    let winLvl = window.player_level || 1;
+    let currentLvl = Math.max(rawLvl, winLvl);
+    window.player_level = currentLvl;
+    if (typeof player_level !== 'undefined') player_level = currentLvl;
+
+    let rawXp = (typeof player_xp !== 'undefined') ? player_xp : 0;
+    let winXp = window.player_xp || 0;
+    let currentXp = Math.max(rawXp, winXp);
+
+    if (currentLvl >= 20 && currentXp >= 300) {
+        let calculations = Math.floor(currentXp / 300);
+        window.bonus_wheel_spins = (window.bonus_wheel_spins || 0) + calculations;
+        if (typeof bonus_wheel_spins !== 'undefined') bonus_wheel_spins = window.bonus_wheel_spins;
+        currentXp = currentXp % 300;
+    }
+
+    window.player_xp = currentXp;
+    if (typeof player_xp !== 'undefined') player_xp = currentXp;
+    
+    let currentSpins = (typeof bonus_wheel_spins !== 'undefined') ? bonus_wheel_spins : (window.bonus_wheel_spins || 0);
+    let xpNeeded = typeof getXpNeededForLevel === "function" ? getXpNeededForLevel(currentLvl) : 100;
+    
+    if (lvlEl) lvlEl.innerText = currentLvl;
+    
+    if (currentLvl >= 20) {
+        if (xpEl) xpEl.innerText = currentXp;
+        if (nxtEl) nxtEl.innerText = "300";
+        if (fillEl) fillEl.style.width = ((currentXp / 300) * 100) + "%";
+    } else {
+        if (xpEl) xpEl.innerText = currentXp;
+        if (nxtEl) nxtEl.innerText = xpNeeded;
+        if (fillEl) fillEl.style.width = ((currentXp / xpNeeded) * 100) + "%";
+    }
+    
+    if (spinBtn) {
+        spinBtn.innerText = `🎰 Spin Prize Wheel (${currentSpins})`;
+        if (currentSpins > 0) {
+            spinBtn.style.setProperty("background", "linear-gradient(180deg, #86efac, #4ade80)", "important");
+            spinBtn.style.border = "4px solid #166534";
+            spinBtn.style.setProperty("color", "#042f1a", "important");
+            spinBtn.style.cursor = "pointer";
+            spinBtn.style.animation = "megaGreenGlow 1.5s infinite ease-in-out";
+        } else {
+            spinBtn.style.setProperty("background", "#4b5563", "important");
+            spinBtn.style.border = "4px solid #1f2937";
+            spinBtn.style.setProperty("color", "#9ca3af", "important");
+            spinBtn.style.cursor = "not-allowed";
+            spinBtn.style.animation = "none";
+            spinBtn.style.boxShadow = "none";
+        }
+    }
+    
+    if (typeof renderRewardRoadUI === "function") {
+        renderRewardRoadUI();
+    }
+}
+
 function saveGame() {
-    if (!current_slot) return;
+    if (typeof current_slot === 'undefined' || !current_slot) return;
 
     try {
+        let savedAchKeys = [];
+        if (typeof achievements !== 'undefined' && achievements) {
+            Object.keys(achievements).forEach(key => {
+                if (achievements[key] && achievements[key].unlocked) {
+                    savedAchKeys.push(key);
+                }
+            });
+        }
+
         let gameState = {
             number: (typeof number !== 'undefined') ? number : 0,
             gold_coins: (typeof gold_coins !== 'undefined') ? gold_coins : 0,
@@ -320,14 +533,21 @@ function saveGame() {
             Giant_godly_unlocked: (typeof Giant_godly_unlocked !== 'undefined') ? Giant_godly_unlocked : false,
             bank_notif_triggered: (typeof bank_notif_triggered !== 'undefined') ? bank_notif_triggered : false,
             pokemon_notif_triggered: (typeof pokemon_notif_triggered !== 'undefined') ? pokemon_notif_triggered : false,
-            has_cheated: has_cheated,
-            player_xp: (typeof player_xp !== 'undefined') ? player_xp : 0,
-            player_level: (typeof player_level !== 'undefined') ? player_level : 1,
+            has_cheated: (typeof has_cheated !== 'undefined') ? has_cheated : false,
+            
+            claimed_rewards: window.claimed_rewards || [],
+            player_xp: window.player_xp || 0,
+            player_level: window.player_level || 1,
+            bonus_wheel_spins: window.bonus_wheel_spins || 0,
+            godly_booster_active: window.godly_booster_active || false,
+            unlocked_achievements: savedAchKeys,
+            season_number: window.season_number || 1,
+            season_start_time: window.season_start_time || Date.now(),
 
-            owned_Giants: (typeof owned_Giants !== 'undefined') ? owned_Giants : {},
-            owned_epics: (typeof owned_epics !== 'undefined') ? owned_epics : {},
-            owned_mythics: (typeof owned_mythics !== 'undefined') ? owned_mythics : {},
-            owned_godlies: (typeof owned_godlies !== 'undefined') ? owned_godlies : {}
+            owned_Giants: (typeof owned_Giants !== 'undefined') ? owned_Giants : (typeof owned_Giants_pool !== 'undefined' ? owned_Giants_pool : {}),
+            owned_epics: (typeof owned_epics !== 'undefined') ? owned_epics : (typeof owned_epics_pool !== 'undefined' ? owned_epics_pool : {}),
+            owned_mythics: (typeof owned_mythics !== 'undefined') ? owned_mythics : (typeof owned_mythics_pool !== 'undefined' ? owned_mythics_pool : {}),
+            owned_godlies: (typeof owned_godlies !== 'undefined') ? owned_godlies : (typeof owned_godlies_pool !== 'undefined' ? owned_godlies_pool : {})
         };
         
         localStorage.setItem("joe_game_save_slot_" + current_slot, JSON.stringify(gameState));
@@ -336,6 +556,7 @@ function saveGame() {
         console.error("Critical error during saveGame execution:", error);
     }
 }
+
 function loadGame(slotId) {
     let savedData = localStorage.getItem("joe_game_save_slot_" + slotId);
     if (!savedData) return false;
@@ -367,8 +588,13 @@ function loadGame(slotId) {
         if (save.pokemon_notif_triggered !== undefined) pokemon_notif_triggered = save.pokemon_notif_triggered;
         if (save.has_cheated !== undefined) has_cheated = save.has_cheated;
 
-        player_xp = save.player_xp !== undefined ? save.player_xp : 0;
-        player_level = save.player_level !== undefined ? save.player_level : 1;
+        window.player_xp = save.player_xp !== undefined ? save.player_xp : 0;
+        window.player_level = save.player_level !== undefined ? save.player_level : 1;
+        window.claimed_rewards = save.claimed_rewards !== undefined ? save.claimed_rewards : [];
+        window.bonus_wheel_spins = save.bonus_wheel_spins !== undefined ? save.bonus_wheel_spins : 0;
+        window.godly_booster_active = save.godly_booster_active !== undefined ? save.godly_booster_active : false;
+        window.season_number = save.season_number !== undefined ? save.season_number : 1;
+        window.season_start_time = save.season_start_time !== undefined ? save.season_start_time : Date.now();
 
         if (save.owned_Giants !== undefined) owned_Giants = save.owned_Giants;
         if (save.owned_epics !== undefined) owned_epics = save.owned_epics;
@@ -376,11 +602,9 @@ function loadGame(slotId) {
         if (save.owned_godlies !== undefined) owned_godlies = save.owned_godlies;
         
         if (typeof achievements !== 'undefined' && achievements) {
-            Object.keys(achievements).forEach(key => achievements[key].unlocked = false);
-            if (save.unlocked_achievements !== undefined) {
-                save.unlocked_achievements.forEach(key => {
-                    if (achievements[key]) achievements[key].unlocked = true;
-                });
+            Object.keys(achievements).forEach(key => { if (achievements[key]) achievements[key].unlocked = false; });
+            if (save.unlocked_achievements !== undefined && Array.isArray(save.unlocked_achievements)) {
+                save.unlocked_achievements.forEach(key => { if (achievements[key]) achievements[key].unlocked = true; });
             }
         }
 
@@ -391,26 +615,45 @@ function loadGame(slotId) {
         let btnUpgrade = document.getElementById("upgrade-btn");
         let btnEggUpgrade = document.getElementById("Egg-upgrade-btn");
 
-        if (dispMoney) dispMoney.style.display = bank_notif_triggered ? "block" : "none";
-        if (dispGold) dispGold.style.display = bank_notif_triggered ? "block" : "none";
-        if (dispBazaar) dispBazaar.style.display = bank_notif_triggered ? "block" : "none";
+        let isBrandNewFile = (save.number === undefined && save.total_clicks === undefined);
+        
+        if (isBrandNewFile) {
+            bank_notif_triggered = false;
+            pokemon_notif_triggered = false;
+            upgrade_button_spawned = false;
+            Egg_upgrade_spawned = false;
+        }
+
+        if (dispMoney) dispMoney.style.display = (bank_notif_triggered || isBrandNewFile) ? "block" : "none";
+        if (dispGold) dispGold.style.display = (bank_notif_triggered || isBrandNewFile) ? "block" : "none";
+        
+        if (dispBazaar) {
+            dispBazaar.style.display = pokemon_notif_triggered ? "block" : "none";
+        }
         
         if (btnShop) {
             btnShop.style.display = pokemon_notif_triggered ? "inline-block" : "none";
-            btnShop.innerText = `Buy Alpha-beast Eggs ($${current_Egg_price.toFixed(2)})`;
+            if (typeof current_Egg_price !== 'undefined') {
+                btnShop.innerText = `Buy Alpha-beast Eggs ($${current_Egg_price.toFixed(2)})`;
+            }
         }
+        
         if (document.getElementById("album-container")) {
             document.getElementById("album-container").style.display = pokemon_notif_triggered ? "block" : "none";
         }
         
         if (btnUpgrade) {
             btnUpgrade.style.display = upgrade_button_spawned ? "inline-block" : "none";
-            btnUpgrade.innerText = `Upgrade Hits (${next_multiplier_step}x earnings) ($${upgrade_cost.toFixed(2)})`;
+            if (typeof next_multiplier_step !== 'undefined' && typeof upgrade_cost !== 'undefined') {
+                btnUpgrade.innerText = `Upgrade Hits (${next_multiplier_step}x earnings) ($${upgrade_cost.toFixed(2)})`;
+            }
         }
         
         if (btnEggUpgrade) {
             btnEggUpgrade.style.display = Egg_upgrade_spawned ? "inline-block" : "none";
-            btnEggUpgrade.innerText = `Upgrade Eggs ($${Egg_upgrade_cost.toFixed(2)})`;
+            if (typeof Egg_upgrade_cost !== 'undefined') {
+                btnEggUpgrade.innerText = `Upgrade Eggs ($${Egg_upgrade_cost.toFixed(2)})`;
+            }
         }
 
         if (Giant_godly_unlocked) {
@@ -423,6 +666,7 @@ function loadGame(slotId) {
         if (menu) menu.style.display = "none";
         if (wrapper) wrapper.style.display = "block";
 
+        if (typeof checkSeasonReset === "function") checkSeasonReset();
         if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
         if (typeof updateGoldDisplay === "function") updateGoldDisplay();
         if (typeof update_achievement_ui === "function") update_achievement_ui();
@@ -615,10 +859,10 @@ function TheCreatorGaveMeThisCheatcode44(type, amount) {
             panel.scrollIntoView({ behavior: 'smooth' });
         }
         if (terminal) {
-            terminal.innerHTML += `\n<span style="color: #ef4444; font-weight: bold;">🚨 [ACCESS GRANTED] Developer Matrix geactiveerd!</span>\n`;
+            terminal.innerHTML += `\n<span style="color: #ef4444; font-weight: bold;">🚨 [ACCESS GRANTED] Developer Matrix activated!</span>\n`;
             terminal.scrollTop = terminal.scrollHeight;
         }
-        return "Developer panel activatet at the bottom of the page.";
+        return "Developer panel activated at the bottom of the page.";
     }
 
     if (String(type).toLowerCase().trim() === 'Egg') {
@@ -637,7 +881,7 @@ function executeCheatInjection(type, amount) {
         number += amount;
         updateMoneyDisplay();
         triggerMoneyAnimation('win');
-        checkAchievements('cash', number);
+        check_achievements('cash', number);
         if (terminal) terminal.innerHTML += `<span style="color: #10b981;">[CHEAT] +$${amount.toLocaleString()} cash injected.</span>\n`;
         return `Succes! $${amount.toLocaleString()} added.`;
     } 
@@ -702,9 +946,9 @@ function executeEggspawnCheat(EggName) {
         }
 
         if (typeof build_rarity_album === "function") build_rarity_album();
-        if (typeof checkAchievements === "function") {
-            checkAchievements('Eggs', 1);
-            if (typeof countUniqueEggs === "function") checkAchievements('album', countUniqueEggs());
+        if (typeof check_achievements === "function") {
+            check_achievements('Eggs', 1);
+            if (typeof countUniqueEggs === "function") check_achievements('album', countUniqueEggs());
         }
 
         if (terminal) {
@@ -749,7 +993,7 @@ function executeCheatInjection(type, amount) {
         number += amount;
         if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
         if (typeof triggerMoneyAnimation === "function") triggerMoneyAnimation('win');
-        if (typeof checkAchievements === "function") checkAchievements('cash', number);
+        if (typeof check_achievements === "function") check_achievements('cash', number);
         if (terminal) terminal.innerHTML += `<span style="color: #10b981;">[CHEAT] Injected $${amount.toLocaleString()} into system balance.</span>\n`;
         return `Succes! $${amount.toLocaleString()} toegevoegd.`;
     } 
@@ -819,9 +1063,9 @@ function executeEggspawnCheat(EggName) {
 
         // Vernieuw album en achievements
         if (typeof build_rarity_album === "function") build_rarity_album();
-        if (typeof checkAchievements === "function") {
-            checkAchievements('Eggs', 1);
-            if (typeof countUniqueEggs === "function") checkAchievements('album', countUniqueEggs());
+        if (typeof check_achievements === "function") {
+            check_achievements('Eggs', 1);
+            if (typeof countUniqueEggs === "function") check_achievements('album', countUniqueEggs());
         }
 
         if (terminal) {
@@ -870,7 +1114,7 @@ function executeCheatInjection(type, amount) {
         number += amount;
         if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
         if (typeof triggerMoneyAnimation === "function") triggerMoneyAnimation('win');
-        if (typeof checkAchievements === "function") checkAchievements('cash', number);
+        if (typeof check_achievements === "function") check_achievements('cash', number);
         if (terminal) terminal.innerHTML += `<span style="color: #10b981;">[CHEAT] Injected $${amount.toLocaleString()} into system balance.</span>\n`;
         return `Succes! $${amount.toLocaleString()} toegevoegd.`;
     } 
@@ -919,7 +1163,7 @@ function injectCheat(type) {
         number += amount;
         updateMoneyDisplay();
         triggerMoneyAnimation('win');
-        checkAchievements('cash', number);
+        check_achievements('cash', number);
         terminal.innerHTML += `<span style="color: #10b981;">[CHEAT] Injected $${amount.toLocaleString()} into system balance.</span>\n`;
     } 
     else if (type === 'gold') {
@@ -1191,22 +1435,53 @@ function updateGoldDisplay() {
     let el = document.getElementById("gold-display");
     if(el) el.innerText = `🌟 Gold Coins: ${gold_coins}`;
 }
-function checkAchievements(type, current_value) {
-    Object.keys(achievements).forEach(key => {
-        let ach = achievements[key];
-        if (ach.type === type && current_value >= ach.req && !ach.unlocked) {
-            number += ach.bonus; 
-            updateMoneyDisplay();
-            triggerMoneyAnimation('win');
-            if (key === 'collector_start' || key === 'album_3' || key === 'album_6') {
-                achievement_bonus_multiplier += 0.10; 
-            }
-            if (key === 'auto_god' || key === 'album_10') {
-                achievement_bonus_multiplier += 1.00; 
-            }
-            triggerAchievement(key, `+$${ach.bonus.toLocaleString()} cash bonus!`);
+function check_achievements() {
+    if (typeof achievements === 'undefined' || !achievements) return;
+
+    if (typeof total_clicks !== 'undefined') {
+        if (total_clicks >= 10 && achievements.clicks_10 && !achievements.clicks_10.unlocked) {
+            achievements.clicks_10.unlocked = true;
+            if (typeof number !== 'undefined') number += 500;
+            triggerAchievementNotification(achievements.clicks_10.name);
         }
-    });
+        if (total_clicks >= 100 && achievements.clicks_100 && !achievements.clicks_100.unlocked) {
+            achievements.clicks_100.unlocked = true;
+            if (typeof number !== 'undefined') number += 5000;
+            triggerAchievementNotification(achievements.clicks_100.name);
+        }
+    }
+
+    if (typeof total_Eggs_bought !== 'undefined') {
+        if (total_Eggs_bought >= 1 && achievements.egg_1 && !achievements.egg_1.unlocked) {
+            achievements.egg_1.unlocked = true;
+            if (typeof number !== 'undefined') number += 1000;
+            triggerAchievementNotification(achievements.egg_1.name);
+        }
+        if (total_Eggs_bought >= 50 && achievements.egg_50 && !achievements.egg_50.unlocked) {
+            achievements.egg_50.unlocked = true;
+            if (typeof number !== 'undefined') number += 50000;
+            triggerAchievementNotification(achievements.egg_50.name);
+        }
+    }
+
+    if (typeof window.player_level !== 'undefined') {
+        if (window.player_level >= 10 && achievements.level_10 && !achievements.level_10.unlocked) {
+            achievements.level_10.unlocked = true;
+            if (typeof number !== 'undefined') number += 100000;
+            triggerAchievementNotification(achievements.level_10.name);
+        }
+    }
+
+    if (typeof update_achievement_ui === "function") update_achievement_ui();
+    if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
+}
+
+function triggerAchievementNotification(name) {
+    let term = document.getElementById("terminal");
+    if (term) {
+        term.innerHTML += `\n<span style="color: #22c55e; font-weight: bold;">🏆 [ACHIEVEMENT UNLOCKED] ${name}! Reward added!</span>\n`;
+        term.scrollTop = term.scrollHeight;
+    }
 }
 
 // === HIER BEGINT JOUW GECORRIGEERDE TIMER ===
@@ -1225,6 +1500,31 @@ function startGlobalCountdown() {
             terminal.innerHTML += `\n<span style="color: #f72585; font-weight: bold;">⏳ [BOUNTY BOARD] 5 minutes passed! Quests rotated and Quest Shop restocked!</span>\n\n`;
             terminal.scrollTop = terminal.scrollHeight;
         }
+        window.season_start_time = window.season_start_time || Date.now();
+
+function checkSeasonReset() {
+    let thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+    let timeElapsed = Date.now() - window.season_start_time;
+    
+    if (timeElapsed >= thirtyDaysInMs) {
+        window.player_xp = 0;
+        window.player_level = 1;
+        window.claimed_rewards = [];
+        window.bonus_wheel_spins = 0;
+        window.season_start_time = Date.now();
+        
+        let term = document.getElementById("terminal");
+        if (term) {
+            term.innerHTML += `\n<span style="color: #ef4444; font-weight: bold; font-size: 14px;">⏳ [NEW SEASON START] A new month has arrived! Your Bounty Pass has been reset. Time to collect the rewards again! 🚀</span>\n`;
+            term.scrollTop = term.scrollHeight;
+        }
+        
+        if (typeof updateFullScreenVisuals === "function") updateFullScreenVisuals();
+        if (typeof saveGame === "function") saveGame();
+        alert("⏳ NEW PASS SEASON! ⏳\n\nA new month has started! Your Bounty Pass has reset. Good luck on your new journey!");
+    }
+}
+
         let mins = Math.floor(time_left / 60);
         let secs = time_left % 60;
         let formattedTime = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
@@ -1252,7 +1552,7 @@ setInterval(() => {
         let pv = document.getElementById("passive-live-value");
         if(ps) ps.style.display = "block";
         if(pv) pv.innerText = `+$${total_passive.toFixed(2)}/sec`;
-        checkAchievements('passive', total_passive);
+        check_achievements('passive', total_passive);
         checkQuestProgression('passive_gain', recent_passive_this_cycle);
     }
 }, 1000);
@@ -1276,60 +1576,89 @@ function strikeBack() {
     terminal.scrollTop = terminal.scrollHeight;
     document.body.classList.add("red")
     setTimeout(resetBackground, 150);
-    checkAchievements('cash', number);        
+    check_achievements('cash', number);        
 }
+
 function clickJoe() {
+    if (typeof total_clicks === 'undefined') window.total_clicks = 0;
+    if (typeof number === 'undefined') window.number = 0;
+    if (typeof click_multiplier === 'undefined') window.click_multiplier = 1.0;
+    if (typeof achievement_bonus_multiplier === 'undefined') window.achievement_bonus_multiplier = 1.0;
+    if (typeof bank_notif_triggered === 'undefined') window.bank_notif_triggered = false;
+    if (typeof pokemon_notif_triggered === 'undefined') window.pokemon_notif_triggered = false;
+    if (typeof upgrade_button_spawned === 'undefined') window.upgrade_button_spawned = false;
+    if (typeof Egg_upgrade_spawned === 'undefined') window.Egg_upgrade_spawned = false;
+
     total_clicks++;
-    recent_clicks_this_cycle++;
     
-    if (number > 5.0 && Math.random() < 0.02) {
-        
-        strikeBack()
-        return;
-    }
+    let earnings = click_multiplier * achievement_bonus_multiplier;
+    number += earnings;
 
-    let album_mult = get_album_multiplier();
-    let final_earnings = 1.0 * click_multiplier * achievement_bonus_multiplier * album_mult;
-    number += final_earnings;
-    updateMoneyDisplay();
-    triggerMoneyAnimation('win'); 
+    let term = document.getElementById("terminal");
 
-    checkAchievements('click', total_clicks);
-    checkAchievements('cash', number);
-    checkQuestProgression('click_joe', recent_clicks_this_cycle);
-
-    if (number >= 1.0 && !bank_notif_triggered) {
-        terminal.innerHTML += `You have earned your first dollar! Look below to monitor your Live Balance!\n`;
-        let md = document.getElementById("money-display");
-        let gd = document.getElementById("gold-display");
-        let qsc = document.getElementById("quest-shop-container");
-        if(md) md.style.display = "block";
-        if(gd) gd.style.display = "block";
-        if(qsc) qsc.style.display = "block";
+    if (!bank_notif_triggered && total_clicks >= 1) {
         bank_notif_triggered = true;
-    }
-    if (number >= 10.0 && !brokemon_notif_triggered) {
-        terminal.innerHTML += `OW! Come on... you already have enough money now... go buy Alpha-beast Eggs or something...\n`;
-        let sb = document.getElementById("shop-btn");
-        let ac = document.getElementById("album-container");
-        if(sb) {
-            sb.innerText = `Buy Alpha-beast Eggs ($${current_Egg_price.toFixed(2)})`;
-            sb.style.display = "inline-block";
+        let dispMoney = document.getElementById("money-display");
+        let dispGold = document.getElementById("gold-display");
+        if (dispMoney) dispMoney.style.display = "block";
+        if (dispGold) dispGold.style.display = "block";
+        
+        if (term) {
+            term.innerHTML += `\n<span style="color: #38bdf8; font-weight: bold;">🏦 [BANK NOTIFICATION] Account activated! Balance tracking enabled!</span>\n`;
+            term.scrollTop = term.scrollHeight;
         }
-        if(ac) ac.style.display = "block";
-        brokemon_notif_triggered = true;
     }
-    if (number >= 100.0 && !upgrade_button_spawned) {
-        terminal.innerHTML += `Wow, you got a lot of money! Look at the new upgrade option!\n`;
-        let ub = document.getElementById("upgrade-btn");
-        if(ub) ub.style.display = "inline-block";
+
+    if (bank_notif_triggered && !pokemon_notif_triggered && total_clicks >= 5) {
+        pokemon_notif_triggered = true;
+        let btnShop = document.getElementById("shop-btn");
+        let albCont = document.getElementById("album-container");
+        let dispBazaar = document.getElementById("quest-shop-container");
+        
+        if (btnShop) btnShop.style.display = "inline-block";
+        if (albCont) albCont.style.display = "block";
+        if (dispBazaar) dispBazaar.style.display = "block";
+        
+        if (term) {
+            term.innerHTML += `\n<span style="color: #4caf50; font-weight: bold;">OW THAT HURTS! JUST GO BUY AN EGG OR SOMETHING BUT LEAVE ME ALONE! Egg Shop, Bazaar and Album unlocked!</span>\n`;
+            term.scrollTop = term.scrollHeight;
+        }
+    }
+
+    if (pokemon_notif_triggered && !upgrade_button_spawned && total_clicks >= 15) {
         upgrade_button_spawned = true;
+        let btnUpgrade = document.getElementById("upgrade-btn");
+        if (btnUpgrade) btnUpgrade.style.display = "inline-block";
+        
+        if (term) {
+            term.innerHTML += `\n<span style="color: #9c27b0; font-weight: bold;">⚡ [UPGRADE UNLOCKED] Hit training available! Click power-ups unlocked!</span>\n`;
+            term.scrollTop = term.scrollHeight;
+        }
     }
-    if (number >= 200.0 && !Egg_upgrade_spawned) {
-        let pub = document.getElementById("Egg-upgrade-btn");
-        if(pub) pub.style.display = "inline-block";
+
+    if (upgrade_button_spawned && !Egg_upgrade_spawned && total_clicks >= 30) {
         Egg_upgrade_spawned = true;
+        let btnEggUpgrade = document.getElementById("Egg-upgrade-btn");
+        if (btnEggUpgrade) {
+            btnEggUpgrade.style.display = "inline-block";
+            if (typeof Egg_upgrade_cost !== 'undefined') {
+                btnEggUpgrade.innerText = `Upgrade Eggs ($${Egg_upgrade_cost.toFixed(2)})`;
+            }
+        }
+        
+        if (term) {
+            term.innerHTML += `\n<span style="color: #facc15; font-weight: bold;">🥚 [EGG UPGRADE UNLOCKED] Better hatching odds available! Upgrade your laboratory!</span>\n`;
+            term.scrollTop = term.scrollHeight;
+        }
     }
+
+    if (term && total_clicks > 1) {
+        term.scrollTop = term.scrollHeight;
+    }
+
+    if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
+    if (typeof check_achievements === "function") check_achievements();
+    if (typeof saveGame === "function") saveGame();
 }
 
 function generateNewQuests() {
@@ -1531,7 +1860,7 @@ function new_button_click() {
                 let Egg = unowned[Math.floor(Math.random() * unowned.length)];
                 owned_godlies[Egg] = 1;
                 terminal.innerHTML += `<span style="color: #e63946; font-weight: bold;">👑 NEW godly PULL: ${Egg}!</span>\n`;
-                checkAchievements('Eggs', 1); 
+                check_achievements('Eggs', 1); 
                 checkQuestProgression('pull_Egg', 1, 'godly');
             }
         } else if (roll < current_chance_godly + current_chance_mythic) {
@@ -1548,7 +1877,7 @@ function new_button_click() {
                 let Egg = unowned[Math.floor(Math.random() * unowned.length)];
                 owned_epics[Egg] = 1;
                 terminal.innerHTML += `<span style="color: #00b4d8; font-weight: bold;">🔷 NEW EPIC PULL: ${Egg}!</span>\n`;
-                checkAchievements('Eggs', 1); 
+                check_achievements('Eggs', 1); 
                 checkQuestProgression('pull_Egg', 1, 'epic');
             }
         }
@@ -1564,9 +1893,9 @@ function new_button_click() {
             if(mg) mg.style.display = "grid";
         }
 
-        checkAchievements('Eggs', total_Eggs_bought);
-        checkAchievements('album', countUniqueEggs());
-        checkAchievements('cash', number); 
+        check_achievements('Eggs', total_Eggs_bought);
+        check_achievements('album', countUniqueEggs());
+        check_achievements('cash', number); 
 
         terminal.innerHTML += `Your new total balance is: $${number.toFixed(2)}\n\n`;
         build_rarity_album();
@@ -1637,7 +1966,7 @@ function upgrade_Eggs_click() {
         chance_godly += 0.0015;
         
         // Verhoog de epic kans, maar zet een harde stop op 50%
-        chance_epic += 0.005; 
+        chance_epic += 0.005;
         chance_Giant = 0.005; // Dit blijft achter de schermen draaien zonder het te noemen
 
         let pub = document.getElementById("Egg-upgrade-btn");
@@ -1662,6 +1991,7 @@ function upgrade_Eggs_click() {
         terminal.innerHTML += `Not enough money!\n`;
     }
     terminal.scrollTop = terminal.scrollHeight;
+    if (typeof build_rarity_album === "function") { build_rarity_album(); }
 }
 
 function buyShopItem(productName) {
@@ -1739,13 +2069,12 @@ function countUniqueEggs() {
     godly_pool.forEach(name => { if ((owned_godlies[name] || 0) > 0) count++; });
     return count;
 }
-
 function build_rarity_album() {
     let pools = [
-        { id: "epic-grid", pool: epic_pool, owned: owned_epics, color: "#00b4d8" },
-        { id: "mythic-grid", pool: mythic_pool, owned: owned_mythics, color: "#8a2be2" },
-        { id: "godly-grid", pool: godly_pool, owned: owned_godlies, color: "#e63946" },
-        { id: "Giant-grid", pool: Giant_pool, owned: owned_Giants, color: "#d97706" }
+        { id: "epic-grid", pool: typeof epic_pool !== 'undefined' ? epic_pool : [], owned: typeof owned_epics !== 'undefined' ? owned_epics : {}, color: "#00b4d8" },
+        { id: "mythic-grid", pool: typeof mythic_pool !== 'undefined' ? mythic_pool : [], owned: typeof owned_mythics !== 'undefined' ? owned_mythics : {}, color: "#8a2be2" },
+        { id: "godly-grid", pool: typeof godly_pool !== 'undefined' ? godly_pool : [], owned: typeof owned_godlies !== 'undefined' ? owned_godlies : {}, color: "#e63946" },
+        { id: "Giant-grid", pool: typeof Giant_pool !== 'undefined' ? Giant_pool : [], owned: typeof owned_Giants !== 'undefined' ? owned_Giants : {}, color: "#d97706" }
     ];
 
     pools.forEach(p => {
@@ -1765,6 +2094,16 @@ function build_rarity_album() {
             });
         }
     });
+
+    let epicRateEl = document.getElementById("epic-rate");
+    let mythicRateEl = document.getElementById("mythic-rate");
+    let godlyRateEl = document.getElementById("godly-rate");
+    let GiantRateEl = document.getElementById("Giant-rate");
+
+    if (epicRateEl && typeof chance_epic !== 'undefined') epicRateEl.innerText = (chance_epic * 100).toFixed(2);
+    if (mythicRateEl && typeof chance_mythic !== 'undefined') mythicRateEl.innerText = (chance_mythic * 100).toFixed(2);
+    if (godlyRateEl && typeof chance_godly !== 'undefined') godlyRateEl.innerText = (chance_godly * 100).toFixed(2);
+    if (GiantRateEl && typeof chance_Giant !== 'undefined') GiantRateEl.innerText = (chance_Giant * 100).toFixed(2);
 }
 
 function TheCreatorGaveMeThisCheatcode44(type, amount) {
@@ -1810,7 +2149,7 @@ function matrixClickMoney() {
         number += amt;
         if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
         if (typeof triggerMoneyAnimation === "function") triggerMoneyAnimation('win');
-        if (typeof checkAchievements === "function") checkAchievements('cash', number);
+        if (typeof check_achievements === "function") check_achievements('cash', number);
         if (typeof terminal !== 'undefined' && terminal) {
             terminal.innerHTML += `\n<span style="color: #10b981;">[CHEAT] +$${amt.toLocaleString()} cash injected.</span>\n`;
             terminal.scrollTop = terminal.scrollHeight;
@@ -1899,113 +2238,15 @@ document.getElementById("cheat-Egg-name").addEventListener("keydown", e => {
     }
 })
                                                             
-if (typeof player_xp === 'undefined') window.player_xp = 0;
-if (typeof player_level === 'undefined') window.player_level = 1;
+window.player_xp = window.player_xp || 0;
+window.player_level = window.player_level || 1;
+window.claimed_rewards = window.claimed_rewards || [];
+window.bonus_wheel_spins = window.bonus_wheel_spins || 0;
+window.godly_booster_active = window.godly_booster_active || false;
 
-function getXpNeededForLevel(level) {
-    if (level === 1) return 100;
-    return 100 + (level - 1) * 50;
-}
+var claimed_rewards = claimed_rewards || [];
 
-function addXP(amount) {
-    window.player_xp = (window.player_xp || 0) + amount;
-    let xpNeeded = getXpNeededForLevel(window.player_level || 1);
-    
-    while (window.player_xp >= xpNeeded) {
-        window.player_xp -= xpNeeded;
-        window.player_level = (window.player_level || 1) + 1;
-        xpNeeded = getXpNeededForLevel(window.player_level);
-        
-        if (typeof giveLevelReward === "function") {
-            giveLevelReward(window.player_level);
-        }
-        
-        let term = document.getElementById("terminal");
-        if (term) {
-            term.innerHTML += `\n<span style="color: #eab308; font-weight: bold; font-size: 14px;">🎉 LEVEL UP! You reached Level ${window.player_level}! 🚀</span>\n`;
-            term.scrollTop = term.scrollHeight;
-        }
-    }
-    
-    let fsScreen = document.getElementById("fullscreen-xp-screen");
-    if (fsScreen && fsScreen.style.display === "flex") {
-        if (typeof updateFullScreenVisuals === "function") {
-            updateFullScreenVisuals();
-        }
-    }
-    if (typeof saveGame === "function") saveGame();
-}
-
-function giveLevelReward(level) {
-    if (level === 2) { gold_coins += 10; }
-    else if (level === 3) { multiplier *= 2; }
-    else if (level === 4) { number += 50000; }
-    else if (level === 5 && typeof owned_mythics !== 'undefined' && mythic_pool.length > 0) {
-        let egg = mythic_pool[Math.floor(Math.random() * mythic_pool.length)];
-        owned_mythics[egg] = 1;
-    }
-    else if (level === 6) { gold_coins += 25; }
-    else if (level === 7) { multiplier *= 3; }
-    else if (level === 8 && typeof owned_godlies !== 'undefined' && godly_pool.length > 0) {
-        let egg = godly_pool[Math.floor(Math.random() * godly_pool.length)];
-        owned_godlies[egg] = 1;
-    }
-    else if (level >= 9 && level <= 14) {
-        gold_coins += 50;
-        multiplier *= 4;
-    }
-    else if (level >= 15 && level <= 19) {
-        gold_coins += 100;
-        number += 5000;
-    }
-    else if (level === 20 && typeof owned_Giants !== 'undefined' && Giant_pool.length > 0) {
-        let egg = Giant_pool[Math.floor(Math.random() * Giant_pool.length)];
-        owned_Giants[egg] = 1;
-    }
-    
-    if (typeof updateGoldDisplay === "function") updateGoldDisplay();
-    if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
-    if (typeof build_rarity_album === "function") build_rarity_album();
-}
-
-function openFullScreenXP() {
-    let fsScreen = document.getElementById("fullscreen-xp-screen");
-    if (fsScreen) {
-        fsScreen.style.display = "flex";
-        renderRewardRoadUI();
-        updateFullScreenVisuals();
-    }
-}
-
-function getXpNeededForLevel(level) {
-    if (level === 1) return 100;
-    return 100 + (level - 1) * 50;
-}
-
-function addXP(amount) {
-    player_xp += amount;
-    let xpNeeded = getXpNeededForLevel(player_level);
-    
-    while (player_xp >= xpNeeded) {
-        player_xp -= xpNeeded;
-        player_level++;
-        xpNeeded = getXpNeededForLevel(player_level);
-        
-        giveLevelReward(player_level);
-        
-        if (document.getElementById("terminal")) {
-            document.getElementById("terminal").innerHTML += `\n<span style="color: #eab308; font-weight: bold; font-size: 14px;">🎉 LEVEL UP! You reached Level ${player_level}! 🚀</span>\n`;
-            document.getElementById("terminal").scrollTop = document.getElementById("terminal").scrollHeight;
-        }
-    }
-    
-    if (document.getElementById("fullscreen-xp-screen") && document.getElementById("fullscreen-xp-screen").style.display === "flex") {
-        updateFullScreenVisuals();
-    }
-    if (typeof saveGame === "function") saveGame();
-}
-
-function giveLevelReward(level) {
+function executeLevelRewardPayout(level) {
     if (level === 2) {
         if (typeof gold_coins !== 'undefined') gold_coins += 10;
         else if (typeof goldCoins !== 'undefined') goldCoins += 10;
@@ -2066,27 +2307,24 @@ function giveLevelReward(level) {
     if (typeof build_rarity_album === "function") build_rarity_album();
 }
 
-function updateFullScreenVisuals() {
-    let lvlEl = document.getElementById("fs-player-level");
-    let xpEl = document.getElementById("fs-current-xp");
-    let nxtEl = document.getElementById("fs-next-level-xp");
-    let fillEl = document.getElementById("fs-xp-bar-fill");
-    
-    let xpNeeded = getXpNeededForLevel(player_level);
-    
-    if (lvlEl) lvlEl.innerText = player_level;
-    if (xpEl) xpEl.innerText = player_xp;
-    if (nxtEl) nxtEl.innerText = xpNeeded;
-    
-    if (fillEl) {
-        fillEl.style.width = "0%";
-        setTimeout(() => {
-            let percentage = (player_xp / xpNeeded) * 100;
-            fillEl.style.width = percentage + "%";
-        }, 100);
+function clickRewardRoadBadge(level, title, desc) {
+    if (player_level < level) {
+        alert(`🔒 LEVEL LOCKED\n\nYou need to reach Level ${level} to unlock this reward!`);
+        return;
     }
     
-    renderRewardRoadUI();
+    if (claimed_rewards.includes(level)) {
+        alert(`✅ ALREADY CLAIMED\n\nYou have already collected this Level ${level} reward!`);
+        return;
+    }
+    
+    claimed_rewards.push(level);
+    executeLevelRewardPayout(level);
+    
+    alert(`🎉 REWARD CLAIMED! 🎉\n\nSuccessfully collected: ${title}\n\n${desc}`);
+    
+    updateFullScreenVisuals();
+    if (typeof saveGame === "function") saveGame();
 }
 
 function renderRewardRoadUI() {
@@ -2094,6 +2332,8 @@ function renderRewardRoadUI() {
     if (!roadEl) return;
     
     roadEl.innerHTML = "";
+    let activeClaimedList = window.claimed_rewards || [];
+    let currentLvl = window.player_level || 1;
     
     for (let l = 2; l <= 20; l++) {
         let borderCol = "#3b82f6";
@@ -2110,36 +2350,160 @@ function renderRewardRoadUI() {
         else if (l === 8) { borderCol = "#e63946"; icon = "👑"; title = "Godly Egg"; desc = "Unlocks an incredibly rare Godly Alpha-beast inside your album!"; }
         else if (l >= 9 && l <= 14) { icon = "🎁"; title = "Level " + l + " Bundle"; desc = "Contains a heavy package of +50 Gold Coins and multiplies your current income by x4!"; }
         else if (l >= 15 && l <= 19) { borderCol = "#facc15"; icon = "💎"; title = "Mega Chest"; desc = "A jaw-dropping chest containing +100 Gold Coins, +\$100,000.00 Cash, and multiplies your income by x4!"; }
-        else if (l === 20) { borderCol = "#d97706"; icon = "📦"; title = "Ultimate Egg Bundle"; desc = "The grand finale! Unlocks 3 random Alpha-beasts at once: 1 Epic, 1 Mythic, and 1 Godly directly into your album!"; }
+        else if (l === 20) { borderCol = "#d97706"; icon = "📦"; title = "Ultimate Egg Bundle"; desc = "The grand finale of your monthly journey! Unlocks 3 random Alpha-beasts at once: 1 Epic, 1 Mythic, and 1 Godly directly into your album!"; }
         
-        let isClaimed = player_level > l;
-        let isLocked = player_level < l;
+        let isClaimed = activeClaimedList.includes(l);
+        let isLocked = currentLvl < l;
         let bgStyle = "background: #1e293b !important;";
         let opacityStyle = "opacity: 1;";
         let badgeBadge = "";
+        let animationStyle = "none";
         
         if (isClaimed) {
             bgStyle = "background: #064e3b !important;";
             badgeBadge = "<span style='position:absolute; top:-5px; right:-5px; background:#10b981; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; line-height:18px; font-weight:bold;'>✓</span>";
+            opacityStyle = "opacity: 0.65;";
         } else if (isLocked) {
-            opacityStyle = "opacity: 0.6;";
+            opacityStyle = "opacity: 0.5;";
             badgeBadge = "<span style='position:absolute; top:-5px; right:-5px; background:#64748b; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; line-height:18px;'>🔒</span>";
         } else {
             bgStyle = "background: #7c2d12 !important;";
-            badgeBadge = "<span style='position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; border-radius:50%; width:18px; height:18px; font-size:10px; line-height:18px; font-weight:bold; animation: pulse 1s infinite;'>⭐</span>";
+            badgeBadge = "<span style='position:absolute; top:-5px; right:-5px; background:#facc15; color:#7c2d12; border-radius:50%; width:18px; height:18px; font-size:10px; line-height:18px; font-weight:bold;'>!</span>";
+            animationStyle = "pulse 1s infinite";
         }
         
         let escapedTitle = title.replace(/'/g, "\\'");
         let escapedDesc = desc.replace(/'/g, "\\'");
         
         roadEl.innerHTML += `
-            <button onclick="alert('${escapedTitle}\\n\\n${escapedDesc}')" style="min-width: 70px; max-width: 70px; height: 70px; ${bgStyle} border: 3px solid ${borderCol}; border-radius: 50% !important; padding: 0; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.4); ${opacityStyle} position: relative; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: scale(1); transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
+            <button onclick="clickRewardRoadBadge(${l}, '${escapedTitle}', '${escapedDesc}')" style="min-width: 70px; max-width: 70px; height: 70px; ${bgStyle} border: 3px solid ${borderCol}; border-radius: 50% !important; padding: 0; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.4); ${opacityStyle} position: relative; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: scale(1); transition: transform 0.1s; animation: ${animationStyle};" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">
                 <div style="font-size: 9px; color: #cbd5e1; font-weight: bold; margin-bottom: -2px;">L${l}</div>
                 <div style="font-size: 22px; line-height: 1;">${icon}</div>
                 ${badgeBadge}
             </button>
         `;
     }
+}
+
+function openFullScreenXP() {
+    let fsScreen = document.getElementById("fullscreen-xp-screen");
+    if (fsScreen) {
+        fsScreen.style.display = "flex";
+        renderRewardRoadUI();
+        updateFullScreenVisuals();
+    }
+}
+
+function giveLevelReward(level) {
+    if (level === 2) {
+        if (typeof gold_coins !== 'undefined') gold_coins += 10;
+        else if (typeof goldCoins !== 'undefined') goldCoins += 10;
+    }
+    else if (level === 3) {
+        if (typeof multiplier !== 'undefined') multiplier *= 2;
+        else if (typeof click_multiplier !== 'undefined') click_multiplier *= 2;
+    }
+    else if (level === 4) {
+        if (typeof number !== 'undefined') number += 50000;
+    }
+    else if (level === 5 && typeof owned_mythics !== 'undefined' && typeof mythic_pool !== 'undefined' && mythic_pool.length > 0) {
+        let egg = mythic_pool[Math.floor(Math.random() * mythic_pool.length)];
+        owned_mythics[egg] = (owned_mythics[egg] || 0) + 1;
+    }
+    else if (level === 6) {
+        if (typeof gold_coins !== 'undefined') gold_coins += 25;
+        else if (typeof goldCoins !== 'undefined') goldCoins += 25;
+    }
+    else if (level === 7) {
+        if (typeof multiplier !== 'undefined') multiplier *= 3;
+        else if (typeof click_multiplier !== 'undefined') click_multiplier *= 3;
+    }
+    else if (level === 8 && typeof owned_godlies !== 'undefined' && typeof godly_pool !== 'undefined' && godly_pool.length > 0) {
+        let egg = godly_pool[Math.floor(Math.random() * godly_pool.length)];
+        owned_godlies[egg] = (owned_godlies[egg] || 0) + 1;
+    }
+    else if (level >= 9 && level <= 14) {
+        if (typeof gold_coins !== 'undefined') gold_coins += 50;
+        else if (typeof goldCoins !== 'undefined') goldCoins += 50;
+        if (typeof multiplier !== 'undefined') multiplier *= 4;
+        else if (typeof click_multiplier !== 'undefined') click_multiplier *= 4;
+    }
+    else if (level >= 15 && level <= 19) {
+        if (typeof gold_coins !== 'undefined') gold_coins += 100;
+        else if (typeof goldCoins !== 'undefined') goldCoins += 100;
+        if (typeof number !== 'undefined') number += 100000;
+        if (typeof multiplier !== 'undefined') multiplier *= 4;
+        else if (typeof click_multiplier !== 'undefined') click_multiplier *= 4;
+    }
+    else if (level === 20) {
+        if (typeof owned_epics !== 'undefined' && typeof epic_pool !== 'undefined' && epic_pool.length > 0) {
+            let egg1 = epic_pool[Math.floor(Math.random() * epic_pool.length)];
+            owned_epics[egg1] = (owned_epics[egg1] || 0) + 1;
+        }
+        if (typeof owned_mythics !== 'undefined' && typeof mythic_pool !== 'undefined' && mythic_pool.length > 0) {
+            let egg2 = mythic_pool[Math.floor(Math.random() * mythic_pool.length)];
+            owned_mythics[egg2] = (owned_mythics[egg2] || 0) + 1;
+        }
+        if (typeof owned_godlies !== 'undefined' && typeof godly_pool !== 'undefined' && godly_pool.length > 0) {
+            let egg3 = godly_pool[Math.floor(Math.random() * godly_pool.length)];
+            owned_godlies[egg3] = (owned_godlies[egg3] || 0) + 1;
+        }
+    }
+    
+    if (typeof updateGoldDisplay === "function") updateGoldDisplay();
+    if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
+    if (typeof build_rarity_album === "function") build_rarity_album();
+}
+var bonus_wheel_spins = bonus_wheel_spins || 0;
+var godly_booster_active = godly_booster_active || false;
+
+function spinPrizeWheel() {
+    if (bonus_wheel_spins <= 0) {
+        alert("You do not have any Prize Wheel spins left! Complete more bounties!");
+        return;
+    }
+    
+    bonus_wheel_spins--;
+    let rand = Math.random() * 100;
+    let prizeTitle = "";
+    let prizeDesc = "";
+    
+    if (rand < 35) {
+        if (typeof number !== 'undefined') number += 50000;
+        prizeTitle = "\$50,000 Cash! 💰";
+        prizeDesc = "The money has been instantly added to your active balance.";
+    } else if (rand < 65) {
+        if (typeof gold_coins !== 'undefined') gold_coins += 50;
+        else if (typeof goldCoins !== 'undefined') goldCoins += 50;
+        prizeTitle = "50 Gold Coins! 🪙";
+        prizeDesc = "Go spend it inside the Secret Gold Coin Bazaar!";
+    } else if (rand < 80) {
+        if (typeof owned_epics !== 'undefined' && typeof epic_pool !== 'undefined' && epic_pool.length > 0) {
+            let egg = epic_pool[Math.floor(Math.random() * epic_pool.length)];
+            owned_epics[egg] = (owned_epics[egg] || 0) + 1;
+        }
+        prizeTitle = "Epic Egg! 🔷";
+        prizeDesc = "A random Epic Alpha-beast has been unlocked in your album.";
+    } else if (rand < 90) {
+        if (typeof owned_mythics !== 'undefined' && typeof mythic_pool !== 'undefined' && mythic_pool.length > 0) {
+            let egg = mythic_pool[Math.floor(Math.random() * mythic_pool.length)];
+            owned_mythics[egg] = (owned_mythics[egg] || 0) + 1;
+        }
+        prizeTitle = "Mythic Egg! 🔮";
+        prizeDesc = "A random Mythic Alpha-beast has been unlocked in your album.";
+    } else {
+        godly_booster_active = true;
+        prizeTitle = "GODLY BOOSTER! 👑";
+        prizeDesc = "Your next single Egg purchase will have 5 TIMES higher odds to roll a Godly Alpha-beast! (One-time use)";
+    }
+    
+    alert(`🎰 PRIZE WHEEL SPIN RESULT 🎰\n\nYou won: ${prizeTitle}\n\n${prizeDesc}`);
+    
+    if (typeof updateGoldDisplay === "function") updateGoldDisplay();
+    if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
+    if (typeof build_rarity_album === "function") build_rarity_album();
+    updateFullScreenVisuals();
+    if (typeof saveGame === "function") saveGame();
 }
 
 function closeFullScreenXP() {
@@ -2179,13 +2543,14 @@ function matrixClickEgg() {
         else document.getElementById("cheat-Egg-name").value = "";
     }
 }
-
 document.addEventListener("DOMContentLoaded", () => {
     let cheatInput = document.getElementById("cheat-Egg-name");
-    if (cheatInput) {
+    if (cheatInput && typeof cheatInput.addEventListener === "function") {
         cheatInput.addEventListener("keydown", e => {
             if (e.key == "Enter") {
-                matrixClickEgg();
+                if (typeof matrixClickEgg === "function") {
+                    matrixClickEgg();
+                }
             }
         });
     }
@@ -2200,10 +2565,58 @@ document.addEventListener("DOMContentLoaded", () => {
         updateSlotMenuUI();
     }
     
+    if (typeof updateFullScreenVisuals === "function") {
+        updateFullScreenVisuals();
+    }
+    
     if (typeof saveGame === "function") {
         setInterval(saveGame, 10000);
     }
 });
+function matrixUnlockAllAlphaBeasts() {
+    has_cheated = true;
+    
+    if (typeof epic_pool !== 'undefined' && typeof owned_epics !== 'undefined') {
+        epic_pool.forEach(name => {
+            owned_epics[name] = (owned_epics[name] || 0) + 1;
+        });
+    }
+    
+    if (typeof mythic_pool !== 'undefined' && typeof owned_mythics !== 'undefined') {
+        mythic_pool.forEach(name => {
+            owned_mythics[name] = (owned_mythics[name] || 0) + 1;
+        });
+    }
+    
+    if (typeof godly_pool !== 'undefined' && typeof owned_godlies !== 'undefined') {
+        godly_pool.forEach(name => {
+            owned_godlies[name] = (owned_godlies[name] || 0) + 1;
+        });
+    }
+    
+    if (typeof Giant_pool !== 'undefined' && typeof owned_Giants !== 'undefined') {
+        Giant_pool.forEach(name => {
+            owned_Giants[name] = (owned_Giants[name] || 0) + 1;
+        });
+        Giant_godly_unlocked = true;
+        let giantHeader = document.getElementById("Giant-header");
+        let giantGrid = document.getElementById("Giant-grid");
+        if (giantHeader) giantHeader.style.display = "block";
+        if (giantGrid) giantGrid.style.display = "grid";
+    }
+    
+    let term = document.getElementById("terminal");
+    if (term) {
+        term.innerHTML += `\n<span style="color: #00bcd4; font-weight: bold;">🪄 [MATRIX CHEAT] All Epics, Mythics, Godlies, and Giants unlocked for testing!</span>\n`;
+        term.scrollTop = term.scrollHeight;
+    }
+    
+    if (typeof build_rarity_album === "function") build_rarity_album();
+    if (typeof saveGame === "function") saveGame();
+    
+    alert("🪄 DEVELOPER CHEAT ACTIVATED!\n\nAll Alpha-beasts have been added to your Album!");
+}
+
 </script>
 
 <div id="developer-matrix-panel" style="display: none; margin: 40px auto; max-width: 750px; padding: 20px; background-color: #0f172a; border: 3px solid #ef4444; border-radius: 12px; color: #f8fafc; text-align: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); position: relative; z-index: 99999; font-family: monospace;">
@@ -2235,7 +2648,11 @@ document.addEventListener("DOMContentLoaded", () => {
 <div id="fullscreen-xp-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, #1e1b4b 0%, #09090b 100%) !important; z-index: 99999; justify-content: center; align-items: center; flex-direction: column; font-family: 'Arial Black', sans-serif;">
     <div style="text-align: center; width: 90%; max-width: 850px; color: white !important; background: rgba(15, 23, 42, 0.85) !important; padding: 30px; border-radius: 24px; border: 4px solid #4f46e5; box-shadow: 0 0 50px rgba(79, 70, 229, 0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 999999;">
         
-        <h2 style="font-size: 32px; color: #facc15 !important; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 5px 0; text-shadow: 3px 3px 0px #b45309;">Bounty Pass</h2>
+        <h2 id="fs-season-header" style="font-size: 32px; color: #facc15 !important; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 5px 0; text-shadow: 3px 3px 0px #b45309;">Bounty Pass - Season 1</h2>
+        
+        <div id="fs-season-timer" style="font-size: 14px; color: #cbd5e1 !important; background: rgba(30, 41, 59, 0.6); padding: 6px 16px; border-radius: 20px; border: 1px solid #475569; margin-bottom: 15px; font-family: monospace; display: inline-block;">
+            ⏳ Season ends in: 30d 0h
+        </div>
         
         <div style="font-size: 40px; color: #38bdf8 !important; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 3px 3px 0px #0369a1;">
             🎖️ LEVEL <span id="fs-player-level">1</span>
@@ -2253,10 +2670,17 @@ document.addEventListener("DOMContentLoaded", () => {
         <div id="brawl-pass-road" style="width: 100%; display: flex; gap: 15px; overflow-x: auto; padding: 15px 5px; margin-bottom: 25px; background: rgba(15, 23, 42, 0.5) !important; border-radius: 12px; border: 2px solid #1e293b; box-shadow: inset 0 2px 8px rgba(0,0,0,0.5); scrollbar-width: thin;">
         </div>
 
-        <button onclick="closeFullScreenXP()" style="padding: 12px 35px; font-size: 16px; font-weight: 900; background: linear-gradient(180deg, #facc15, #eab308); color: #7c2d12 !important; border: 4px solid #7c2d12; border-radius: 12px; cursor: pointer; text-transform: uppercase; box-shadow: 0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.1s; display: block !important; position: relative; z-index: 9999999;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #7c2d12'" onmouseup="this.style.transform='none'; this.style.boxShadow='0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5)'">
-            Close ❌
-        </button>
+        <div style="display: flex; gap: 20px; align-items: center; justify-content: center; width: 100%; margin-top: 10px;">
+            <button id="wheel-spin-btn" onclick="spinPrizeWheel()" style="padding: 12px 30px; font-size: 16px; font-weight: 900; text-transform: uppercase; border-radius: 12px; cursor: pointer; box-shadow: 0 6px 0 rgba(0,0,0,0.4); transition: transform 0.1s; display: inline-block !important; position: relative; z-index: 9999999;">
+                🎰 Spin Prize Wheel (0)
+            </button>
+
+            <button onclick="closeFullScreenXP()" style="padding: 12px 35px; font-size: 16px; font-weight: 900; background: linear-gradient(180deg, #facc15, #eab308); color: #7c2d12 !important; border: 4px solid #7c2d12; border-radius: 12px; cursor: pointer; text-transform: uppercase; box-shadow: 0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.1s; display: inline-block !important; position: relative; z-index: 9999999;" onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #7c2d12'" onmouseup="this.style.transform='none'; this.style.boxShadow='0 6px 0 #7c2d12, 0 10px 20px rgba(0,0,0,0.5)'">
+                Close ❌
+            </button>
+        </div>
     </div>
+</div>
 </div>
 </body>
 </html>
