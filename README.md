@@ -1,4 +1,4 @@
-# Hit Joe For Alpha-Beasts
+# Hit Joe For Alpha Beasts
 
 ## What is the game about?
 This is a clicker game where you need to hit 'Joe' to get money, with your money you can buy Brokémon cards, Pack upgrades or hit upgrades.
