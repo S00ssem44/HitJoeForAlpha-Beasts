@@ -7,6 +7,138 @@
     <link rel="icon" href="image_bfd5aa20.jpg">
     <style>
 
+@keyframes textPercent {
+    0% { content: "0%"; }
+    5% { content: "7%"; }
+    10% { content: "12%"; }
+    15% { content: "20%"; }
+    20% { content: "27%"; }
+    25% { content: "31%"; }
+    30% { content: "39%"; }
+    35% { content: "46%"; }
+    40% { content: "51%"; }
+    45% { content: "57%"; }
+    50% { content: "63%"; }
+    55% { content: "68%"; }
+    60% { content: "72%"; }
+    65% { content: "81%"; }
+    70% { content: "84%"; }
+    75% { content: "89%"; }
+    80% { content: "91%"; }
+    95% { content: "99%"; }
+    100% { content: "100%"; }
+}
+
+@keyframes loadingDots {
+    0% { content: "LOADING ."; }
+    33% { content: "LOADING .   ."; }
+    66% { content: "LOADING .   .   ."; }
+    100% { content: "LOADING ."; }
+}
+
+@keyframes splashSequence {
+    0% { opacity: 1; visibility: visible; }
+    85% { opacity: 1; visibility: visible; }
+    100% { opacity: 0; visibility: hidden; }
+}
+
+#splash-screen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: #09090b !important;
+    z-index: 999999999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    animation: splashSequence 5s forwards ease-in-out !important;
+}
+
+.splash-logo {
+    max-width: 250px !important;
+    height: auto !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
+    margin-bottom: 25px !important;
+}
+
+.splash-text {
+    color: #ffffff !important;
+    font-family: 'Arial Black', sans-serif !important;
+    font-size: 24px !important;
+    letter-spacing: 4px !important;
+    text-transform: uppercase !important;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
+    margin-bottom: 20px !important;
+}
+
+#splash-percentage {
+    color: #3b82f6 !important;
+    font-family: 'Arial Black', sans-serif !important;
+    font-size: 20px !important;
+    letter-spacing: 2px !important;
+    text-shadow: 0 0 12px #3b82f6 !important;
+    margin-bottom: 15px !important;
+}
+
+#splash-percentage::after {
+    content: "0%";
+    animation: textPercent 4.2s forwards linear !important;
+}
+
+#splash-loading-text {
+    color: #475569 !important;
+    font-family: 'Arial Black', sans-serif !important;
+    font-size: 13px !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+}
+
+#splash-loading-text::after {
+    content: "LOADING .";
+    animation: loadingDots 1.5s infinite steps(1) !important;
+}
+
+#splash-loading-text {
+    color: #475569 !important;
+    font-family: 'Arial Black', sans-serif !important;
+    font-size: 13px !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+}
+
+#splash-loading-text::after {
+    content: "LOADING .";
+    animation: loadingDots 1.5s infinite steps(1) !important;
+}
+
+.modern-loading-container {
+    width: 260px !important;
+    height: 6px !important;
+    background-color: #1e293b !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    position: relative !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.6) !important;
+    margin-bottom: 20px !important;
+}
+
+#splash-loading-text {
+    color: #475569 !important;
+    font-family: 'Arial Black', sans-serif !important;
+    font-size: 13px !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+}
+
+#splash-loading-text::after {
+    content: "LOADING .";
+    animation: loadingDots 1.5s infinite steps(1) !important;
+}
+
         @keyframes megaGreenGlow {
     0% {
         box-shadow: 0 0 25px #4ade80, 0 0 50px #22c55e, 0 4px 0 #064e3b;
@@ -192,8 +324,13 @@
         .Egg-item { text-align: left; font-size: 13px; }
     </style></head>
 <body>
-    
-<!-- === 🗂️ THE SELECT FILE / SLOT SCREEN (WITH RENAME SYSTEM) === -->
+<div id="splash-screen">
+    <img src="image_bfd5aa20.jpg" alt="Studio Logo" class="splash-logo">
+    <div class="splash-text">S00SSEM44 STUDIOS</div>
+    <div id="splash-percentage"></div>
+    <div id="splash-loading-text"></div>
+</div>
+
 <div id="slot-select-screen" style="max-width: 600px; margin: 40px auto; text-align: center; font-family: monospace; background: #f8fafc; padding: 25px; border: 3px solid #ef4444; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: block !important; color: #0f172a;">
     <h2 style="color: #ef4444; margin-bottom: 5px; font-weight: bold;">💾 SELECT YOUR SAVE FILE 💾</h2>
     <p style="color: #64748b; font-size: 12px; margin-bottom: 25px;">Choose a slot to continue your journey or start a fresh Alpha-beast adventure.</p>
@@ -888,7 +1025,7 @@ function executeCheatInjection(type, amount) {
     else if (type === 'gold') {
         gold_coins += Math.floor(amount);
         updateGoldDisplay();
-        if (terminal) terminal.innerHTML += `<span style="color: #f59e0b;">[CHEAT] +${Math.floor(amount)} Gold Coins geïnjecteerd.</span>\n`;
+        if (terminal) terminal.innerHTML += `<span style="color: #f59e0b;">[CHEAT] +${Math.floor(amount)} Gold Coins injected.</span>\n`;
         return `Succes! ${Math.floor(amount)} Gold Coins added.`;
     } 
     else if (type === 'multiplier') {
@@ -897,7 +1034,7 @@ function executeCheatInjection(type, amount) {
         if(ub && typeof upgrade_cost !== 'undefined') {
             ub.innerText = `Upgrade Hits (${(click_multiplier * 2).toFixed(1)}x earnings) ($${upgrade_cost.toFixed(2)})`;
         }
-        if (terminal) terminal.innerHTML += `<span style="color: #8b5cf6;">[CHEAT] Multiplier upgraded with +${amount}x! (Nu: ${click_multiplier}x)</span>\n`;
+        if (terminal) terminal.innerHTML += `<span style="color: #8b5cf6;">[CHEAT] Multiplier upgraded with +${amount}x! (Now: ${click_multiplier}x)</span>\n`;
         return `Succes! Multiplier upgraded.`;
     }
     else if (type === 'Egg_upgrade') {
@@ -956,9 +1093,9 @@ function executeEggspawnCheat(EggName) {
             terminal.scrollTop = terminal.scrollHeight;
         }
         if (typeof saveGame === "function") saveGame();
-        return `Succes! ${actualName} toegevoegd.`;
+        return `Succes! ${actualName} added.`;
     } else {
-        return `Kaart "${EggName}" staat niet in de pools. Check je spelling!`;
+        return `Egg "${EggName}" is not in the pools. Check your spelling!`;
     }
 }
 
@@ -966,120 +1103,14 @@ function injectCheat(type) {
     let amountInput = document.getElementById("cheat-amount");
     let amount = parseFloat(amountInput.value);
     if (isNaN(amount) || amount <= 0) {
-        alert("Voer eerst een geldig positief getal in!");
+        alert("Enter a valid positive number!");
         return;
     }
     executeCheatInjection(type, amount);
     if (terminal) terminal.scrollTop = terminal.scrollHeight;
 }
 
-function injectEggCheat() {
-    let EggInput = document.getElementById("cheat-Egg-name");
-    let EggName = EggInput.value;
-    if (!EggName || EggName.trim() === "") {
-        alert("Enter the exact name of a Alpha-beast!");
-        return;
-    }
-    let result = executeEggspawnCheat(EggName);
-    if (result.startsWith("Kaart")) {
-        alert(result);
-    } else {
-        EggInput.value = "";
-    }
-}
 
-function executeCheatInjection(type, amount) {
-    if (type === 'money') {
-        number += amount;
-        if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
-        if (typeof triggerMoneyAnimation === "function") triggerMoneyAnimation('win');
-        if (typeof check_achievements === "function") check_achievements('cash', number);
-        if (terminal) terminal.innerHTML += `<span style="color: #10b981;">[CHEAT] Injected $${amount.toLocaleString()} into system balance.</span>\n`;
-        return `Succes! $${amount.toLocaleString()} toegevoegd.`;
-    } 
-    else if (type === 'gold') {
-        gold_coins += Math.floor(amount);
-        if (typeof updateGoldDisplay === "function") updateGoldDisplay();
-        if (terminal) terminal.innerHTML += `<span style="color: #f59e0b;">[CHEAT] Injected ${Math.floor(amount)} Gold Coins into inventory.</span>\n`;
-        return `Succes! ${Math.floor(amount)} Gold Coins toegevoegd.`;
-    } 
-    else if (type === 'multiplier') {
-        click_multiplier += amount;
-        let ub = document.getElementById("upgrade-btn");
-        if(ub && typeof upgrade_cost !== 'undefined') {
-            ub.innerText = `Upgrade Hits (${(click_multiplier * 2).toFixed(1)}x earnings) ($${upgrade_cost.toFixed(2)})`;
-        }
-        if (terminal) terminal.innerHTML += `<span style="color: #8b5cf6;">[CHEAT] Added +${amount}x to Hit Multiplier. New: ${click_multiplier}x!</span>\n`;
-        return `Succes! Multiplier verhoogd met +${amount}x.`;
-    }
-    else if (type === 'Egg_upgrade') {
-        if (typeof upgrade_Eggs_click === "function") {
-            let loops = Math.min(Math.floor(amount), 100);
-            let preNumber = number;
-            number = 999999999999;
-            for(let i = 0; i < loops; i++) {
-                if (chance_epic >= 0.50) break;
-                upgrade_Eggs_click();
-            }
-            number = preNumber;
-            if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
-        }
-        return `Egg upgrades verwerkt!`;
-    }
-    return "Foutieve invoer: Kies uit 'money', 'gold', 'multiplier', of 'Egg_upgrade'.";
-}
-
-function executeEggspawnCheat(EggName) {
-    if (!EggName) return "Voer een kaartnaam in.";
-    
-    let targetName = EggName.trim().toLowerCase();
-    let found = false;
-    let poolFound = "";
-
-    // Helper om door een pool te zoeken (case-insensitive)
-    let checkAndUnlock = (pool, ownedObject, poolName) => {
-        let match = pool.find(p => p.toLowerCase() === targetName);
-        if (match) {
-            ownedObject[match] = 1;
-            found = true;
-            poolFound = poolName;
-            return match;
-        }
-        return null;
-    };
-
-    let actualName = checkAndUnlock(epic_pool, owned_epics, "Epic") ||
-                     checkAndUnlock(mythic_pool, owned_mythics, "Mythic") ||
-                     checkAndUnlock(godly_pool, owned_godlies, "godly") ||
-                     checkAndUnlock(Giant_pool, owned_Giants, "Giant");
-
-    if (found && actualName) {
-        // Activeer endgame als dit de 100e kaart is
-        if (typeof countUniqueEggs === "function" && countUniqueEggs() === 100 && !Giant_godly_unlocked) {
-            Giant_godly_unlocked = true;
-            if(document.getElementById("Giant-header")) document.getElementById("Giant-header").style.display = "block";
-            if(document.getElementById("Giant-grid")) document.getElementById("Giant-grid").style.display = "grid";
-        }
-
-        // Vernieuw album en achievements
-        if (typeof build_rarity_album === "function") build_rarity_album();
-        if (typeof check_achievements === "function") {
-            check_achievements('Eggs', 1);
-            if (typeof countUniqueEggs === "function") check_achievements('album', countUniqueEggs());
-        }
-
-        if (terminal) {
-            terminal.innerHTML += `\n<span style="color: #ec4899; font-weight: bold;">🪄 [MATRIX INJECTION] SECRET CODE USED! You have spawned <strong>${actualName}</strong> (${poolFound}) directly in your album!</span>\n`;
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-        if (typeof saveGame === "function") saveGame();
-        return `Succes! ${actualName} added to your album.`;
-    } else {
-        return `Egg "${EggName}" not found. Check the spelling.`;
-    }
-}
-
-// Aangeroepen door de resource-knoppen onderaan
 function injectCheat(type) {
     let amountInput = document.getElementById("cheat-amount");
     let amount = parseFloat(amountInput.value);
@@ -1101,54 +1132,13 @@ function injectEggCheat() {
     }
     let result = executeEggspawnCheat(EggName);
     // Als het niet lukt, geef een waarschuwing via alert
-    if (result.startsWith("Kaart")) {
+    if (result.startsWith("Egg")) {
         alert(result);
     } else {
         EggInput.value = ""; // Maak het vakje leeg bij succes
     }
 }
 
-// Losse functie die de daadwerkelijke aanpassing in de game state regelt (voor console én knoppen)
-function executeCheatInjection(type, amount) {
-    if (type === 'money') {
-        number += amount;
-        if (typeof updateMoneyDisplay === "function") updateMoneyDisplay();
-        if (typeof triggerMoneyAnimation === "function") triggerMoneyAnimation('win');
-        if (typeof check_achievements === "function") check_achievements('cash', number);
-        if (terminal) terminal.innerHTML += `<span style="color: #10b981;">[CHEAT] Injected $${amount.toLocaleString()} into system balance.</span>\n`;
-        return `Succes! $${amount.toLocaleString()} toegevoegd.`;
-    } 
-    else if (type === 'gold') {
-        gold_coins += Math.floor(amount);
-        if (typeof updateGoldDisplay === "function") updateGoldDisplay();
-        if (terminal) terminal.innerHTML += `<span style="color: #f59e0b;">[CHEAT] Injected ${Math.floor(amount)} Gold Coins into inventory.</span>\n`;
-        return `Succes! ${Math.floor(amount)} Gold Coins added.`;
-    } 
-    else if (type === 'multiplier') {
-        click_multiplier += amount;
-        let ub = document.getElementById("upgrade-btn");
-        if(ub && typeof upgrade_cost !== 'undefined') {
-            ub.innerText = `Upgrade Hits (${(click_multiplier * 2).toFixed(1)}x earnings) ($${upgrade_cost.toFixed(2)})`;
-        }
-        if (terminal) terminal.innerHTML += `<span style="color: #8b5cf6;">[CHEAT] Added +${amount}x to Hit Multiplier. New: ${click_multiplier}x!</span>\n`;
-        return `Succes! Multiplier increased with +${amount}x.`;
-    }
-    return "Incorrect input: choose 'money', 'gold', or 'multiplier'.";
-}
-
-// De functie die door de HTML-knoppen onderaan wordt aangeroepen
-function injectCheat(type) {
-    let amountInput = document.getElementById("cheat-amount");
-    let amount = parseFloat(amountInput.value);
-    
-    if (isNaN(amount) || amount <= 0) {
-        alert("First enter a valid positive number!");
-        return;
-    }
-    
-    executeCheatInjection(type, amount);
-    if (terminal) terminal.scrollTop = terminal.scrollHeight;
-}
 function injectCheat(type) {
     let amountInput = document.getElementById("cheat-amount");
     let amount = parseFloat(amountInput.value);
@@ -2544,35 +2534,50 @@ function matrixClickEgg() {
     }
 }
 document.addEventListener("DOMContentLoaded", () => {
+    let menu = document.getElementById("slot-select-screen");
+    let wrapper = document.getElementById("game-content-wrapper");
+    let splash = document.getElementById("splash-screen");
+    let modernBar = document.getElementById("modern-splash-bar");
+    
+    if (menu) menu.style.setProperty("display", "none", "important");
+    if (wrapper) wrapper.style.setProperty("display", "none", "important");
+
+    let minTime = 3;
+    let maxTime = 12;
+    let randomSeconds = Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
+
+    if (modernBar) {
+        modernBar.style.setProperty("animation", `smoothLoad ${randomSeconds}s forwards linear`, "important");
+    }
+
+    setTimeout(() => {
+        if (splash) {
+            splash.classList.add("splash-fade-out");
+            setTimeout(() => {
+                splash.style.setProperty("display", "none", "important");
+                if (menu) {
+                    menu.style.setProperty("display", "block", "important");
+                }
+                if (typeof updateSlotMenuUI === "function") updateSlotMenuUI();
+                if (typeof updateFullScreenVisuals === "function") updateFullScreenVisuals();
+            }, 800);
+        }
+    }, randomSeconds * 1000);
+
     let cheatInput = document.getElementById("cheat-Egg-name");
     if (cheatInput && typeof cheatInput.addEventListener === "function") {
         cheatInput.addEventListener("keydown", e => {
-            if (e.key == "Enter") {
-                if (typeof matrixClickEgg === "function") {
-                    matrixClickEgg();
-                }
+            if (e.key == "Enter" && typeof matrixClickEgg === "function") {
+                matrixClickEgg();
             }
         });
     }
 
-    let menu = document.getElementById("slot-select-screen");
-    let wrapper = document.getElementById("game-content-wrapper");
-    
-    if (menu) menu.style.display = "block";
-    if (wrapper) wrapper.style.display = "none";
-
-    if (typeof updateSlotMenuUI === "function") {
-        updateSlotMenuUI();
-    }
-    
-    if (typeof updateFullScreenVisuals === "function") {
-        updateFullScreenVisuals();
-    }
-    
     if (typeof saveGame === "function") {
         setInterval(saveGame, 10000);
     }
 });
+
 function matrixUnlockAllAlphaBeasts() {
     has_cheated = true;
     
@@ -2616,6 +2621,44 @@ function matrixUnlockAllAlphaBeasts() {
     
     alert("🪄 DEVELOPER CHEAT ACTIVATED!\n\nAll Alpha-beasts have been added to your Album!");
 }
+(function() {
+    let minTime = 3;
+    let maxTime = 12;
+    let totalLoadingTime = (Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime) * 1000;
+    
+    window.addEventListener("load", () => {
+        let percentEl = document.getElementById("splash-percentage");
+        let splash = document.getElementById("splash-screen");
+        let menu = document.getElementById("slot-select-screen");
+        let wrapper = document.getElementById("game-content-wrapper");
+
+        if (menu) menu.style.setProperty("display", "none", "important");
+        if (wrapper) wrapper.style.setProperty("display", "none", "important");
+
+        let startTime = Date.now();
+        let intervalId = setInterval(() => {
+            let elapsed = Date.now() - startTime;
+            let percentage = Math.min((elapsed / totalLoadingTime) * 100, 100);
+            
+            if (percentEl) {
+                percentEl.innerText = Math.floor(percentage) + "%";
+            }
+            
+            if (elapsed >= totalLoadingTime) {
+                clearInterval(intervalId);
+                if (splash) {
+                    splash.classList.add("splash-fade-out");
+                    setTimeout(() => {
+                        splash.style.setProperty("display", "none", "important");
+                        if (menu) menu.style.setProperty("display", "block", "important");
+                        if (typeof updateSlotMenuUI === "function") updateSlotMenuUI();
+                        if (typeof updateFullScreenVisuals === "function") updateFullScreenVisuals();
+                    }, 800);
+                }
+            }
+        }, 30);
+    });
+})();
 
 </script>
 
